@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-bounce.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ESP8266,SDK,MQTT,局域网," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="根据乐鑫官网的提供的Pro，已经提供了 支持MQTT协议，，在乐鑫pro 基础上再局域网下面控制led">
+<meta name="keywords" content="ESP8266,SDK,MQTT,局域网">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES8266模块二次开发SDK之MQTT局域网控制LED">
+<meta property="og:url" content="funful.ink;/2018/10/28/ESP8266_SDK_MQTT_LED/index.html">
+<meta property="og:site_name" content="FunfulBlog">
+<meta property="og:description" content="根据乐鑫官网的提供的Pro，已经提供了 支持MQTT协议，，在乐鑫pro 基础上再局域网下面控制led">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-2.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-3.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-4.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-6.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-5.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-7.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-8.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-9.png">
+<meta property="og:updated_time" content="2018-10-28T13:52:42.216Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ES8266模块二次开发SDK之MQTT局域网控制LED">
+<meta name="twitter:description" content="根据乐鑫官网的提供的Pro，已经提供了 支持MQTT协议，，在乐鑫pro 基础上再局域网下面控制led">
+<meta name="twitter:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="funful.ink;/2018/10/28/ESP8266_SDK_MQTT_LED/"/>
+
+
+
+
+
+  <title>ES8266模块二次开发SDK之MQTT局域网控制LED | FunfulBlog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">FunfulBlog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Funful的个人博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-文章分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-categories"></i> <br />
+            
+            文章分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archives"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-about"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="funful.ink;/2018/10/28/ESP8266_SDK_MQTT_LED/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ZhaoH.T.">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FunfulBlog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ES8266模块二次开发SDK之MQTT局域网控制LED</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-28T21:52:42+08:00">
+                2018-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ESP8266/" itemprop="url" rel="index">
+                    <span itemprop="name">ESP8266</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+      
+
+          
+          
+             <span id="/2018/10/28/ESP8266_SDK_MQTT_LED/" class="leancloud_visitors" data-flag-title="ES8266模块二次开发SDK之MQTT局域网控制LED">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+<span>&nbsp;|&nbsp;</span>
+          
+
+          
+            <span class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,043
+                </span>
+              
+
+              
+
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>根据乐鑫官网的提供的Pro，已经提供了 支持MQTT协议，，在乐鑫pro</p>
+<p>基础上再局域网下面控制led</p>
+<a id="more"></a>
+<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><h2 id="工程文档准备"><a href="#工程文档准备" class="headerlink" title="工程文档准备"></a>工程文档准备</h2><ol>
+<li>下载链接 <a href="https://www.espressif.com/zh-hans/support/download/sdks-demos" target="_blank" rel="noopener">乐鑫</a></li>
+<li>选用的平台NON-OS SDK</li>
+<li>使用安信可一体化编程软件打开，文档的导入具体去安信可官网搜索，这里直接讲解导入后的操作。 删除third_party,将esp_mqtt_proj从example拉出来，将driver_lib的Makefile添加后.bak,目的是为了不讲driver_lib不编译进工程</li>
+<li>如图，<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25.png" alt=""></li>
+</ol>
+<h2 id="MQTT的windows环境准备"><a href="#MQTT的windows环境准备" class="headerlink" title="MQTT的windows环境准备"></a>MQTT的windows环境准备</h2><ol>
+<li>下载EMQ压缩包，根据你的windows环境选择，下载地址<a href="http://www.emqtt.com/downloads" target="_blank" rel="noopener">链接</a></li>
+<li>解压到不带中文的目录下，打开windows命令，进入到该解压目录的bin文件夹下面，</li>
+<li>在终端执行”emqttd console”，如果卡顿就重新执行</li>
+<li>在浏览器输入”127.0.0.1:18083”</li>
+<li>此时会进入EMQ的界面SSID为admin，Passwd为public</li>
+<li>此时MQTT服务器已经搭建完成</li>
+</ol>
+<h2 id="硬件环境准备"><a href="#硬件环境准备" class="headerlink" title="硬件环境准备"></a>硬件环境准备</h2><ol>
+<li>一块MODEMCU或者是ESP8266的最小系统</li>
+<li>一个USB转TTL或者是数据线</li>
+</ol>
+<h2 id="软件环境"><a href="#软件环境" class="headerlink" title="软件环境"></a>软件环境</h2><ol>
+<li>烧录工具，可以在安信可官网下载 <a href="http://wiki.ai-thinker.com/esp_download" target="_blank" rel="noopener">链接</a></li>
+<li>串口工具，使用任意一款都可以，</li>
+</ol>
+<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="搭建测试环境"><a href="#搭建测试环境" class="headerlink" title="搭建测试环境"></a>搭建测试环境</h2><ol>
+<li><p>在工程中打开user_main.c和mqtt_config.h，</p>
+</li>
+<li><p>在mqtt_config.h需要修改以下几个宏</p>
+<p>| CFG_HOLDER        | 更新配置到FLASH中，只要数值和本次不一样就行，                |<br>| —————– | —————————————- |<br>| MQTT_HOST         | MQTT服务器的IP                               |<br>| MQTT_PORT         | MQTT服务器的PORT                             |<br>| MQTT_CLIENT_ID    | 客户端ID                                    |<br>| MQTT_USER         | MQTT服务器的登录账号”admin”                      |<br>| MQTT_PASS         | MQTT服务器的登录”admin”                        |<br>| STA_SSID          | ESP8266和电脑端连接的路由账号                       |<br>| STA_PASS          | ESP8266和电脑端连接的路由密码                       |<br>| PROTOCOL_NAMEv311 | 根据MQTT协议的兼容性，在前面加#define，PROTOCOL_NAMEv31注释掉 |<br>|                   |                                          |</p>
+</li>
+<li><p>右击该工程，Clean Project &amp;&amp;Build Project</p>
+</li>
+<li><p>可以看到顺利通过编译，如图<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-2.png" alt=""></p>
+<p>依照安信可官方提供的烧录方法可以知道，<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-3.png" alt=""></p>
+<p>blank.bin、esp_init_data_default_v05.bin是乐鑫SDK提供的，而eagle.flash.bin和eagle.irom0text.bin是编译工程生成的，，下载地址需要我们将工程给的地址和安信可提供地址组合得到，如图</p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-4.png" alt=""></p>
+<p>| SPI SPEED  | 40MHz          |<br>| ———- | ————– |<br>| SPI MODE   | DOUT           |<br>| FLASH SIZE | 32Mbit（根据板子而定） |<br>|            |                |</p>
+</li>
+<li><p>使用烧写工具擦写和下载，</p>
+</li>
+<li><p>将MQTT服务器Runing，(MQTT服务器和ESP8266需要在同一个局域网下面)</p>
+</li>
+<li><p>重启ESP8266模块，打开串口 BAUD 115200</p>
+</li>
+<li><p>在浏览器登录MQTT，可以看到会话界面，有刚才客户端ID,主题界面有工程中注册的主题如图</p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-6.png" alt=""></p>
+<p>​</p>
+</li>
+<li><p>主题，是我们在user_main.c的mqttConnectedCb函数注册的主题 如图 <img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-5.png" alt="">  </p>
+</li>
+<li><p>串口也会打印出来</p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-7.png" alt=""></p>
+</li>
+<li><p>到这一步，我们整个MQTT的局域网服务器已经搭建起来，下面测试一下，</p>
+<ol>
+<li><p>在EMQ界面切换到websocket测试，首先连接</p>
+</li>
+<li><p>订阅主题”/mqtt/topic/1”</p>
+</li>
+<li><p>给主题”/mqtt/topic/1” 发送”Hello World!”</p>
+</li>
+<li><p>如图  <img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-8.png" alt=""></p>
+</li>
+<li><p>在串口端会打印出”Hello World!”,如图<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-9.png" alt=""></p>
+<p>​</p>
+</li>
+</ol>
+<p>这里整体的测试环境已经搭建完成，我们下面开始进行局域网，点亮LED</p>
+</li>
+</ol>
+<h2 id="局域网点亮LED"><a href="#局域网点亮LED" class="headerlink" title="局域网点亮LED"></a>局域网点亮LED</h2><ol>
+<li><p>回到工程进入user_main.c，</p>
+</li>
+<li><p>在user_init 函数中添加</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO5_U, FUNC_GPIO5); <span class="comment">//选择GPIO5</span></span><br><span class="line">GPIO_OUTPUT_SET(GPIO_ID_PIN(<span class="number">5</span>), <span class="number">1</span>); <span class="comment">//默认GPIO5为高</span></span><br></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>在mqttConnectedCb函数中注册一个主题</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MQTT_Subscribe(client, <span class="string">"/hangtong/led/control"</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在mqttDataCb对收到的值解析</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (data[<span class="number">0</span>] == <span class="string">'0'</span>) &#123;</span><br><span class="line">        GPIO_OUTPUT_SET(GPIO_ID_PIN(<span class="number">5</span>), <span class="number">0</span>);</span><br><span class="line">        MQTT_Publish(client, <span class="string">"/xuhong/LED/out"</span>, <span class="string">"LED status is open ..."</span>,</span><br><span class="line">                <span class="built_in">strlen</span>(<span class="string">"LED status is open ..."</span>), <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//接收到指令是0，GPIO15为高,也就是LED关灯，同时发布消息，主题是/xuhong/LED/out，信息是LED status is off ...</span></span><br><span class="line">    <span class="keyword">if</span> (data[<span class="number">0</span>] == <span class="string">'1'</span>) &#123;</span><br><span class="line">        GPIO_OUTPUT_SET(GPIO_ID_PIN(<span class="number">5</span>), <span class="number">1</span>);</span><br><span class="line">        MQTT_Publish(client, <span class="string">"/xuhong/LED/out"</span>, <span class="string">"LED status is off ..."</span>,</span><br><span class="line">                <span class="built_in">strlen</span>(<span class="string">"LED status is off ..."</span>), <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>Clean Project &amp;&amp;build Project</p>
+</li>
+<li><p>重复上面步骤，</p>
+</li>
+<li><p>在EMQ服务器上面我们，会发现出现了”/hangtong/led/control” 主题 ，在websocket向”/hangtong/led/control”主题发送0则GPIO5为低电平。发送1则GPIO5为高电平</p>
+</li>
+<li><p>成功，</p>
+</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li>MQTT服务器的IP需要我们在电脑端查询得到，</li>
+<li>局域网的控制，所以电脑端和ESP8266需要连接同一个路由</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+      <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+      </div>
+      <div>
+      
+        
+      
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ESP8266/" rel="tag"># ESP8266</a>
+          
+            <a href="/tags/SDK/" rel="tag"># SDK</a>
+          
+            <a href="/tags/MQTT/" rel="tag"># MQTT</a>
+          
+            <a href="/tags/局域网/" rel="tag"># 局域网</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/27/ESP8266_SDK_api_HelloWorld/" rel="next" title="ES8266模块二次开发SDK之<输出hello world>">
+                <i class="fa fa-chevron-left"></i> ES8266模块二次开发SDK之<输出hello world>
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/03/Orange's_Implementation_of_an_operating_system_1th_build_environment/" rel="prev" title="Orange's:一个操作系统的实现_1th_环境搭建">
+                Orange's:一个操作系统的实现_1th_环境搭建 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="ZhaoH.T." />
+            
+              <p class="site-author-name" itemprop="name">ZhaoH.T.</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/funful" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:funful@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#准备"><span class="nav-number">1.</span> <span class="nav-text">准备</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#工程文档准备"><span class="nav-number">1.1.</span> <span class="nav-text">工程文档准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MQTT的windows环境准备"><span class="nav-number">1.2.</span> <span class="nav-text">MQTT的windows环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#硬件环境准备"><span class="nav-number">1.3.</span> <span class="nav-text">硬件环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#软件环境"><span class="nav-number">1.4.</span> <span class="nav-text">软件环境</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#步骤"><span class="nav-number">2.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建测试环境"><span class="nav-number">2.1.</span> <span class="nav-text">搭建测试环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#局域网点亮LED"><span class="nav-number">2.2.</span> <span class="nav-text">局域网点亮LED</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhaoH.T.</span>
+
+  
+</div>
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访问人数:<span id="busuanzi_value_site_uv"></span> 人 | |
+</span> 
+<span id="busuanzi_container_site_pv">
+    访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+
+
+  <span class="post-meta-divider"></span>
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("Lkdgp40r5EzS5xw13XjE2odj-gzGzoHsz", "PqMXuVWSIC5UeQX1QYbRL9Tv");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/exturl.js?v=5.1.4"></script>
+
+
+
+</body>
+</html>
