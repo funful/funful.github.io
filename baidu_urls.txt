@@ -1,3 +1,4 @@
+http://www.funful.ink/2018/11/20/Technical_articles_1/
 http://www.funful.ink/2018/11/18/STM32_FreeRTOS_config_2/
 http://www.funful.ink/2018/11/14/STM32_FreeRTOS_config_1/
 http://www.funful.ink/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/

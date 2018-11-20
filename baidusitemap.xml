@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://www.funful.ink/2018/11/20/Technical_articles_1/</loc>
+    <lastmod>2018-11-20T04:30:10.000Z</lastmod>
+  </url>  <url>
     <loc>http://www.funful.ink/2018/11/18/STM32_FreeRTOS_config_2/</loc>
     <lastmod>2018-11-17T16:44:53.599Z</lastmod>
   </url>  <url>
