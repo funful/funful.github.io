@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://www.funful.ink/2018/05/25/linux+Qt_c_conplicationMplayer/</loc>
+    <lastmod>2018-11-21T16:56:48.055Z</lastmod>
+  </url>  <url>
     <loc>http://www.funful.ink/2018/11/22/Linux_LinkSharelib/</loc>
     <lastmod>2018-11-21T16:42:39.694Z</lastmod>
   </url>  <url>
@@ -39,8 +42,5 @@
   </url>  <url>
     <loc>http://www.funful.ink/2018/06/03/Qt+ARM_fontsandcolor/</loc>
     <lastmod>2018-06-03T15:20:18.362Z</lastmod>
-  </url>  <url>
-    <loc>http://www.funful.ink/2018/11/22/linux+Qt_c_conplicationMplayer/</loc>
-    <lastmod>2018-06-02T17:44:35.667Z</lastmod>
   </url>
 </urlset>
