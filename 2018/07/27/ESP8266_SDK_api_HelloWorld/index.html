@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-bounce.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ESP8266,SDK," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="根据安信可官方文档，通过修改安信可提供的SDK，使串口输出Hello，World！">
+<meta name="keywords" content="ESP8266,SDK">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES8266模块二次开发SDK之&lt;输出hello world&gt;">
+<meta property="og:url" content="http://www.funful.ink/2018/07/27/ESP8266_SDK_api_HelloWorld/index.html">
+<meta property="og:site_name" content="FunfulBlog">
+<meta property="og:description" content="根据安信可官方文档，通过修改安信可提供的SDK，使串口输出Hello，World！">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.11.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.12.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.13.png">
+<meta property="og:updated_time" content="2018-07-27T08:28:33.646Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ES8266模块二次开发SDK之&lt;输出hello world&gt;">
+<meta name="twitter:description" content="根据安信可官方文档，通过修改安信可提供的SDK，使串口输出Hello，World！">
+<meta name="twitter:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.11.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.funful.ink/2018/07/27/ESP8266_SDK_api_HelloWorld/"/>
+
+
+
+
+
+  <title>ES8266模块二次开发SDK之<输出hello world> | FunfulBlog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">FunfulBlog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Funful的个人博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-文章分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-categories"></i> <br />
+            
+            文章分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archives"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-about"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2018/07/27/ESP8266_SDK_api_HelloWorld/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ZhaoH.T.">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FunfulBlog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ES8266模块二次开发SDK之<输出hello world></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-27T16:30:35+08:00">
+                2018-07-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ESP8266/" itemprop="url" rel="index">
+                    <span itemprop="name">ESP8266</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+      
+
+          
+          
+             <span id="/2018/07/27/ESP8266_SDK_api_HelloWorld/" class="leancloud_visitors" data-flag-title="ES8266模块二次开发SDK之<输出hello world>">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+<span>&nbsp;|&nbsp;</span>
+          
+
+          
+            <span class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  669
+                </span>
+              
+
+              
+
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>根据安信可官方文档，通过修改安信可提供的SDK，使串口输出Hello，World！</p>
+<a id="more"></a>
+<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><ul>
+<li>开发环境搭建： <a href="http://wiki.ai-thinker.com/ai_ide_install" target="_blank" rel="noopener">链接</a></li>
+<li>最新烧录工具： <a href="http://wiki.ai-thinker.com/_media/esp8266/flash_download_tools_v3.6.4.rar" target="_blank" rel="noopener">ESP FLASH TOOL </a></li>
+<li>1.54版本的SDK： <a href="http://wiki.ai-thinker.com/_media/esp8266/sdk/esp8266_nonos_sdk_v1.5.4.7z" target="_blank" rel="noopener">ESP8266_NONOS_SDK_v1.54</a></li>
+<li>开发板(以下三种都可以）：<ul>
+<li>ESP8266模块</li>
+<li>NodeMcu</li>
+<li>安信可开发板</li>
+</ul>
+</li>
+</ul>
+<p>下面根据我使用的NodeMcu，，前提是开发环境已经搭建完成，手中也有一块板子 ，需要的工具也已经下载了，记录一下，该教程操作步骤！</p>
+<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="SDK编译生成BIN文件"><a href="#SDK编译生成BIN文件" class="headerlink" title="SDK编译生成BIN文件"></a>SDK编译生成BIN文件</h2><ol>
+<li><p>打开AiThinker_IDE</p>
+</li>
+<li><p>File- &gt;Import-&gt;C/C++-&gt;Existing Code as MakeFile Project，点击 Next</p>
+</li>
+<li><p>选择我们刚才下载的最新SDK的路径，取消C++，选中Cygwin  GCC， 点击Finish</p>
+</li>
+<li><p>这样我们的工程就建立好了</p>
+</li>
+<li><p>在工程中，打开app，进入user，打开user_main.c</p>
+</li>
+<li><p>在user_init函数中添加一句 os_printf(“\r\nHello，World!\r\n”);</p>
+</li>
+<li><p>选中该工程右键选择Clean Project，然后再Build Project。</p>
+</li>
+<li><p>然后就可以 看到下面提示</p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.11.png" alt=""></p>
+</li>
+<li><p>下面就开始烧录</p>
+</li>
+</ol>
+<h2 id="烧录"><a href="#烧录" class="headerlink" title="烧录"></a>烧录</h2><ol>
+<li><p>参考安信可官方的 ESP 系列模组烧录固件的指导： <a href="http://wiki.ai-thinker.com/esp_download" target="_blank" rel="noopener"></a></p>
+</li>
+<li><p>NodeMcu, 不需要我们手动的将GPIO0拉低，</p>
+</li>
+<li><p>根据我们上面的生成的两个bin文件可以知道，我们下载的1.54版本的SDK是支持云端升级的boot的</p>
+</li>
+<li><p>| 文件名称                      | 8Mbit 地址分配 | 16Mbit 地址分配 | 32Mbit 地址分配 | 备注                      |<br>| ————————- | :——–: | ———– | ———– | ———————– |<br>| boot.bin                  |  0x00000   | 0x00000     | 0x00000     | 由乐鑫在 SDK 中提供，建议一直使用最新版本 |<br>| user1.bin                 |  0x01000   | 0x01000     | 0x01000     | 主程序，由代码编译生成             |<br>| user2.bin                 |  0x81000   | 0x81000     | 0x81000     | 主程序，由代码编译生成             |<br>| esp_init_data_default.bin |  0xFC000   | 0x1FC000    | 0x3FC000    | 由乐鑫在 SDK 中提供            |<br>| blank.bin                 |  0xFE000   | 0x1FE000    | 0x3FE000    | 由乐鑫在 SDK 中提供            |</p>
+</li>
+<li><p>参考上图我们自己的烧录设置是（NodeMcu是32Mbit的）</p>
+<p>| boot_v1.5.bin             | 0x00000  |<br>| ————————- | ——– |<br>| user1.1024.new.2.bin      | 0x01000  |<br>| esp_init_data_default.bin | 0x3FC000 |<br>| blank.bin                 | 0x3FE000 |<br>|                           |          |</p>
+</li>
+<li><p>烧录工具的设置 如图：</p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.12.png" alt=""></p>
+</li>
+<li><p>选好COM口，BAUD选的越大，下载速度越快，如果下载失败，可以将波特率降低</p>
+</li>
+<li><p>下载好之后，我们重启开发板，连接串口调试助手，波特率76800-1-8-0，如图</p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.13.png" alt=""></p>
+</li>
+<li><p>可以看到输出 Hello,World！</p>
+</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li><p>这个ESP8266的入门教程我们需要注意几点，第一是安信可提供的烧录指南的分两种情况，一种是支持云端升级的(BOOT)，另一种是不支持云端升级（No BOOT）。我们使用的1.5.4的SDK是支持云端升级的，1.2版本的不支持云端升级，两者下载的时候选的BIN文件，不相同。</p>
+</li>
+<li><p>使用ESP8266模块的下载的时候需要将GPIO0拉低。</p>
+<p>​</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+      <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+      </div>
+      <div>
+      
+        
+      
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ESP8266/" rel="tag"># ESP8266</a>
+          
+            <a href="/tags/SDK/" rel="tag"># SDK</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/12/Linux的文件IO/" rel="next" title="Linux 文件IO">
+                <i class="fa fa-chevron-left"></i> Linux 文件IO
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/28/ESP8266_SDK_MQTT_LED/" rel="prev" title="ES8266模块二次开发SDK之MQTT局域网控制LED">
+                ES8266模块二次开发SDK之MQTT局域网控制LED <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="ZhaoH.T." />
+            
+              <p class="site-author-name" itemprop="name">ZhaoH.T.</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/funful" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:funful@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#准备"><span class="nav-number">1.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#步骤"><span class="nav-number">2.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SDK编译生成BIN文件"><span class="nav-number">2.1.</span> <span class="nav-text">SDK编译生成BIN文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#烧录"><span class="nav-number">2.2.</span> <span class="nav-text">烧录</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhaoH.T.</span>
+
+  
+</div>
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  访问人数:<span id="busuanzi_value_site_uv"></span> 人 | |
+</span> 
+<span id="busuanzi_container_site_pv">
+    访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+
+
+  <span class="post-meta-divider"></span>
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("Lkdgp40r5EzS5xw13XjE2odj-gzGzoHsz", "PqMXuVWSIC5UeQX1QYbRL9Tv");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/exturl.js?v=5.1.4"></script>
+
+
+
+</body>
+</html>
