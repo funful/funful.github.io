@@ -118,7 +118,7 @@
 
 
 
-  <meta name="keywords" content="移植,arm,linux," />
+  <meta name="keywords" content="C++相关,回调函数,Qt输出日志," />
 
 
 
@@ -129,20 +129,18 @@
 
 
 
-<meta name="description" content="整理下自己之前的移植uboot时记录的笔记！这个章节是对uboot的第一阶段的代码进行优化和代码的修改，使其可以正确的启动串口。">
-<meta name="keywords" content="移植,arm,linux">
+<meta name="description" content="日常开发中遇到过使用回调函数的场景，但是对其具体定义和实现方式一直没有清晰的认识，导致平时能不用就不用，这次做一个总结克服它。">
+<meta name="keywords" content="C++相关,回调函数,Qt输出日志">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JZ2440的uboot-2009-11移植&lt;2&gt;_串口输出">
-<meta property="og:url" content="http://www.funful.ink/2018/06/08/JZ2440_uboot_2009_11_transplant_2_支持串口/index.html">
+<meta property="og:title" content="return不同类型变量的区别">
+<meta property="og:url" content="http://www.funful.ink/2018/11/30/2018-12-02-callback-function/index.html">
 <meta property="og:site_name" content="FunfulBlog">
-<meta property="og:description" content="整理下自己之前的移植uboot时记录的笔记！这个章节是对uboot的第一阶段的代码进行优化和代码的修改，使其可以正确的启动串口。">
+<meta property="og:description" content="日常开发中遇到过使用回调函数的场景，但是对其具体定义和实现方式一直没有清晰的认识，导致平时能不用就不用，这次做一个总结克服它。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/1.jpg">
-<meta property="og:updated_time" content="2018-06-08T09:44:45.577Z">
+<meta property="og:updated_time" content="2018-12-02T15:03:30.228Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JZ2440的uboot-2009-11移植&lt;2&gt;_串口输出">
-<meta name="twitter:description" content="整理下自己之前的移植uboot时记录的笔记！这个章节是对uboot的第一阶段的代码进行优化和代码的修改，使其可以正确的启动串口。">
-<meta name="twitter:image" content="http://p9zz81nyl.bkt.clouddn.com/1.jpg">
+<meta name="twitter:title" content="return不同类型变量的区别">
+<meta name="twitter:description" content="日常开发中遇到过使用回调函数的场景，但是对其具体定义和实现方式一直没有清晰的认识，导致平时能不用就不用，这次做一个总结克服它。">
 
 
 
@@ -172,13 +170,13 @@
 
 
 
-  <link rel="canonical" href="http://www.funful.ink/2018/06/08/JZ2440_uboot_2009_11_transplant_2_支持串口/"/>
+  <link rel="canonical" href="http://www.funful.ink/2018/11/30/2018-12-02-callback-function/"/>
 
 
 
 
 
-  <title>JZ2440的uboot-2009-11移植<2>_串口输出 | FunfulBlog</title>
+  <title>return不同类型变量的区别 | FunfulBlog</title>
   
 
 
@@ -349,7 +347,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2018/06/08/JZ2440_uboot_2009_11_transplant_2_支持串口/">
+    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2018/11/30/2018-12-02-callback-function/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ZhaoH.T.">
@@ -366,7 +364,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">JZ2440的uboot-2009-11移植<2>_串口输出</h1>
+          <h1 class="post-title" itemprop="name headline">return不同类型变量的区别</h1>
         
 
         <div class="post-meta">
@@ -379,8 +377,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-08T17:44:45+08:00">
-                2018-06-08
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-30T00:00:00Z">
+                2018-11-30
               </time>
             
 
@@ -402,8 +400,19 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/uboot移植/" itemprop="url" rel="index">
-                    <span itemprop="name">uboot移植</span>
+                  <a href="/categories/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/Qt/" itemprop="url" rel="index">
+                    <span itemprop="name">Qt</span>
                   </a>
                 </span>
 
@@ -420,9 +429,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/06/08/JZ2440_uboot_2009_11_transplant_2_支持串口/#comments" itemprop="discussionUrl">
+                <a href="/2018/11/30/2018-12-02-callback-function/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/06/08/JZ2440_uboot_2009_11_transplant_2_支持串口/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/11/30/2018-12-02-callback-function/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -431,7 +440,7 @@
 
           
           
-             <span id="/2018/06/08/JZ2440_uboot_2009_11_transplant_2_支持串口/" class="leancloud_visitors" data-flag-title="JZ2440的uboot-2009-11移植<2>_串口输出">
+             <span id="/2018/11/30/2018-12-02-callback-function/" class="leancloud_visitors" data-flag-title="return不同类型变量的区别">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -456,7 +465,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,257
+                  1,860
                 </span>
               
 
@@ -481,60 +490,47 @@
       
 
       
-        <p>整理下自己之前的移植uboot时记录的笔记！这个章节是对uboot的第一阶段的代码进行优化和代码的修改，使其可以正确的启动串口。</p>
+        <blockquote>
+<p>日常开发中遇到过使用回调函数的场景，但是对其具体定义和实现方式一直没有清晰的认识，导致平时能不用就不用，这次做一个总结克服它。</p>
+</blockquote>
 <a id="more"></a>
-<h2 id="修改启动代码"><a href="#修改启动代码" class="headerlink" title="修改启动代码"></a>修改启动代码</h2><ul>
-<li><p>在上个章节，当我们编译完成之后会发现在根目录下面会有一个u-boot.lds的文件，这是链接文件，这个文件就在 u-boot-2016.09/arch/arm/cpu/u-boot.lds </p>
+<h2 id="一-回调函数的定义"><a href="#一-回调函数的定义" class="headerlink" title="一  回调函数的定义"></a>一  回调函数的定义</h2><h3 id="1-1-百度百科定义"><a href="#1-1-百度百科定义" class="headerlink" title="1.1 百度百科定义"></a>1.1 百度百科定义</h3><p>如果你把函数的指针（地址）<strong>作为参数</strong>传递给另一个函数，当这个指针被用来调用其所指向的函数时，我们就说这是回调函数。回调函数<strong>不是由该函数的实现方直接调用</strong>，而是在特定的事件或条件发生时由<strong>另外的一方调用的</strong>，用于对该事件或条件进行响应。</p>
+<h3 id="1-2其他定义"><a href="#1-2其他定义" class="headerlink" title="1.2其他定义"></a>1.2其他定义</h3><ol>
+<li><p>回调函数是指<strong>使用者自己定义一个函数</strong>，实现这个函数的程序内容，然后把这个函数（入口地址）作为参数传入别人（或系统）的函数中，由别人（或系统）的函数在运行时来调用的函数。<strong>函数是你实现的</strong>，但由别人（或系统）的函数在运行时通过参数传递的方式调用，这就是所谓的回调函数。简单来说，就是<strong>由别人的函数运行期间通过函数指针来回调你实现的函数</strong>。 </p>
 </li>
-<li><p>进去之后发现，板子启动执行的第一个文件是start.S,代码流程      </p>
-<h3 id="第一阶段启动代码修改"><a href="#第一阶段启动代码修改" class="headerlink" title="第一阶段启动代码修改"></a>第一阶段启动代码修改</h3><ul>
-<li><p>设置cpu为SVC32 模式</p>
+<li><p>所谓回调，就是模块A要通过模块B的某个函数b()完成一定的功能，但是函数b()自己无法实现全部功能，需要反过头来调用模块A中的某个函数a()来完成，这个a()就是回调函数。 </p>
 </li>
-<li><p>关闭看门狗</p>
-</li>
-<li><p>屏蔽中断，这个地方我们需要添加对2440的支持，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> 在</span><br><span class="line"> #if defined(CONFIG_S3C2410)</span><br><span class="line">	ldr	r1, =0x3ff</span><br><span class="line">	ldr	r0, =INTSUBMSK</span><br><span class="line">	str	r1, [r0]</span><br><span class="line">添加：</span><br><span class="line">#elif  defined(CONFIG_S3C2440)</span><br><span class="line">	ldr	r1, =0x7fff</span><br><span class="line">	ldr	r0, =INTSUBMSK</span><br><span class="line">	str	r1, [r0]</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设置系统时钟，查看S3C2440的数据手册可以，FCLK:HCLK:PCLK=1:4:8,FCLK=405Mhz</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">修改如下：</span><br><span class="line">	ldr	r0, =CLKDIVN</span><br><span class="line">	mov	r1, #5</span><br><span class="line">	str	r1, [r0]</span><br><span class="line">/**配置为异步模式**/</span><br><span class="line">	mrc p15, 0, r1, c1, c0, 0		</span><br><span class="line">	orr r1, r1, #0xc0000000 		</span><br><span class="line">	mcr p15, 0, r1, c1, c0, 0		</span><br><span class="line">#define S3C2440_MPLL_400MHZ 	((0x7f&lt;&lt;12)|(0x02&lt;&lt;4)|(0x01))/* </span><br><span class="line">	ldr r0, =0x4c000004</span><br><span class="line">	ldr r1, =S3C2440_MPLL_400MHZ</span><br><span class="line">	str r1, [r0]</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>跳转到cpu_init_crit，关闭MMU，关闭I/D caches ,再进入lowlevel_init</p>
-</li>
-<li><p>lowlevel_init，这个是配置Memory控制器。 在u-boot-2016.09/board/samsung/myff2440/lowlevel_init.S</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">上面我们修改了系统时钟的分频系数，所以此时的存储器控制器的SDRAM的刷新周期也需要更改，查数据手册，可知</span><br><span class="line">将</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> REFCNT			1113	<span class="comment">/* period=15.6us, HCLK=60Mhz, (2048+1-15.6*6.) */</span></span></span><br><span class="line">修改为：</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> REFCNT			1269	<span class="comment">/* period=7.8us, HCLK=100Mhz, (2048+1-7.8*100) */</span></span></span><br></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-<li><p>然后进入 _main分支，也就是对第二阶段板子外设的设置， 位于uboot2016.9\ubootproject\u-boot-2016.09\arch\arm\lib\crt0.S</p>
-</li>
-</ul>
-<h3 id="系统时钟移植"><a href="#系统时钟移植" class="headerlink" title="系统时钟移植"></a>系统时钟移植</h3><h4 id="添加s3c2440配置的宏"><a href="#添加s3c2440配置的宏" class="headerlink" title="添加s3c2440配置的宏"></a>添加s3c2440配置的宏</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">进入include/configs/myff2440.h</span><br><span class="line">将：</span><br><span class="line">	<span class="meta">#<span class="meta-keyword">define</span> CONFIG_S3C2440		<span class="comment">/* specifically a SAMSUNG S3C2410 SoC */</span></span></span><br><span class="line">	<span class="meta">#<span class="meta-keyword">define</span> CONFIG_MYFF2440		<span class="comment">/* on a SAMSUNG SMDK2410 Board */</span></span></span><br><span class="line">修改为：</span><br><span class="line">	<span class="meta">#<span class="meta-keyword">define</span> CONFIG_S3C2440		<span class="comment">/* specifically a SAMSUNG S3C2410 SoC */</span></span></span><br><span class="line">	<span class="meta">#<span class="meta-keyword">define</span> CONFIG_MYFF2440		<span class="comment">/* on a SAMSUNG SMDK2410 Board */</span></span></span><br></pre></td></tr></table></figure>
-<h4 id="修改分频系数"><a href="#修改分频系数" class="headerlink" title="修改分频系数"></a>修改分频系数</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">进入uboot2016<span class="number">.9</span>\ubootproject\u-boot<span class="number">-2016.09</span>\board\samsung\myff2440\Myff2440.c</span><br><span class="line">将：</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FCLK_SPEED 1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> (FCLK_SPEED == 0)		<span class="comment">/* Fout = 203MHz, Fin = 12MHz for Audio */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_MDIV	0xC3</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_PDIV	0x4</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_SDIV	0x1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">elif</span> (FCLK_SPEED == 1)		<span class="comment">/* Fout = 202.8MHz */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_MDIV	0xA1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_PDIV	0x3</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_SDIV	0x1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">修改为：</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FCLK_SPEED 1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> (FCLK_SPEED == 0)		<span class="comment">/* Fout = 203MHz, Fin = 12MHz for Audio */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_MDIV	0xC3</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_PDIV	0x4</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_SDIV	0x1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">elif</span> (FCLK_SPEED == 1)		<span class="comment">/* Fout = 405.8MHz */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_MDIV	0x7f        <span class="comment">/*查数据手册可知，为了是FCLK=405MHZ，这三个分频值依次是0x7f、0x2、0x1*/</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_PDIV	0x2</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_SDIV	0x1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
-<p>​</p>
-<h4 id="修改获取时钟函数"><a href="#修改获取时钟函数" class="headerlink" title="修改获取时钟函数"></a>修改获取时钟函数</h4><p>在：u-boot-2016.09\arch\arm\cpu\arm920t\s3c24x0\Speed.c</p>
+</ol>
+<p>   总结来说，<strong>回调函数这一设计允许了底层代码调用在高层定义的子程序。</strong></p>
+<h2 id="二-回调函数简单实例"><a href="#二-回调函数简单实例" class="headerlink" title="二  回调函数简单实例"></a>二  回调函数简单实例</h2><h3 id="1-1无参数的回调实例"><a href="#1-1无参数的回调实例" class="headerlink" title="1.1无参数的回调实例"></a>1.1无参数的回调实例</h3><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义带参回调函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintfText</span>(<span class="params"><span class="keyword">char</span>* s</span>) </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    printf(s);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//定义实现带参回调函数的"调用函数"</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CallPrintfText</span>(<span class="params"><span class="keyword">void</span> (*callfuct</span>)(<span class="params"><span class="keyword">char</span>*</span>),<span class="keyword">char</span>* s)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    callfuct(s);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//在main函数中实现带参的函数回调</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span>(<span class="params"><span class="keyword">int</span> argc,<span class="keyword">char</span>* argv[]</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    CallPrintfText(PrintfText,<span class="string">"Hello World!\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="1-2将上述代码修改为带参函数"><a href="#1-2将上述代码修改为带参函数" class="headerlink" title="1.2将上述代码修改为带参函数"></a>1.2将上述代码修改为带参函数</h3><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义带参回调函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintfText</span>(<span class="params"><span class="keyword">char</span>* s</span>) </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    printf(s);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//定义实现带参回调函数的"调用函数"</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CallPrintfText</span>(<span class="params"><span class="keyword">void</span> (*callfuct</span>)(<span class="params"><span class="keyword">char</span>*</span>),<span class="keyword">char</span>* s)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    callfuct(s);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//在main函数中实现带参的函数回调</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span>(<span class="params"><span class="keyword">int</span> argc,<span class="keyword">char</span>* argv[]</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    CallPrintfText(PrintfText,<span class="string">"Hello World!\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上两个实例对回调函数的定义有了清晰的说明，但是没有指明回调函数的真正用途：<strong>回调函数这一设计允许了底层代码调用在高层定义的子程序。</strong>这也是前文提到的，回调函数主要是为了让其他人已经实现的函数调用，而不是让自己实现的函数调用。第三章将给出回调函数的实用用途。</p>
+<h2 id="三-Qt5中引入的消息重定向机制使用的回调函数"><a href="#三-Qt5中引入的消息重定向机制使用的回调函数" class="headerlink" title="三  Qt5中引入的消息重定向机制使用的回调函数"></a>三  Qt5中引入的消息重定向机制使用的回调函数</h2><h3 id="1-1使用场景"><a href="#1-1使用场景" class="headerlink" title="1.1使用场景"></a>1.1使用场景</h3><p>一般在开发Qt程序时，主要由两种调试方式：一种是在debug模式下调试，另一种是在程序中使用qDebug()等函数打印信息帮助调试。一旦程序release投入实际使用，这些打印信息将无法被开发人员看到，qt5使用消息重定向机制使得打印信息可以重定向输出至log文件。这样即使软件在使用过程中发生问题也可以凭借日志文件追溯。</p>
+<p>如下是Qt帮助文档对于注册回调函数的描述：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Installs a Qt message <span class="keyword">handler</span> which has been defined previously. <span class="keyword">Returns</span> a pointer <span class="keyword">to</span> the previous message handler.</span><br><span class="line">The message <span class="keyword">handler</span> <span class="keyword">is</span> a <span class="keyword">function</span> that prints <span class="keyword">out</span> debug messages, <span class="keyword">warnings</span>, <span class="keyword">critical</span> <span class="keyword">and</span> fatal <span class="keyword">error</span> messages. The Qt <span class="keyword">library</span> (debug <span class="keyword">mode</span>) contains hundreds <span class="keyword">of</span> <span class="keyword">warning</span> messages that <span class="keyword">are</span> printed <span class="keyword">when</span> internal <span class="keyword">errors</span> (usually invalid <span class="keyword">function</span> arguments) occur. Qt built <span class="keyword">in</span> <span class="keyword">release</span> <span class="keyword">mode</span> also contains such <span class="keyword">warnings</span> unless QT_NO_WARNING_OUTPUT <span class="keyword">and</span>/<span class="keyword">or</span> QT_NO_DEBUG_OUTPUT have been <span class="keyword">set</span> during compilation. <span class="keyword">If</span> you implement your own message <span class="keyword">handler</span>, you <span class="keyword">get</span> total control <span class="keyword">of</span> these messages.</span><br><span class="line">The <span class="keyword">default</span> message <span class="keyword">handler</span> prints the message <span class="keyword">to</span> the standard <span class="keyword">output</span> <span class="keyword">under</span> X11 <span class="keyword">or</span> <span class="keyword">to</span> the debugger <span class="keyword">under</span> Windows. <span class="keyword">If</span> it <span class="keyword">is</span> a fatal message, the application aborts immediately.</span><br><span class="line"><span class="keyword">Only</span> one message <span class="keyword">handler</span> can be defined, since this <span class="keyword">is</span> usually done <span class="keyword">on</span> an application-wide basis <span class="keyword">to</span> control debug output.</span><br><span class="line"><span class="keyword">To</span> <span class="keyword">restore</span> the message <span class="keyword">handler</span>, <span class="keyword">call</span> qInstallMessageHandler(<span class="number">0</span>).</span><br></pre></td></tr></table></figure>
+<h3 id="1-2Qt回调代码实例"><a href="#1-2Qt回调代码实例" class="headerlink" title="1.2Qt回调代码实例"></a>1.2Qt回调代码实例</h3><p>如下代码是qt提供的例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;qapplication.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">myMessageOutput</span><span class="params">(QtMsgType type, <span class="keyword">const</span> QMessageLogContext &amp;context, <span class="keyword">const</span> QString &amp;msg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    QByteArray localMsg = msg.toLocal8Bit();</span><br><span class="line">    <span class="keyword">switch</span> (type)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">case</span> QtDebugMsg:</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Debug: %s (%s:%u, %s)\n"</span>, localMsg.constData(), context.file, context.line, context.function);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> QtInfoMsg:</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Info: %s (%s:%u, %s)\n"</span>, localMsg.constData(), context.file, context.line, context.function);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> QtWarningMsg:</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Warning: %s (%s:%u, %s)\n"</span>, localMsg.constData(), context.file, context.line, context.function);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> QtCriticalMsg:</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Critical: %s (%s:%u, %s)\n"</span>, localMsg.constData(), context.file, context.line, context.function);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> QtFatalMsg:</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Fatal: %s (%s:%u, %s)\n"</span>, localMsg.constData(), context.file, context.line, context.function);</span><br><span class="line">        <span class="built_in">abort</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    qInstallMessageHandler(myMessageOutput);</span><br><span class="line">    <span class="function">QApplication <span class="title">app</span><span class="params">(argc, argv)</span></span>;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> app.exec();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上代码，函数void myMessageOutput(QtMsgType type, const QMessageLogContext &amp;context, const QString &amp;msg)可以看做是我们自己实现的回调函数，qInstallMessageHandler(myMessageOutput)是Qt提供的注册回调函数。之后，一旦Qt提供的几种消息类型发生就会调用我们定义的回调函数。</p>
+<p>以上代码稍做修改即可实现重定向消息输出至log文件，代码如下：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> myMessageOutput(QtMsgType <span class="keyword">type</span>, <span class="keyword">const</span> QMessageLogContext &amp;<span class="keyword">context</span>, <span class="keyword">const</span> QString &amp;msg)</span><br><span class="line">&#123;</span><br><span class="line">    QByteArray localMsg = msg<span class="variable">.toLocal8Bit</span>();</span><br><span class="line">    switch (<span class="keyword">type</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> QtDebugMsg:</span><br><span class="line">        fprintf(stderr, <span class="string">"Debug: %s (%s:%u, %s)\n"</span>, localMsg<span class="variable">.constData</span>(), <span class="keyword">context</span><span class="variable">.file</span>, <span class="keyword">context</span><span class="variable">.line</span>, <span class="keyword">context</span><span class="variable">.function</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> QtInfoMsg:</span><br><span class="line">        fprintf(stderr, <span class="string">"Info: %s (%s:%u, %s)\n"</span>, localMsg<span class="variable">.constData</span>(), <span class="keyword">context</span><span class="variable">.file</span>, <span class="keyword">context</span><span class="variable">.line</span>, <span class="keyword">context</span><span class="variable">.function</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> QtWarningMsg:</span><br><span class="line">        fprintf(stderr, <span class="string">"Warning: %s (%s:%u, %s)\n"</span>, localMsg<span class="variable">.constData</span>(), <span class="keyword">context</span><span class="variable">.file</span>, <span class="keyword">context</span><span class="variable">.line</span>, <span class="keyword">context</span><span class="variable">.function</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> QtCriticalMsg:</span><br><span class="line">        fprintf(stderr, <span class="string">"Critical: %s (%s:%u, %s)\n"</span>, localMsg<span class="variable">.constData</span>(), <span class="keyword">context</span><span class="variable">.file</span>, <span class="keyword">context</span><span class="variable">.line</span>, <span class="keyword">context</span><span class="variable">.function</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> QtFatalMsg:</span><br><span class="line">        fprintf(stderr, <span class="string">"Fatal: %s (%s:%u, %s)\n"</span>, localMsg<span class="variable">.constData</span>(), <span class="keyword">context</span><span class="variable">.file</span>, <span class="keyword">context</span><span class="variable">.line</span>, <span class="keyword">context</span><span class="variable">.function</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, char *argv[])</span><br><span class="line">&#123;</span><br><span class="line">    qInstallMessageHandler( myMessageOutput );</span><br><span class="line">    QCoreApplication a(argc, argv);</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>经过修改后的回调函数可以实现将打印信息及其所在的，文件，函数，代码行等输出至log文件。</p>
+<p><strong>这个例子可以帮助我们清晰的认识回调函数的具体应用场景。</strong></p>
+<h2 id="四-标准回调函数定义方式"><a href="#四-标准回调函数定义方式" class="headerlink" title="四 标准回调函数定义方式"></a>四 标准回调函数定义方式</h2><blockquote>
+<p>回调函数的定义及其实现方式并不复杂，如果不清楚其应用场景只是一味的看概念确实容易对其理解有偏差。本小结将给出关于回调函数及注册回调函数一些标准的定义。  </p>
+</blockquote>
+<h3 id="1-回调函数定义"><a href="#1-回调函数定义" class="headerlink" title="1.回调函数定义"></a>1.回调函数定义</h3><p>定义时最好符合如下函数原型：typedef void (*SCT_XXX)(LPVOID lp, const CBParamStruct&amp; cbNode);   </p>
+<p>其中SCT_XXX是回调函数名称，lp是回调上下文，CBParamStruct是回调参数，一般由于要回调的参数不止一个，所以定义一个结构体比较方便。</p>
+<h3 id="2-注册回调函数"><a href="#2-注册回调函数" class="headerlink" title="2.注册回调函数"></a>2.注册回调函数</h3><p>注册回调函数原型：void RCF_XXX(SCT_XXX pfn, LPVOID lp);</p>
+<p>其中，RCF_XXX是注册函数名，pfn是回调函数名称（是指针），lp是回调上下文。 </p>
+<blockquote>
+<p>后记CSDN论坛一个<a href="https://bbs.csdn.net/topics/390081829" target="_blank" rel="noopener">关于为什么要使用回调函数</a>的帖子可能对深入理解回调函数有帮助，毕竟争论出真知。</p>
+</blockquote>
+<p><strong>参考：</strong></p>
 <ul>
-<li><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">将：</span><br><span class="line"><span class="function"><span class="keyword">static</span> ulong <span class="title">get_PLLCLK</span><span class="params">(<span class="keyword">int</span> pllreg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> *<span class="title">clk_power</span> = <span class="title">s3c24x0_get_base_clock_power</span>();</span></span><br><span class="line">        ulong r, m, p, s;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (pllreg == MPLL)</span><br><span class="line">                r = readl(&amp;clk_power-&gt;mpllcon);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (pllreg == UPLL)</span><br><span class="line">                r = readl(&amp;clk_power-&gt;upllcon);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">                hang();</span><br><span class="line">        m = ((r &amp; <span class="number">0xFF000</span>) &gt;&gt; <span class="number">12</span>) + <span class="number">8</span>;</span><br><span class="line">        p = ((r &amp; <span class="number">0x003F0</span>) &gt;&gt; <span class="number">4</span>) + <span class="number">2</span>;</span><br><span class="line">        s = r &amp; <span class="number">0x3</span>;</span><br><span class="line">        <span class="keyword">return</span> (CONFIG_SYS_CLK_FREQ * m) / (p &lt;&lt; s);</span><br><span class="line">&#125;</span><br><span class="line">修改为：</span><br><span class="line"><span class="function"><span class="keyword">static</span> ulong <span class="title">get_PLLCLK</span><span class="params">(<span class="keyword">int</span> pllreg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> *<span class="title">clk_power</span> = <span class="title">s3c24x0_get_base_clock_power</span>();</span></span><br><span class="line">        ulong r, m, p, s;</span><br><span class="line">        <span class="keyword">if</span> (pllreg == MPLL)</span><br><span class="line">                r = readl(&amp;clk_power-&gt;mpllcon);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (pllreg == UPLL)</span><br><span class="line">                r = readl(&amp;clk_power-&gt;upllcon);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">                hang();</span><br><span class="line">        m = ((r &amp; <span class="number">0xFF000</span>) &gt;&gt; <span class="number">12</span>) + <span class="number">8</span>;</span><br><span class="line">        p = ((r &amp; <span class="number">0x003F0</span>) &gt;&gt; <span class="number">4</span>) + <span class="number">2</span>;</span><br><span class="line">        s = r &amp; <span class="number">0x3</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(CONFIG_S3C2440)</span></span><br><span class="line">        <span class="keyword">if</span> (pllreg == MPLL)</span><br><span class="line">                <span class="keyword">return</span> <span class="number">2</span> * m * (CONFIG_SYS_CLK_FREQ / (p &lt;&lt; s));</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">        <span class="keyword">return</span> (CONFIG_SYS_CLK_FREQ * m) / (p &lt;&lt; s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">将：</span><br><span class="line"><span class="function">ulong <span class="title">get_HCLK</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> *<span class="title">clk_power</span> = <span class="title">s3c24x0_get_base_clock_power</span>();</span></span><br><span class="line">        <span class="keyword">return</span> (readl(&amp;clk_power-&gt;clkdivn) &amp; <span class="number">2</span>) ? get_FCLK() / <span class="number">2</span> : get_FCLK();</span><br><span class="line">&#125;</span><br><span class="line">修改为：</span><br><span class="line"><span class="function">ulong <span class="title">get_HCLK</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> *<span class="title">clk_power</span> = <span class="title">s3c24x0_get_base_clock_power</span>();</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_S3C2440</span></span><br><span class="line">        <span class="keyword">switch</span> (readl(&amp;clk_power-&gt;clkdivn) &amp; <span class="number">0x6</span>) &#123;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> get_FCLK();</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                <span class="keyword">return</span> get_FCLK() / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">                <span class="keyword">return</span> (readl(&amp;clk_power-&gt;camdivn) &amp; (<span class="number">1</span> &lt;&lt; <span class="number">9</span>)) ?</span><br><span class="line">                        get_FCLK() / <span class="number">8</span> : get_FCLK() / <span class="number">4</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">6</span>:</span><br><span class="line">                <span class="keyword">return</span> (readl(&amp;clk_power-&gt;camdivn) &amp; (<span class="number">1</span> &lt;&lt; <span class="number">8</span>)) ?</span><br><span class="line">                        get_FCLK() / <span class="number">6</span> : get_FCLK() / <span class="number">3</span>;</span><br><span class="line">        &#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">        <span class="keyword">return</span> (readl(&amp;clk_power-&gt;clkdivn) &amp; <span class="number">2</span>) ? get_FCLK() / <span class="number">2</span> : get_FCLK();</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
+<li><a href="https://www.cnblogs.com/ioleon13/archive/2010/03/02/1676621.html" target="_blank" rel="noopener">ioleon13的博客</a></li>
+<li><a href="https://baike.baidu.com/item/%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/7545973?fr=aladdin" target="_blank" rel="noopener">百度百科回调函数词条</a></li>
 </ul>
-<h4 id="添加摄像头分频寄存器CAMDIVN"><a href="#添加摄像头分频寄存器CAMDIVN" class="headerlink" title="添加摄像头分频寄存器CAMDIVN"></a>添加摄像头分频寄存器CAMDIVN</h4><p>因为我们在修改get_HCLK函数时，用到了camera寄存器所以我们需要添加相关的宏。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">在：u-boot<span class="number">-2016.09</span>\arch\arm\include\<span class="keyword">asm</span>\arch-s3c24x0\S3c24x0.h</span><br><span class="line">将：</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> &#123;</span></span><br><span class="line">	u32	locktime;</span><br><span class="line">	u32	mpllcon;</span><br><span class="line">	u32	upllcon;</span><br><span class="line">	u32	clkcon;</span><br><span class="line">	u32	clkslow;</span><br><span class="line">	u32	clkdivn;</span><br><span class="line">&#125;;</span><br><span class="line">修改为：</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> &#123;</span></span><br><span class="line">	u32	locktime;</span><br><span class="line">	u32	mpllcon;</span><br><span class="line">	u32	upllcon;</span><br><span class="line">	u32	clkcon;</span><br><span class="line">	u32	clkslow;</span><br><span class="line">	u32	clkdivn;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(CONFIG_S3C2440)</span></span><br><span class="line">	u32	camdivn;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="支持CONFIG-S3C2440-CONFIG-MYFF2440的宏配置"><a href="#支持CONFIG-S3C2440-CONFIG-MYFF2440的宏配置" class="headerlink" title="支持CONFIG_S3C2440/CONFIG_MYFF2440的宏配置"></a>支持CONFIG_S3C2440/CONFIG_MYFF2440的宏配置</h3><p>在前面我们修改板级支持的头文件中，我们修改了两个宏下面我们需要将系统中的CONFIG_S3C2410替换成CONFIG_S3C2440，将CONFIG_SMDK2410替换成CONFIG_MYFF2440</p>
-<p>在ubuntu的根目录下，执行</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find .|xargs grep -ri "CONFIG_S3C2410" -l</span><br></pre></td></tr></table></figure>
-<p> 会列出包含CONFIG_S3C2410的文件，将其替换，</p>
-<p>同理执行：</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find</span> .|xargs <span class="keyword">grep</span> -<span class="keyword">ri</span> <span class="string">"CONFIG_SMDK2410"</span> -<span class="keyword">l</span></span><br></pre></td></tr></table></figure>
-<p>也将其替换</p>
-<h2 id="编译调试"><a href="#编译调试" class="headerlink" title="编译调试"></a>编译调试</h2><p>经过上面这几个步骤我们执行如下命令：</p>
-<p> 在u-boot-2009.11的顶层目录，</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make MyFF2440_config&amp;&amp;make</span><br></pre></td></tr></table></figure>
-<p>不出意外的话，就可以顺利生成u-boot.bin文件，烧进板子里面nor 启动，串口就能正常输出    </p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/1.jpg"></p>
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>我们在注释的时候尽量使用“/**/”符号，不要用“//”,因为有些交叉编译器不识别单行注释</p>
-<p>​</p>
-</li>
-</ul>
+<p>修订记录：2018.12.02  22:46  完成初稿</p>
 
       
     </div>
@@ -568,7 +564,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接:</strong>
-    <a href="http://www.funful.ink/2018/06/08/JZ2440_uboot_2009_11_transplant_2_支持串口/" title="JZ2440的uboot-2009-11移植<2>_串口输出">http://www.funful.ink/2018/06/08/JZ2440_uboot_2009_11_transplant_2_支持串口/</a>
+    <a href="http://www.funful.ink/2018/11/30/2018-12-02-callback-function/" title="return不同类型变量的区别">http://www.funful.ink/2018/11/30/2018-12-02-callback-function/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明: </strong>
@@ -583,11 +579,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/移植/" rel="tag"><i class="fa fa-tag"></i> 移植</a>
+            <a href="/tags/C-相关/" rel="tag"><i class="fa fa-tag"></i> C++相关</a>
           
-            <a href="/tags/arm/" rel="tag"><i class="fa fa-tag"></i> arm</a>
+            <a href="/tags/回调函数/" rel="tag"><i class="fa fa-tag"></i> 回调函数</a>
           
-            <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
+            <a href="/tags/Qt输出日志/" rel="tag"><i class="fa fa-tag"></i> Qt输出日志</a>
           
         </div>
       
@@ -600,8 +596,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/08/Qt+ARM_fontsandcolor/" rel="next" title="Qt5移植4412时汉字及颜色显示">
-                <i class="fa fa-chevron-left"></i> Qt5移植4412时汉字及颜色显示
+              <a href="/2018/11/30/2018-11-29-this-pointer/" rel="next" title="this指针小结">
+                <i class="fa fa-chevron-left"></i> this指针小结
               </a>
             
           </div>
@@ -609,10 +605,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/06/12/JZ2440_uboot_2009_11_transplant_3_nor_flash/" rel="prev" title="JZ2440的uboot-2009-11移植<3>_支持Nor Flash">
-                JZ2440的uboot-2009-11移植<3>_支持Nor Flash <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -775,7 +767,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#修改启动代码"><span class="nav-number">1.</span> <span class="nav-text">修改启动代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一阶段启动代码修改"><span class="nav-number">1.1.</span> <span class="nav-text">第一阶段启动代码修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#系统时钟移植"><span class="nav-number">1.2.</span> <span class="nav-text">系统时钟移植</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#添加s3c2440配置的宏"><span class="nav-number">1.2.1.</span> <span class="nav-text">添加s3c2440配置的宏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改分频系数"><span class="nav-number">1.2.2.</span> <span class="nav-text">修改分频系数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改获取时钟函数"><span class="nav-number">1.2.3.</span> <span class="nav-text">修改获取时钟函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加摄像头分频寄存器CAMDIVN"><span class="nav-number">1.2.4.</span> <span class="nav-text">添加摄像头分频寄存器CAMDIVN</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#支持CONFIG-S3C2440-CONFIG-MYFF2440的宏配置"><span class="nav-number">1.3.</span> <span class="nav-text">支持CONFIG_S3C2440/CONFIG_MYFF2440的宏配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译调试"><span class="nav-number">2.</span> <span class="nav-text">编译调试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意"><span class="nav-number">3.</span> <span class="nav-text">注意</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-回调函数的定义"><span class="nav-number">1.</span> <span class="nav-text">一  回调函数的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-百度百科定义"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 百度百科定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2其他定义"><span class="nav-number">1.2.</span> <span class="nav-text">1.2其他定义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-回调函数简单实例"><span class="nav-number">2.</span> <span class="nav-text">二  回调函数简单实例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1无参数的回调实例"><span class="nav-number">2.1.</span> <span class="nav-text">1.1无参数的回调实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2将上述代码修改为带参函数"><span class="nav-number">2.2.</span> <span class="nav-text">1.2将上述代码修改为带参函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-Qt5中引入的消息重定向机制使用的回调函数"><span class="nav-number">3.</span> <span class="nav-text">三  Qt5中引入的消息重定向机制使用的回调函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1使用场景"><span class="nav-number">3.1.</span> <span class="nav-text">1.1使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2Qt回调代码实例"><span class="nav-number">3.2.</span> <span class="nav-text">1.2Qt回调代码实例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-标准回调函数定义方式"><span class="nav-number">4.</span> <span class="nav-text">四 标准回调函数定义方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-回调函数定义"><span class="nav-number">4.1.</span> <span class="nav-text">1.回调函数定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-注册回调函数"><span class="nav-number">4.2.</span> <span class="nav-text">2.注册回调函数</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -946,9 +938,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://www.funful.ink/2018/06/08/JZ2440_uboot_2009_11_transplant_2_支持串口/';
-          this.page.identifier = '2018/06/08/JZ2440_uboot_2009_11_transplant_2_支持串口/';
-          this.page.title = 'JZ2440的uboot-2009-11移植<2>_串口输出';
+          this.page.url = 'http://www.funful.ink/2018/11/30/2018-12-02-callback-function/';
+          this.page.identifier = '2018/11/30/2018-12-02-callback-function/';
+          this.page.title = 'return不同类型变量的区别';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://.disqus.com/embed.js';
