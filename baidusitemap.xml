@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://www.funful.ink/2019/03/09/Linux%E7%9A%84%E6%96%87%E4%BB%B6IO/</loc>
-    <lastmod>2019-03-09T08:32:16.498Z</lastmod>
+    <loc>http://www.funful.ink/2019/01/15/Linux%E7%9A%84%E6%96%87%E4%BB%B6IO/</loc>
+    <lastmod>2019-03-09T08:52:35.362Z</lastmod>
+  </url>  <url>
+    <loc>http://www.funful.ink/2018/11/21/Linux_LinkSharelib/</loc>
+    <lastmod>2019-03-09T08:52:35.152Z</lastmod>
   </url>  <url>
     <loc>http://www.funful.ink/2018/12/02/2018-12-02-callback-function/</loc>
     <lastmod>2018-12-02T15:11:02.108Z</lastmod>
@@ -18,9 +21,6 @@
   </url>  <url>
     <loc>http://www.funful.ink/2018/05/25/linux+Qt_c_conplicationMplayer/</loc>
     <lastmod>2018-11-21T16:56:48.055Z</lastmod>
-  </url>  <url>
-    <loc>http://www.funful.ink/2018/11/22/Linux_LinkSharelib/</loc>
-    <lastmod>2018-11-21T16:42:39.694Z</lastmod>
   </url>  <url>
     <loc>http://www.funful.ink/2018/11/20/Technical_articles_1/</loc>
     <lastmod>2018-11-20T05:13:56.286Z</lastmod>
