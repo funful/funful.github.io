@@ -118,7 +118,7 @@
 
 
 
-  <meta name="keywords" content="AT指令集,ESP8266,TCP通信," />
+  <meta name="keywords" content="ESP8266,AT指令集,TCP通信," />
 
 
 
@@ -130,7 +130,7 @@
 
 
 <meta name="description" content="这个教程是基于ESP8266和手机与电脑的TCP通信。">
-<meta name="keywords" content="AT指令集,ESP8266,TCP通信">
+<meta name="keywords" content="ESP8266,AT指令集,TCP通信">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ES8266模块AT操作&lt;多连接TCP通信&gt;">
 <meta property="og:url" content="http://www.funful.ink/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/index.html">
@@ -535,11 +535,11 @@
 <li><p>ESP82266多链接最多可以连接5个设备，上面我们知道手机分配的ID为0，电脑ID为1</p>
 </li>
 <li><p>先给手机端发送，执行命令</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AT+<span class="attribute">CIPSEND</span>=&lt;link ID&gt;,&lt;length&gt;</span><br><span class="line">AT+<span class="attribute">CIPSEND</span>=0,11（给ID0发送11个字节数据）</span><br><span class="line">OK</span><br><span class="line">&gt;</span><br><span class="line">Hello,PHONE</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AT+CIPSEND=&lt;link ID&gt;,&lt;length&gt;</span><br><span class="line">AT+CIPSEND=0,11（给ID0发送11个字节数据）</span><br><span class="line">OK</span><br><span class="line">&gt;</span><br><span class="line">Hello,PHONE</span><br></pre></td></tr></table></figure>
 <p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_8.jpg" alt=""></p>
 </li>
 <li><p>给电脑端发送，执行命令</p>
-<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">AT+CIPSEND=<span class="number">1</span>,<span class="number">11</span>（给ID1发送<span class="number">11</span>个字节数据）</span><br><span class="line">OK</span><br><span class="line">&gt;</span><br><span class="line">Hello,PC</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">AT+CIPSEND=1,11（给ID1发送11个字节数据）</span><br><span class="line">OK</span><br><span class="line">&gt;</span><br><span class="line">Hello,PC</span><br></pre></td></tr></table></figure>
 <p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_7.png" alt=""></p>
 </li>
 </ol>
@@ -592,9 +592,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/AT指令集/" rel="tag"><i class="fa fa-tag"></i> AT指令集</a>
-          
             <a href="/tags/ESP8266/" rel="tag"><i class="fa fa-tag"></i> ESP8266</a>
+          
+            <a href="/tags/AT指令集/" rel="tag"><i class="fa fa-tag"></i> AT指令集</a>
           
             <a href="/tags/TCP通信/" rel="tag"><i class="fa fa-tag"></i> TCP通信</a>
           
@@ -724,7 +724,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -805,7 +805,7 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

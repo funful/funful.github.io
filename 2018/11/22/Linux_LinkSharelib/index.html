@@ -507,9 +507,9 @@
 </li>
 <li><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">内容如下:</span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdio.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdlib.h"</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">"Welcome !!\r\n"</span>); </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
-<li><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc test1.c -o test1  <span class="comment">;这是默认动态链接</span></span><br></pre></td></tr></table></figure>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc test1.c -o test1  ;这是默认动态链接</span><br></pre></td></tr></table></figure>
 </li>
-<li><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc test1.<span class="built_in">c</span> -o test1_1 -<span class="keyword">static</span> ;这是静态链接</span><br></pre></td></tr></table></figure>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc test1.c -o test1_1 -static ;这是静态链接</span><br></pre></td></tr></table></figure>
 <p><img src="http://cdn.funful.ink/2018-11-19.png" alt=""></p>
 </li>
 </ol>
@@ -529,10 +529,10 @@
 </ol>
 <h2 id="使用动态库"><a href="#使用动态库" class="headerlink" title="使用动态库"></a>使用动态库</h2><ol>
 <li><p>创建一个test3.c</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdio.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdlib.h"</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span>  <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line"> Funful_call();</span><br><span class="line"> </span><br><span class="line">    </span><br><span class="line"> <span class="keyword">return</span>  <span class="number">0</span>;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;stdio.h&quot;</span><br><span class="line">#include &quot;stdlib.h&quot;</span><br><span class="line">int  main(void) &#123;</span><br><span class="line">    </span><br><span class="line"> Funful_call();</span><br><span class="line"> </span><br><span class="line">    </span><br><span class="line"> return  0;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>编译 </p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -W test3<span class="selector-class">.c</span>  -o test3 -L ./  -lfunful</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -W test3.c  -o test3 -L ./  -lfunful</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>运行会发现找不到libfunful.so  ,这是因为我们上面只是指定了编译时候的动态库地址,但是我们运行的时候还是在系统默认的库地址(/usr/lib ;/lib)进行链接;可以通过/ect/ld.so.conf,配置文件和环境变量LD_LiBRARY_PATH指示额外的动态库路径.</p>
 <p>还可以通过libfunful.so移到/usr/lib或者/lib里面,这样我们的库就可以正常运行.</p>
@@ -767,7 +767,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -848,7 +848,7 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

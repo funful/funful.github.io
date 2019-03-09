@@ -497,43 +497,43 @@
 <li>Nasm源码下载地址：<a href="https://www.nasm.us/pub/nasm/releasebuilds/2.14rc16/" target="_blank" rel="noopener">Nasm</a>  </li>
 <li>解压并进入解压目录</li>
 <li><p>执行命令</p>
-<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure</span><br><span class="line"><span class="built_in">make</span></span><br><span class="line"><span class="built_in">make</span> install</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>简单指令</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">汇编指令：</span><br><span class="line"><span class="selector-tag">nasm</span> <span class="selector-tag">boot</span><span class="selector-class">.asm</span> <span class="selector-tag">-o</span> <span class="selector-tag">boot</span><span class="selector-class">.bin</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">汇编指令：</span><br><span class="line">nasm boot.asm -o boot.bin</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <h2 id="Bochs"><a href="#Bochs" class="headerlink" title="Bochs"></a>Bochs</h2><ol>
 <li>Bochs下载地址：<a href="http://bochs.sourceforge.net/" target="_blank" rel="noopener">Bochs官网</a></li>
 <li>解压并进入解压目录</li>
 <li><p>Bochs依赖软件安装</p>
-<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get <span class="keyword">install </span><span class="keyword">build-essential</span></span><br><span class="line"><span class="keyword">sudo </span>apt-get <span class="keyword">install </span> <span class="keyword">xorg-dev</span></span><br><span class="line"><span class="keyword">如果执行4命令报出别错误的话可能是别的依赖软件没有安装 </span>，请自行百度</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential</span><br><span class="line">sudo apt-get install  xorg-dev</span><br><span class="line">如果执行4命令报出别错误的话可能是别的依赖软件没有安装 ，请自行百度</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>执行以下命令</p>
-<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure --<span class="keyword">enable</span>-debugger --<span class="keyword">enable</span>-disasm   ；<span class="comment">//这个命令是将bochs设置为可调式的</span></span><br><span class="line"><span class="built_in">make</span></span><br><span class="line"><span class="built_in">make</span> instal</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure --enable-debugger --enable-disasm   ；//这个命令是将bochs设置为可调式的</span><br><span class="line">make</span><br><span class="line">make instal</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>Bochs简单命令</p>
-<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">我们在使用bochs启动的时候可以选择硬盘启动或者是软盘启动，所以这个时候，我们需要配置相应的配置文件，我们可能会在bochs源码里面发现有“.bochsrc”或者是“bochsrc” ，我们也可以自己写一个配置文件使用“bochs -f yourname” 这命令来启动我们自己写的配置文件“yourname<span class="string">"。（linux下的.文件被隐藏使用 “ls -al”查看）</span></span><br><span class="line">启动配置文件:  bochs -f yourname（直接bochs也可以启动默认配置文件）</span><br><span class="line">继续执行直到遇见断点：c</span><br><span class="line">单步执行 : n</span><br><span class="line">看寄存器信息：dump_cpu</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">我们在使用bochs启动的时候可以选择硬盘启动或者是软盘启动，所以这个时候，我们需要配置相应的配置文件，我们可能会在bochs源码里面发现有“.bochsrc”或者是“bochsrc” ，我们也可以自己写一个配置文件使用“bochs -f yourname” 这命令来启动我们自己写的配置文件“yourname&quot;。（linux下的.文件被隐藏使用 “ls -al”查看）</span><br><span class="line">启动配置文件:  bochs -f yourname（直接bochs也可以启动默认配置文件）</span><br><span class="line">继续执行直到遇见断点：c</span><br><span class="line">单步执行 : n</span><br><span class="line">看寄存器信息：dump_cpu</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <h1 id="打印一个”Hello-World”"><a href="#打印一个”Hello-World”" class="headerlink" title="打印一个”Hello World”"></a>打印一个”Hello World”</h1><p>在我们接触C语言的时候最基础的工程就是使用printf打印出”Hello World!”.这里我们也使用汇编打印一个hello</p>
 <ol>
 <li><p>创建boot.asm并书写一下内容</p>
-<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">org <span class="number">07c00h</span>          <span class="comment">; 告诉编译器程序加载到7c00处</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">ax</span>, <span class="built_in">cs</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">ds</span>, <span class="built_in">ax</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">es</span>, <span class="built_in">ax</span></span><br><span class="line"><span class="keyword">call</span>    DispStr         <span class="comment">; 调用显示字符串例程</span></span><br><span class="line"><span class="keyword">jmp</span> $          <span class="comment">; 无限循环</span></span><br><span class="line"><span class="symbol">DispStr:</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">ax</span>, BootMessage</span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">bp</span>, <span class="built_in">ax</span>          <span class="comment">; ES:BP = 串地址</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">cx</span>, <span class="number">16</span>          <span class="comment">; CX = 串长度</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">ax</span>, <span class="number">01301h</span>      <span class="comment">; AH = 13,  AL = 01h</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">bx</span>, <span class="number">000ch</span>       <span class="comment">; 页号为0(BH = 0) 黑底红字(BL = 0Ch,高亮)</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">dl</span>, <span class="number">0</span></span><br><span class="line"><span class="keyword">int</span> <span class="number">10h</span>         <span class="comment">; 10h 号中断</span></span><br><span class="line"><span class="keyword">ret</span></span><br><span class="line"><span class="symbol">BootMessage:</span>        <span class="built_in">db</span>  <span class="string">"Hello, OS world!"</span></span><br><span class="line"><span class="built_in">times</span>   <span class="number">510</span>-($-$$)   <span class="built_in">db</span>  <span class="number">0</span>   <span class="comment">; 填充剩下的空间，使生成的二进制代码恰好为512字节</span></span><br><span class="line"><span class="built_in">dw</span>  <span class="number">0xaa55</span>              <span class="comment">; 结束标志</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">org 07c00h          ; 告诉编译器程序加载到7c00处</span><br><span class="line">mov ax, cs</span><br><span class="line">mov ds, ax</span><br><span class="line">mov es, ax</span><br><span class="line">call    DispStr         ; 调用显示字符串例程</span><br><span class="line">jmp $          ; 无限循环</span><br><span class="line">DispStr:</span><br><span class="line">mov ax, BootMessage</span><br><span class="line">mov bp, ax          ; ES:BP = 串地址</span><br><span class="line">mov cx, 16          ; CX = 串长度</span><br><span class="line">mov ax, 01301h      ; AH = 13,  AL = 01h</span><br><span class="line">mov bx, 000ch       ; 页号为0(BH = 0) 黑底红字(BL = 0Ch,高亮)</span><br><span class="line">mov dl, 0</span><br><span class="line">int 10h         ; 10h 号中断</span><br><span class="line">ret</span><br><span class="line">BootMessage:        db  &quot;Hello, OS world!&quot;</span><br><span class="line">times   510-($-$$)   db  0   ; 填充剩下的空间，使生成的二进制代码恰好为512字节</span><br><span class="line">dw  0xaa55              ; 结束标志</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>生成bin文件</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">nasm</span> <span class="selector-tag">boot</span><span class="selector-class">.asm</span> <span class="selector-tag">-o</span> <span class="selector-tag">boot</span><span class="selector-class">.bin</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nasm boot.asm -o boot.bin</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>bximage生成512字节的虚拟软盘</p>
 <ol>
 <li>在终端下执行bximage <img src="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-1.png" alt=""></li>
 <li>选择1，再输入”fd”（选择虚拟软盘），再确认，再确认，最终生成1.44M的a.img文件</li>
-<li>也可以使用dd命令代替bximage，<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd <span class="attribute">if</span>=/dev/zero <span class="attribute">of</span>=a.img <span class="attribute">bs</span>=1440k <span class="attribute">count</span>=1</span><br></pre></td></tr></table></figure>
+<li>也可以使用dd命令代替bximage，<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd if=/dev/zero of=a.img bs=1440k count=1</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 </li>
 <li><p>dd命令将boot.bin烧录到a.img</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd <span class="attribute">if</span>=./boot.bin <span class="attribute">of</span>=./a.img <span class="attribute">bs</span>=512 <span class="attribute">count</span>=1 <span class="attribute">conv</span>=notrunc</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd if=./boot.bin of=./a.img bs=512 count=1 conv=notrunc</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>配置bochs文件</p>
 <ol>
@@ -734,7 +734,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -815,7 +815,7 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
