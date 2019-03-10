@@ -118,7 +118,7 @@
 
 
 
-  <meta name="keywords" content="ESP8266,AT指令集,TCP通信," />
+  <meta name="keywords" content="RAID,独立冗余磁盘阵列," />
 
 
 
@@ -129,27 +129,22 @@
 
 
 
-<meta name="description" content="这个教程是基于ESP8266和手机与电脑的TCP通信。">
-<meta name="keywords" content="ESP8266,AT指令集,TCP通信">
+<meta name="description" content="独立冗余磁盘阵列，简称RAID，是通过多个磁盘相互组合提高对硬盘设备IO读取速度和数据安全性的一种技术，目前已有的磁盘阵列方案比较多，标准的RAID有：RAID0、RAID1、RAID2、RAID3、RAID4、RAID5、RAID6。本文主要讲解及在VM虚拟机下使用相关命令配置RAID0、RAID1、RAID5、6、10。">
+<meta name="keywords" content="RAID,独立冗余磁盘阵列">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ES8266模块AT操作&lt;多连接TCP通信&gt;">
-<meta property="og:url" content="http://www.funful.ink/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/index.html">
+<meta property="og:title" content="独立冗余磁盘阵列（RAID）">
+<meta property="og:url" content="http://www.funful.ink/2019/03/09/2019-3-9_RAID_Description/index.html">
 <meta property="og:site_name" content="FunfulBlog">
-<meta property="og:description" content="这个教程是基于ESP8266和手机与电脑的TCP通信。">
+<meta property="og:description" content="独立冗余磁盘阵列，简称RAID，是通过多个磁盘相互组合提高对硬盘设备IO读取速度和数据安全性的一种技术，目前已有的磁盘阵列方案比较多，标准的RAID有：RAID0、RAID1、RAID2、RAID3、RAID4、RAID5、RAID6。本文主要讲解及在VM虚拟机下使用相关命令配置RAID0、RAID1、RAID5、6、10。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_picture.jpg">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_1.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_5.jpg">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_3.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_4.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_8.jpg">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_7.png">
-<meta property="og:updated_time" content="2018-07-25T04:46:33.245Z">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-9_RAID0.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-9_RAID1.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-9_RAID5.png">
+<meta property="og:updated_time" content="2019-03-10T05:48:10.719Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ES8266模块AT操作&lt;多连接TCP通信&gt;">
-<meta name="twitter:description" content="这个教程是基于ESP8266和手机与电脑的TCP通信。">
-<meta name="twitter:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_picture.jpg">
+<meta name="twitter:title" content="独立冗余磁盘阵列（RAID）">
+<meta name="twitter:description" content="独立冗余磁盘阵列，简称RAID，是通过多个磁盘相互组合提高对硬盘设备IO读取速度和数据安全性的一种技术，目前已有的磁盘阵列方案比较多，标准的RAID有：RAID0、RAID1、RAID2、RAID3、RAID4、RAID5、RAID6。本文主要讲解及在VM虚拟机下使用相关命令配置RAID0、RAID1、RAID5、6、10。">
+<meta name="twitter:image" content="http://cdn.funful.ink/Blog_2019-3-9_RAID0.png">
 
 
 
@@ -179,13 +174,13 @@
 
 
 
-  <link rel="canonical" href="http://www.funful.ink/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/"/>
+  <link rel="canonical" href="http://www.funful.ink/2019/03/09/2019-3-9_RAID_Description/"/>
 
 
 
 
 
-  <title>ES8266模块AT操作<多连接TCP通信> | FunfulBlog</title>
+  <title>独立冗余磁盘阵列（RAID） | FunfulBlog</title>
   
 
 
@@ -356,7 +351,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/">
+    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/03/09/2019-3-9_RAID_Description/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ZhaoH.T.">
@@ -373,7 +368,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">ES8266模块AT操作<多连接TCP通信></h1>
+          <h1 class="post-title" itemprop="name headline">独立冗余磁盘阵列（RAID）</h1>
         
 
         <div class="post-meta">
@@ -386,8 +381,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-07T20:20:23+08:00">
-                2018-11-07
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-09T08:00:00+08:00">
+                2019-03-09
               </time>
             
 
@@ -409,8 +404,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ESP8266/" itemprop="url" rel="index">
-                    <span itemprop="name">ESP8266</span>
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
                   </a>
                 </span>
 
@@ -427,9 +422,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/#comments" itemprop="discussionUrl">
+                <a href="/2019/03/09/2019-3-9_RAID_Description/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2019/03/09/2019-3-9_RAID_Description/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -438,7 +433,7 @@
 
           
           
-             <span id="/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/" class="leancloud_visitors" data-flag-title="ES8266模块AT操作<多连接TCP通信>">
+             <span id="/2019/03/09/2019-3-9_RAID_Description/" class="leancloud_visitors" data-flag-title="独立冗余磁盘阵列（RAID）">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -463,7 +458,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  509
+                  521
                 </span>
               
 
@@ -488,63 +483,15 @@
       
 
       
-        <p>这个教程是基于ESP8266和手机与电脑的TCP通信。</p>
+        <p>独立冗余磁盘阵列，简称RAID，是通过多个磁盘相互组合提高对硬盘设备IO读取速度和数据安全性的一种技术，目前已有的磁盘阵列方案比较多，标准的RAID有：RAID0、RAID1、RAID2、RAID3、RAID4、RAID5、RAID6。本文主要讲解及在VM虚拟机下使用相关命令配置RAID0、RAID1、RAID5、6、10。</p>
 <a id="more"></a>
-<h1 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h1><ul>
-<li><a href="http://wiki.ai-thinker.com/_media/esp8266/docs/4a-esp8266_at_instruction_set_cn.pdf" target="_blank" rel="noopener">AT的指令集</a></li>
-<li><a href="http://wiki.ai-thinker.com/_media/esp8266/docs/4b-esp8266_at_command_examples_cn.pdf" target="_blank" rel="noopener">AT的示例教程</a></li>
-<li>Android版的TCP调试助手可以去软件库里面下载</li>
-<li>PC版的调试助手可以去CSDN下载，链接 <a href="https://download.csdn.net/download/ajian0051/9478097" target="_blank" rel="noopener">Download</a></li>
-</ul>
-<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="ESP8266的AT操作"><a href="#ESP8266的AT操作" class="headerlink" title="ESP8266的AT操作"></a>ESP8266的AT操作</h2><ol>
-<li>AT+RST（重启）</li>
-<li>AT+RESTORE（恢复出厂设置，第一次操作建议不要，如果不能正常工作的话，可以执行该命令）</li>
-<li>AT+CWMODE_DEF=3（WIFI模式（STA/AP/STA+AP））</li>
-<li>AT+CWSAP=”OneNET”,”123456789”,1,3（设置ssoftAP的ssid，密码，通道号1，WAP2_PSK加密）</li>
-<li>AT+CIPMUX=1（多连接）</li>
-<li>AT+CIPSERVER=1,8080（设置TCP server 的端口号8080）</li>
-<li>这样我们就设置好了，手机和电脑都可以正常连接到“OneNET”，我们还要注意下ESP8266的IP和端口，上面已经知道端口号是8080，服务器IP是192.168.4.1，可以使用”AT+CIFSR”得知。</li>
-</ol>
-<h2 id="手机端-amp-PC连接"><a href="#手机端-amp-PC连接" class="headerlink" title="手机端&amp;PC连接"></a>手机端&amp;PC连接</h2><ol>
-<li><p>手机开启wifi连接OneNET</p>
-</li>
-<li><p>手机端打开TCP调试助手，设置如图，点击connect</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_picture.jpg" alt=""></p>
-</li>
-<li><p>电脑连接ESP8266的串口显示</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_1.png" alt=""></p>
-</li>
-<li><p>这就显示连接成功了，下来电脑端也连接”OneNET”，打开网络调试助手，设置如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2.png" alt=""></p>
-</li>
-<li><p>上面四步我们就将手机和电脑作为TCP client 连接到电脑了，下面测试通信。</p>
-</li>
-</ol>
-<h2 id="通信"><a href="#通信" class="headerlink" title="通信"></a>通信</h2><h3 id="ESP8266接收"><a href="#ESP8266接收" class="headerlink" title="ESP8266接收"></a>ESP8266接收</h3><ol>
-<li><p>手机端发送如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_5.jpg" alt=""></p>
-</li>
-<li><p>电脑端发送如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_3.png" alt=""></p>
-</li>
-<li><p>ESP8266串口显示</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_4.png" alt=""></p>
-</li>
-</ol>
-<h3 id="ESP8266发送"><a href="#ESP8266发送" class="headerlink" title="ESP8266发送"></a>ESP8266发送</h3><ol>
-<li><p>ESP82266多链接最多可以连接5个设备，上面我们知道手机分配的ID为0，电脑ID为1</p>
-</li>
-<li><p>先给手机端发送，执行命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AT+CIPSEND=&lt;link ID&gt;,&lt;length&gt;</span><br><span class="line">AT+CIPSEND=0,11（给ID0发送11个字节数据）</span><br><span class="line">OK</span><br><span class="line">&gt;</span><br><span class="line">Hello,PHONE</span><br></pre></td></tr></table></figure>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_8.jpg" alt=""></p>
-</li>
-<li><p>给电脑端发送，执行命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">AT+CIPSEND=1,11（给ID1发送11个字节数据）</span><br><span class="line">OK</span><br><span class="line">&gt;</span><br><span class="line">Hello,PC</span><br></pre></td></tr></table></figure>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_7.png" alt=""></p>
-</li>
-</ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>使用AT指令开发ESP8266，比较简单，但是ESP8266内置MCU，这使得浪费了硬件资源。这篇文章是基于TCP多连接的通信，至于单连接，就更简单了。</p>
-
+<h1 id="RAID介绍"><a href="#RAID介绍" class="headerlink" title="RAID介绍"></a>RAID介绍</h1><h2 id="RAID0"><a href="#RAID0" class="headerlink" title="RAID0"></a>RAID0</h2><p>RAID0是通过硬件或者是软件的方式将其连接在一起，至少需要两块硬盘，数据分段之后依次写入各个物理硬盘上面。RAID的存储速度最快，但是没有备份，空间利用率达到100%，但是硬盘损坏之后，数据无法修复。</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID0.png" alt=""></p>
+<h2 id="RAID1"><a href="#RAID1" class="headerlink" title="RAID1"></a>RAID1</h2><p>RAID0是对数据分开存放的，任何一个硬盘发生故障，那么整个数据都将不可用。RAID1则提高数据安全性，将数据同时存入多个硬盘当中，相当于镜像存储，磁盘阵列无论挂载多少个硬盘，都相当于容量最小的硬盘，写入速度相对于RAID0慢，但是数据安全性大大提高，但是这种读取速度是一个硬盘读取速度乘于硬盘个数。</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID1.png" alt=""></p>
+<h2 id="RAID5"><a href="#RAID5" class="headerlink" title="RAID5"></a>RAID5</h2><p>RAID1虽然安全性大大提高，但是硬盘空间利用率大大降低。RAID5兼顾RAID0和RAID1的优点提出来的一种技术方案。RAID5与RAID3和RAID4不同的是RAID4是使用固定盘来存储奇偶校验位，而RAID5是将数据和数据对应的校验位在分散存储在各个硬盘上面。RAID5的数据和RAID0数据分布相似，都是把数据以块为单位分布到各个评判上面。上面这两个RAID5技术方案特点，使得RAID至少需要3块磁盘。RAID5没有备份数据，只保存数据的校验位，在硬盘损坏之后通过奇偶校验位进行数据恢复。RAID5受到系统故障之后，重建时间比较长。</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID5.png" alt=""></p>
+<h2 id="RAID6"><a href="#RAID6" class="headerlink" title="RAID6"></a>RAID6</h2><h2 id="RAID10"><a href="#RAID10" class="headerlink" title="RAID10"></a>RAID10</h2><h1 id="虚拟磁盘部署阵列实验"><a href="#虚拟磁盘部署阵列实验" class="headerlink" title="虚拟磁盘部署阵列实验"></a>虚拟磁盘部署阵列实验</h1><h2 id="RAID0-1"><a href="#RAID0-1" class="headerlink" title="RAID0"></a>RAID0</h2><h2 id="RAID1-1"><a href="#RAID1-1" class="headerlink" title="RAID1"></a>RAID1</h2><h2 id="RAID5-1"><a href="#RAID5-1" class="headerlink" title="RAID5"></a>RAID5</h2><h2 id="RAID6-1"><a href="#RAID6-1" class="headerlink" title="RAID6"></a>RAID6</h2><h2 id="RADI10"><a href="#RADI10" class="headerlink" title="RADI10"></a>RADI10</h2>
       
     </div>
     
@@ -577,7 +524,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接:</strong>
-    <a href="http://www.funful.ink/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/" title="ES8266模块AT操作<多连接TCP通信>">http://www.funful.ink/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/</a>
+    <a href="http://www.funful.ink/2019/03/09/2019-3-9_RAID_Description/" title="独立冗余磁盘阵列（RAID）">http://www.funful.ink/2019/03/09/2019-3-9_RAID_Description/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明: </strong>
@@ -592,11 +539,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/ESP8266/" rel="tag"><i class="fa fa-tag"></i> ESP8266</a>
+            <a href="/tags/RAID/" rel="tag"><i class="fa fa-tag"></i> RAID</a>
           
-            <a href="/tags/AT指令集/" rel="tag"><i class="fa fa-tag"></i> AT指令集</a>
-          
-            <a href="/tags/TCP通信/" rel="tag"><i class="fa fa-tag"></i> TCP通信</a>
+            <a href="/tags/独立冗余磁盘阵列/" rel="tag"><i class="fa fa-tag"></i> 独立冗余磁盘阵列</a>
           
         </div>
       
@@ -609,8 +554,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/03/Orange's_Implementation_of_an_operating_system_1th_build_environment/" rel="next" title="Orange's:一个操作系统的实现_1th_环境搭建">
-                <i class="fa fa-chevron-left"></i> Orange's:一个操作系统的实现_1th_环境搭建
+              <a href="/2019/01/15/Linux的文件IO/" rel="next" title="Linux 文件IO">
+                <i class="fa fa-chevron-left"></i> Linux 文件IO
               </a>
             
           </div>
@@ -618,10 +563,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/11/14/STM32_FreeRTOS_config_1/" rel="prev" title="STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1>">
-                STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1> <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -784,7 +725,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#文档"><span class="nav-number">1.</span> <span class="nav-text">文档</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#步骤"><span class="nav-number">2.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ESP8266的AT操作"><span class="nav-number">2.1.</span> <span class="nav-text">ESP8266的AT操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#手机端-amp-PC连接"><span class="nav-number">2.2.</span> <span class="nav-text">手机端&amp;PC连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通信"><span class="nav-number">2.3.</span> <span class="nav-text">通信</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ESP8266接收"><span class="nav-number">2.3.1.</span> <span class="nav-text">ESP8266接收</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ESP8266发送"><span class="nav-number">2.3.2.</span> <span class="nav-text">ESP8266发送</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RAID介绍"><span class="nav-number">1.</span> <span class="nav-text">RAID介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID0"><span class="nav-number">1.1.</span> <span class="nav-text">RAID0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID1"><span class="nav-number">1.2.</span> <span class="nav-text">RAID1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID5"><span class="nav-number">1.3.</span> <span class="nav-text">RAID5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID6"><span class="nav-number">1.4.</span> <span class="nav-text">RAID6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID10"><span class="nav-number">1.5.</span> <span class="nav-text">RAID10</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#虚拟磁盘部署阵列实验"><span class="nav-number">2.</span> <span class="nav-text">虚拟磁盘部署阵列实验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID0-1"><span class="nav-number">2.1.</span> <span class="nav-text">RAID0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID1-1"><span class="nav-number">2.2.</span> <span class="nav-text">RAID1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID5-1"><span class="nav-number">2.3.</span> <span class="nav-text">RAID5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID6-1"><span class="nav-number">2.4.</span> <span class="nav-text">RAID6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RADI10"><span class="nav-number">2.5.</span> <span class="nav-text">RADI10</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -955,9 +896,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://www.funful.ink/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/';
-          this.page.identifier = '2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/';
-          this.page.title = 'ES8266模块AT操作<多连接TCP通信>';
+          this.page.url = 'http://www.funful.ink/2019/03/09/2019-3-9_RAID_Description/';
+          this.page.identifier = '2019/03/09/2019-3-9_RAID_Description/';
+          this.page.title = '独立冗余磁盘阵列（RAID）';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://.disqus.com/embed.js';
