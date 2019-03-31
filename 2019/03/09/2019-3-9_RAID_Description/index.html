@@ -139,8 +139,17 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-9_RAID0.png">
 <meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-9_RAID1.png">
-<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-9_RAID5.png">
-<meta property="og:updated_time" content="2019-03-10T05:48:10.719Z">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-9_RAID5（nor）.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-9_RAID6.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-9_RAID10.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-10_lsblk.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-10_mdadm0.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-10_mdadm0iointest.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-10_raid10.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-10_raid10des.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-10_raid10rebui.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-10_raid10add.png">
+<meta property="og:updated_time" content="2019-03-10T15:30:09.984Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="独立冗余磁盘阵列（RAID）">
 <meta name="twitter:description" content="独立冗余磁盘阵列，简称RAID，是通过多个磁盘相互组合提高对硬盘设备IO读取速度和数据安全性的一种技术，目前已有的磁盘阵列方案比较多，标准的RAID有：RAID0、RAID1、RAID2、RAID3、RAID4、RAID5、RAID6。本文主要讲解及在VM虚拟机下使用相关命令配置RAID0、RAID1、RAID5、6、10。">
@@ -372,7 +381,11 @@
         
 
         <div class="post-meta">
-       
+      
+        <i class="fa fa-thumb-tack"></i>
+        <font size="5" color="red">置顶</font>
+        <span class="post-meta-divider">|</span>
+         
                 <span class="post-time">
             
               <span class="post-meta-item-icon">
@@ -458,7 +471,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  521
+                  2,180
                 </span>
               
 
@@ -485,13 +498,158 @@
       
         <p>独立冗余磁盘阵列，简称RAID，是通过多个磁盘相互组合提高对硬盘设备IO读取速度和数据安全性的一种技术，目前已有的磁盘阵列方案比较多，标准的RAID有：RAID0、RAID1、RAID2、RAID3、RAID4、RAID5、RAID6。本文主要讲解及在VM虚拟机下使用相关命令配置RAID0、RAID1、RAID5、6、10。</p>
 <a id="more"></a>
-<h1 id="RAID介绍"><a href="#RAID介绍" class="headerlink" title="RAID介绍"></a>RAID介绍</h1><h2 id="RAID0"><a href="#RAID0" class="headerlink" title="RAID0"></a>RAID0</h2><p>RAID0是通过硬件或者是软件的方式将其连接在一起，至少需要两块硬盘，数据分段之后依次写入各个物理硬盘上面。RAID的存储速度最快，但是没有备份，空间利用率达到100%，但是硬盘损坏之后，数据无法修复。</p>
+<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><ul>
+<li>系统：RHEL7.6 </li>
+<li>虚拟机：VM</li>
+</ul>
+<h1 id="RAID介绍"><a href="#RAID介绍" class="headerlink" title="RAID介绍"></a>RAID介绍</h1><h2 id="RAID0"><a href="#RAID0" class="headerlink" title="RAID0"></a>RAID0</h2><p>RAID0是通过硬件或者是软件的方式将其连接在一起，至少需要两块硬盘，数据分段之后依次写入各个物理硬盘上面。RAID的存储速度最快，但是没有备份，空间利用率达到100%，但是硬盘损坏之后，数据无法修复。零容错。</p>
 <p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID0.png" alt=""></p>
 <h2 id="RAID1"><a href="#RAID1" class="headerlink" title="RAID1"></a>RAID1</h2><p>RAID0是对数据分开存放的，任何一个硬盘发生故障，那么整个数据都将不可用。RAID1则提高数据安全性，将数据同时存入多个硬盘当中，相当于镜像存储，磁盘阵列无论挂载多少个硬盘，都相当于容量最小的硬盘，写入速度相对于RAID0慢，但是数据安全性大大提高，但是这种读取速度是一个硬盘读取速度乘于硬盘个数。</p>
 <p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID1.png" alt=""></p>
 <h2 id="RAID5"><a href="#RAID5" class="headerlink" title="RAID5"></a>RAID5</h2><p>RAID1虽然安全性大大提高，但是硬盘空间利用率大大降低。RAID5兼顾RAID0和RAID1的优点提出来的一种技术方案。RAID5与RAID3和RAID4不同的是RAID4是使用固定盘来存储奇偶校验位，而RAID5是将数据和数据对应的校验位在分散存储在各个硬盘上面。RAID5的数据和RAID0数据分布相似，都是把数据以块为单位分布到各个评判上面。上面这两个RAID5技术方案特点，使得RAID至少需要3块磁盘。RAID5没有备份数据，只保存数据的校验位，在硬盘损坏之后通过奇偶校验位进行数据恢复。RAID5受到系统故障之后，重建时间比较长。</p>
-<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID5.png" alt=""></p>
-<h2 id="RAID6"><a href="#RAID6" class="headerlink" title="RAID6"></a>RAID6</h2><h2 id="RAID10"><a href="#RAID10" class="headerlink" title="RAID10"></a>RAID10</h2><h1 id="虚拟磁盘部署阵列实验"><a href="#虚拟磁盘部署阵列实验" class="headerlink" title="虚拟磁盘部署阵列实验"></a>虚拟磁盘部署阵列实验</h1><h2 id="RAID0-1"><a href="#RAID0-1" class="headerlink" title="RAID0"></a>RAID0</h2><h2 id="RAID1-1"><a href="#RAID1-1" class="headerlink" title="RAID1"></a>RAID1</h2><h2 id="RAID5-1"><a href="#RAID5-1" class="headerlink" title="RAID5"></a>RAID5</h2><h2 id="RAID6-1"><a href="#RAID6-1" class="headerlink" title="RAID6"></a>RAID6</h2><h2 id="RADI10"><a href="#RADI10" class="headerlink" title="RADI10"></a>RADI10</h2>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID5（nor）.png" alt=""></p>
+<h2 id="RAID6"><a href="#RAID6" class="headerlink" title="RAID6"></a>RAID6</h2><p>RAID5可以知道，如果某一个盘故障之后，可以通过其他盘的校验位和其余的数据记性数据恢复，但是如果同时有两个盘故障的话，则不能完全进行数据恢复（假如上图的Disk1和Disk2同时损坏，A的数据可以通过A1和ParityA恢复，D的数据可以通过D3和ParityD恢复，而B,C的数据由于校验位数据丢失不能恢复）。所以这是出现RAID6，RAID6是在RAID5增加一个安全等级，就是RIAD6在RAID5的基础上，在其他盘又增加XOR校验区，这两个XOR校验使用不同的算法，这个阵列需要至少4块硬盘。这样磁盘阵列允许同时两个硬盘故障，容错功能提高。但是在写入数据的时候需要计算两个XOR区，速度大大降低，空间利用率也降低。</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID6.png" alt=""></p>
+<h2 id="RAID10"><a href="#RAID10" class="headerlink" title="RAID10"></a>RAID10</h2><p>由于RAID磁盘阵列的读写速度和数据安全性是相互制约，RAID10通过将RAID0和RAID1进行组合，他利用RAID0的快速读写和RAID1的安全性。性能超过RAID6和RAID5.只要同一组的硬盘不全部损坏，那么数据就不会丢失。RAID10至少需要4块硬盘。如图 ：</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID10.png" alt=""></p>
+<h2 id="热备磁盘"><a href="#热备磁盘" class="headerlink" title="热备磁盘"></a>热备磁盘</h2><p>针对磁盘阵列，不同的方案容错成都也不一样，一般都会有热备磁盘，也就是在磁盘阵列中某个磁盘挂了，热备磁盘可以立刻代替损坏磁盘的位置，这时候，我们的磁盘阵列就会重建，一个磁盘阵列可以包含多个热备磁盘。</p>
+<h1 id="mdadm命令"><a href="#mdadm命令" class="headerlink" title="mdadm命令"></a>mdadm命令</h1><p>mdadm命令是Linux下创建和管理磁盘阵列的命令，具体参数如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">参数</th>
+<th style="text-align:center">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">-a</td>
+<td style="text-align:center">检测设备名称</td>
+</tr>
+<tr>
+<td style="text-align:center">-n</td>
+<td style="text-align:center">指定设备数量</td>
+</tr>
+<tr>
+<td style="text-align:center">-l</td>
+<td style="text-align:center">设定RAID级别</td>
+</tr>
+<tr>
+<td style="text-align:center">-C</td>
+<td style="text-align:center">创建磁盘阵列名称</td>
+</tr>
+<tr>
+<td style="text-align:center">-v</td>
+<td style="text-align:center">显示创建过程</td>
+</tr>
+<tr>
+<td style="text-align:center">-f</td>
+<td style="text-align:center">模拟设备损坏</td>
+</tr>
+<tr>
+<td style="text-align:center">-r</td>
+<td style="text-align:center">移除设备</td>
+</tr>
+<tr>
+<td style="text-align:center">-Q</td>
+<td style="text-align:center">查看摘要信息</td>
+</tr>
+<tr>
+<td style="text-align:center">-D</td>
+<td style="text-align:center">查看详细信息</td>
+</tr>
+<tr>
+<td style="text-align:center">-S</td>
+<td style="text-align:center">停止磁盘阵列</td>
+</tr>
+</tbody>
+</table>
+<h1 id="虚拟磁盘部署磁盘阵列实验"><a href="#虚拟磁盘部署磁盘阵列实验" class="headerlink" title="虚拟磁盘部署磁盘阵列实验"></a>虚拟磁盘部署磁盘阵列实验</h1><h2 id="RAID0-1"><a href="#RAID0-1" class="headerlink" title="RAID0"></a>RAID0</h2><ul>
+<li>步骤一（添加磁盘）</li>
+</ul>
+<p>在虚拟机系统关机状态下，添加两个SCSI磁盘。（虚拟机-&gt;设置-&gt;添加-&gt;硬盘-&gt;SCSI-&gt;创建新虚拟磁盘-&gt;容量20G，完成），按照这个步骤添加两个硬盘。</p>
+<ul>
+<li>步骤二（查看磁盘）</li>
+</ul>
+<p>虚拟机下开机（打开系统），进入终端（桌面版），使用lsblk或者“fdisk  -l”命令，可以看到我们添加的两个硬盘，如图：</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-10_lsblk.png" alt=""></p>
+<ul>
+<li>步骤三（分区）</li>
+</ul>
+<p>分区，上面步骤已经添加两个磁盘，下面使用fdisk对磁盘进行分区。1. “fdisk   /dev/sdb” （关于fdisk分区自行根据提示进行就可以，这里我们只分一个主分区，默认编号是1，大小是上限值就即可，设置完成之后，切记分区表同步到磁盘（w   write table to disk and exit））。重复操作对/dev/sdc进行分区 。（不对磁盘分区，应该也可以直接构建磁盘阵列也就是不需要第三步骤也可以）</p>
+<ul>
+<li>步骤四（创建磁盘阵列）</li>
+</ul>
+<p>使用mdadm命令创建磁盘阵列，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mdadm  -C  /dev/md0  -a yes   -l0   -n2   /dev/sdb1  /dev/sdc1</span><br></pre></td></tr></table></figure>
+<p>参数说明：  -C  创建阵列  ；  -a  yes  自动创建设备文件；  -l +数字 是阵列模式-l0就是说RAD0；-n2 是指连个磁盘创建磁盘阵列；</p>
+<ul>
+<li>步骤五（格式化）</li>
+</ul>
+<p>格式化磁盘阵列 “mkfs.xfs   /dev/md0”;  这个mkfs格式工具很强大，mkfs.ext3、mkfs.ext4.都比较方便。</p>
+<ul>
+<li>步骤六（查看磁盘阵列信息）</li>
+</ul>
+<p>查看我们创建的磁盘阵列：终端命令“cat  /proc/mdstat”或者使用“mdadm  -D   /dev/md0”详细查看RAID0 配置，如图：</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-10_mdadm0.png" alt=""></p>
+<ul>
+<li>步骤七（挂载）</li>
+</ul>
+<p>使用mount挂在磁盘阵列只能在本次开机有效，要想开机自动挂载可以将磁盘阵列信息写入到/etc/fstab。这里只使用mount挂载。“sudo mkdir /RAID/raid0”  ; “mount  /dev/md0    /RAID/raid0”。到此为止我们就可以正常使用磁盘阵列。</p>
+<ul>
+<li>步骤八（读取写入速度测试）</li>
+</ul>
+<ol>
+<li><p>写入测试</p>
+<p>先给磁盘阵列写入，使用dd和time命令，dd有复制功能，time可以计时,写入1GB。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">time dd  if=/dev/zero  of=/RAID/raid0/iointest bs=8k count=131072</span><br></pre></td></tr></table></figure>
+<p>在直接写入本地:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo time dd  if=/dev/zero  of=/home/funful/iointest bs=8k count=131072</span><br></pre></td></tr></table></figure>
+<p>如图可以看出来，虽然是虚拟磁盘模拟出来的，但是写入速度与时间还是有差距的(忽略数值，电脑配置比较低)。</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-10_mdadm0iointest.png" alt=""></p>
+</li>
+<li><p>读取测试</p>
+<p>先读取磁盘阵列数据，命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo time dd  if=/RAID/raid0/iointest   of=/dev/null  bs=8k count=131072</span><br></pre></td></tr></table></figure>
+<p>再测试读取本地数据，命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo time dd  if=/home/funful/iointest   of=/dev/null  bs=8k count=131072</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>由于各个磁盘阵列的方案实施过程相似，所以就不一一进行实验，下面只对RAID10进行创建</p>
+<h2 id="RADI10"><a href="#RADI10" class="headerlink" title="RADI10"></a>RADI10</h2><ul>
+<li><p>步骤一（添加磁盘）</p>
+<p>和RAID0的过程相似，在虚拟机系统关机状态下添加5个虚拟磁盘（每个20GB）,4个数据盘，一个热备份盘。如图：</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-10_raid10.png" alt=""></p>
+</li>
+<li><p>步骤二（创建磁盘阵列+备份盘 ）</p>
+<p>使用命令创建磁盘阵列：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mdadm -C /dev/md0 -n 4  -l 10 -x 1 /dev/sdb /dev/sdc /dev/sdd  /dev/sde  /dev/sdf</span><br></pre></td></tr></table></figure>
+<p>使用命令查看磁盘阵列信息：“mdadm -D    /dev/md0”  如图：</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-10_raid10des.png" alt=""></p>
+<p>从上图可以看出来，总共有5个磁盘，四个活动磁盘，一个备份磁盘。/dev/sdf作为备份盘。</p>
+</li>
+</ul>
+<ul>
+<li><p>步骤三（格式化磁盘阵列）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs.xfs   /dev/md0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>步骤四（主动破坏某个数据盘）</p>
+<p>使用mdadm的-f命令主动从磁盘阵列移除一个磁盘，命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mdadm /dev/md0 -f /dev/sdb</span><br></pre></td></tr></table></figure>
+<p>可以从图中可以看到，/dev/sdb已经挂了，而之前的备份盘正在顶替sdb的位置，而且正在rebuilding，所以此时活动盘只有3个。过一会再使用这个命令可以看到，rebuilding完毕之后，顶替之前位置。</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-10_raid10rebui.png" alt=""></p>
+</li>
+</ul>
+<ul>
+<li><p>步骤五（添加热备磁盘）</p>
+<p>下面我们将模拟损坏的磁盘，作为热备磁盘加进磁盘阵列，命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>移除损坏磁盘</span><br><span class="line">sudo mdadm  /dev/md0 -r /dev/sdb</span><br><span class="line"><span class="meta">   #</span>添加备份磁盘</span><br><span class="line">   sudo mdadm  /dev/md0 -a /dev/sdb</span><br></pre></td></tr></table></figure>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-10_raid10add.png" alt=""></p>
+<p>从上图可以看到我们刚才模拟损坏的sdb盘，已经作为热备份盘，添加到磁盘阵列当中。</p>
+</li>
+</ul>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>由于是使用虚拟磁盘来创建磁盘阵列，所以性能对比差距不是那么明显。但是我们可以通过软件的方式使用命令来管理磁盘阵列。</p>
+
       
     </div>
     
@@ -563,6 +721,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/30/2019-3-30_SSH/" rel="prev" title="SSH基本原理及使用<一>">
+                SSH基本原理及使用<一> <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -654,7 +816,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -676,7 +838,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -725,7 +887,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RAID介绍"><span class="nav-number">1.</span> <span class="nav-text">RAID介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID0"><span class="nav-number">1.1.</span> <span class="nav-text">RAID0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID1"><span class="nav-number">1.2.</span> <span class="nav-text">RAID1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID5"><span class="nav-number">1.3.</span> <span class="nav-text">RAID5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID6"><span class="nav-number">1.4.</span> <span class="nav-text">RAID6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID10"><span class="nav-number">1.5.</span> <span class="nav-text">RAID10</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#虚拟磁盘部署阵列实验"><span class="nav-number">2.</span> <span class="nav-text">虚拟磁盘部署阵列实验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID0-1"><span class="nav-number">2.1.</span> <span class="nav-text">RAID0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID1-1"><span class="nav-number">2.2.</span> <span class="nav-text">RAID1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID5-1"><span class="nav-number">2.3.</span> <span class="nav-text">RAID5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID6-1"><span class="nav-number">2.4.</span> <span class="nav-text">RAID6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RADI10"><span class="nav-number">2.5.</span> <span class="nav-text">RADI10</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#环境"><span class="nav-number">1.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RAID介绍"><span class="nav-number">2.</span> <span class="nav-text">RAID介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID0"><span class="nav-number">2.1.</span> <span class="nav-text">RAID0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID1"><span class="nav-number">2.2.</span> <span class="nav-text">RAID1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID5"><span class="nav-number">2.3.</span> <span class="nav-text">RAID5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID6"><span class="nav-number">2.4.</span> <span class="nav-text">RAID6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID10"><span class="nav-number">2.5.</span> <span class="nav-text">RAID10</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#热备磁盘"><span class="nav-number">2.6.</span> <span class="nav-text">热备磁盘</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mdadm命令"><span class="nav-number">3.</span> <span class="nav-text">mdadm命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#虚拟磁盘部署磁盘阵列实验"><span class="nav-number">4.</span> <span class="nav-text">虚拟磁盘部署磁盘阵列实验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RAID0-1"><span class="nav-number">4.1.</span> <span class="nav-text">RAID0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RADI10"><span class="nav-number">4.2.</span> <span class="nav-text">RADI10</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结语"><span class="nav-number">5.</span> <span class="nav-text">结语</span></a></li></ol></div>
             
 
           </div>
