@@ -118,7 +118,7 @@
 
 
 
-  <meta name="keywords" content="AT指令集,ESP8266,TCP通信," />
+  <meta name="keywords" content="Linux,V4L2," />
 
 
 
@@ -129,27 +129,20 @@
 
 
 
-<meta name="description" content="这个教程是基于ESP8266和手机与电脑的TCP通信。">
-<meta name="keywords" content="AT指令集,ESP8266,TCP通信">
+<meta name="description" content="Linux操作系统内核的采用的是V4L2视频设备内核驱动。该框架是在V4L的基础上进行扩展升级。视频的采集使用流水线的方式传输，通过使用V4L2的视频采集框架流程，在内核空间申请出缓存，在主线程下，图像的每一帧都向缓存空间传输。">
+<meta name="keywords" content="Linux,V4L2">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ES8266模块AT操作&lt;多连接TCP通信&gt;">
-<meta property="og:url" content="http://www.funful.ink/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/index.html">
+<meta property="og:title" content="Video for Linux two">
+<meta property="og:url" content="http://www.funful.ink/2019/05/25/2019-05-25-V4L2/index.html">
 <meta property="og:site_name" content="FunfulBlog">
-<meta property="og:description" content="这个教程是基于ESP8266和手机与电脑的TCP通信。">
+<meta property="og:description" content="Linux操作系统内核的采用的是V4L2视频设备内核驱动。该框架是在V4L的基础上进行扩展升级。视频的采集使用流水线的方式传输，通过使用V4L2的视频采集框架流程，在内核空间申请出缓存，在主线程下，图像的每一帧都向缓存空间传输。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_picture.jpg">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_1.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_5.jpg">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_3.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_4.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_8.jpg">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_7.png">
-<meta property="og:updated_time" content="2018-07-25T04:46:33.245Z">
+<meta property="og:image" content="http://cdn.funful.ink/2019-5-25.png">
+<meta property="og:updated_time" content="2019-05-25T06:58:18.103Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ES8266模块AT操作&lt;多连接TCP通信&gt;">
-<meta name="twitter:description" content="这个教程是基于ESP8266和手机与电脑的TCP通信。">
-<meta name="twitter:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_picture.jpg">
+<meta name="twitter:title" content="Video for Linux two">
+<meta name="twitter:description" content="Linux操作系统内核的采用的是V4L2视频设备内核驱动。该框架是在V4L的基础上进行扩展升级。视频的采集使用流水线的方式传输，通过使用V4L2的视频采集框架流程，在内核空间申请出缓存，在主线程下，图像的每一帧都向缓存空间传输。">
+<meta name="twitter:image" content="http://cdn.funful.ink/2019-5-25.png">
 
 
 
@@ -179,13 +172,13 @@
 
 
 
-  <link rel="canonical" href="http://www.funful.ink/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/"/>
+  <link rel="canonical" href="http://www.funful.ink/2019/05/25/2019-05-25-V4L2/"/>
 
 
 
 
 
-  <title>ES8266模块AT操作<多连接TCP通信> | FunfulBlog</title>
+  <title>Video for Linux two | FunfulBlog</title>
   
 
 
@@ -356,7 +349,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/">
+    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/05/25/2019-05-25-V4L2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ZhaoH.T.">
@@ -373,11 +366,15 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">ES8266模块AT操作<多连接TCP通信></h1>
+          <h1 class="post-title" itemprop="name headline">Video for Linux two</h1>
         
 
         <div class="post-meta">
-       
+      
+        <i class="fa fa-thumb-tack"></i>
+        <font size="5" color="red">置顶</font>
+        <span class="post-meta-divider">|</span>
+         
                 <span class="post-time">
             
               <span class="post-meta-item-icon">
@@ -386,8 +383,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-07T20:20:23+08:00">
-                2018-11-07
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-25T00:00:00Z">
+                2019-05-25
               </time>
             
 
@@ -409,8 +406,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ESP8266/" itemprop="url" rel="index">
-                    <span itemprop="name">ESP8266</span>
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
                   </a>
                 </span>
 
@@ -427,9 +424,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/#comments" itemprop="discussionUrl">
+                <a href="/2019/05/25/2019-05-25-V4L2/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2019/05/25/2019-05-25-V4L2/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -438,7 +435,7 @@
 
           
           
-             <span id="/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/" class="leancloud_visitors" data-flag-title="ES8266模块AT操作<多连接TCP通信>">
+             <span id="/2019/05/25/2019-05-25-V4L2/" class="leancloud_visitors" data-flag-title="Video for Linux two">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -463,7 +460,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  509
+                  2,616
                 </span>
               
 
@@ -488,63 +485,309 @@
       
 
       
-        <p>这个教程是基于ESP8266和手机与电脑的TCP通信。</p>
+        <p>Linux操作系统内核的采用的是V4L2视频设备内核驱动。该框架是在V4L的基础上进行扩展升级。视频的采集使用流水线的方式传输，通过使用V4L2的视频采集框架流程，在内核空间申请出缓存，在主线程下，图像的每一帧都向缓存空间传输。</p>
 <a id="more"></a>
-<h1 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h1><ul>
-<li><a href="http://wiki.ai-thinker.com/_media/esp8266/docs/4a-esp8266_at_instruction_set_cn.pdf" target="_blank" rel="noopener">AT的指令集</a></li>
-<li><a href="http://wiki.ai-thinker.com/_media/esp8266/docs/4b-esp8266_at_command_examples_cn.pdf" target="_blank" rel="noopener">AT的示例教程</a></li>
-<li>Android版的TCP调试助手可以去软件库里面下载</li>
-<li>PC版的调试助手可以去CSDN下载，链接 <a href="https://download.csdn.net/download/ajian0051/9478097" target="_blank" rel="noopener">Download</a></li>
+<h1 id="V4L2（Video-for-Linux-two-）流程"><a href="#V4L2（Video-for-Linux-two-）流程" class="headerlink" title="V4L2（Video for Linux two ）流程"></a>V4L2（Video for Linux two ）流程</h1><p>在将QT+opencv 移植到Arm上面的时候发现不能直接用QT或者是Opencv提供的库函数进行视频采集，从网上查得发现，还需要将GTK的库也移植到板子上去，好像实施的可能性不大，（网上说的非常复杂，并且得不偿失），这里可以使用V4l2 ，他给linux下的视频设备提供了一套接口规范。从Linux2.5之后都默认有这个开发接口。（可以看下/usr/include/linux/下面是否有videodev2.h）</p>
+<p>可以在V4L2官网下载英文版的手册</p>
+<p>CSDN 有中文版的</p>
+<p>下面的我们需要常用的结构体和宏在进行了总结，都可以在</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/include/linux/videodev.h</span><br></pre></td></tr></table></figure>
+<p>查找的到</p>
+<ul>
+<li>V4L2的常用结构体介绍()</li>
 </ul>
-<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="ESP8266的AT操作"><a href="#ESP8266的AT操作" class="headerlink" title="ESP8266的AT操作"></a>ESP8266的AT操作</h2><ol>
-<li>AT+RST（重启）</li>
-<li>AT+RESTORE（恢复出厂设置，第一次操作建议不要，如果不能正常工作的话，可以执行该命令）</li>
-<li>AT+CWMODE_DEF=3（WIFI模式（STA/AP/STA+AP））</li>
-<li>AT+CWSAP=”OneNET”,”123456789”,1,3（设置ssoftAP的ssid，密码，通道号1，WAP2_PSK加密）</li>
-<li>AT+CIPMUX=1（多连接）</li>
-<li>AT+CIPSERVER=1,8080（设置TCP server 的端口号8080）</li>
-<li>这样我们就设置好了，手机和电脑都可以正常连接到“OneNET”，我们还要注意下ESP8266的IP和端口，上面已经知道端口号是8080，服务器IP是192.168.4.1，可以使用”AT+CIFSR”得知。</li>
-</ol>
-<h2 id="手机端-amp-PC连接"><a href="#手机端-amp-PC连接" class="headerlink" title="手机端&amp;PC连接"></a>手机端&amp;PC连接</h2><ol>
-<li><p>手机开启wifi连接OneNET</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">v4l2_requestbuffers</span>        //申请帧缓冲，对应命令<span class="title">VIDIOC_REQBUFS</span> </span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">v4l2_capability</span>        //视频设备的功能，对应命令<span class="title">VIDIOC_QUERYCAP</span>  <span class="title">struct</span> <span class="title">v4l2_input</span>        //视频输入信息，对应命令<span class="title">VIDIOC_ENUMINPUT</span></span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">v4l2_standard</span>        //视频的制式，比如<span class="title">PAL</span>，<span class="title">NTSC</span>，对应命令                                                            <span class="title">VIDIOC_ENUMSTD</span> </span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">v4l2format</span>       //帧的格式，对应命令<span class="title">VIDIOC_GFMT</span>、<span class="title">VIDIOC_S_FMT</span>等</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">v4l2_buffer</span>        //驱动中的一帧图像缓存，对应命令<span class="title">VIDIOC_QUERYBUF</span> </span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">v4l2_crop</span>        //视频信号矩形边框</span></span><br><span class="line"><span class="class"><span class="title">v4l2_std_id</span>        //视频制式</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>V4L2常用的宏</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">VIDIOC_REQBUFS <span class="comment">//分配内存 </span></span><br><span class="line">VIDIOC_QUERYBUF         <span class="comment">//把VIDIOC_REQBUFS中分配的数据缓存转换成物理地址 </span></span><br><span class="line">VIDIOC_QUERYCAP        <span class="comment">//查询驱动功能 </span></span><br><span class="line">VIDIOC_ENUM_FMT        <span class="comment">//获取当前驱动支持的视频格式 </span></span><br><span class="line">VIDIOC_S_FMT        <span class="comment">//设置当前驱动的频捕获格式 </span></span><br><span class="line">VIDIOC_G_FMT        <span class="comment">//读取当前驱动的频捕获格式 </span></span><br><span class="line">VIDIOC_TRY_FMT        <span class="comment">//验证当前驱动的显示格式 </span></span><br><span class="line">VIDIOC_CROPCAP        <span class="comment">//查询驱动的修剪能力 </span></span><br><span class="line">VIDIOC_S_CROP        <span class="comment">//设置视频信号的矩形边框 </span></span><br><span class="line">VIDIOC_G_CROP        <span class="comment">//读取视频信号的矩形边框</span></span><br><span class="line">VIDIOC_QBUF        <span class="comment">//把数据从缓存中读取出来 </span></span><br><span class="line">VIDIOC_DQBUF        <span class="comment">//把数据放回缓存队列 </span></span><br><span class="line">VIDIOC_STREAMON        <span class="comment">//开始视频显示函数 </span></span><br><span class="line">VIDIOC_STREAMOFF        <span class="comment">//结束视频显示函数 </span></span><br><span class="line">VIDIOC_QUERYSTD         <span class="comment">//检查当前视频设备支持的标准，例如PAL或NTSC。</span></span><br></pre></td></tr></table></figure>
 </li>
-<li><p>手机端打开TCP调试助手，设置如图，点击connect</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_picture.jpg" alt=""></p>
+<li><p>看了网上好多博主写的对V4L2的流程分析，总结了下，先理清楚流程，然后再进行代码的更改和搬移（这个流程是基于视频的采集）</p>
+<ul>
+<li><p>打开设备文件/dev/video* ，linux下一切皆文件。open函数提供了阻塞/非阻塞的方式进行打开，</p>
 </li>
-<li><p>电脑连接ESP8266的串口显示</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_1.png" alt=""></p>
+<li><p>打开这个文件之后，我们就要看看，这个文件有什么功能 ，视频输入，采集，音频输入输出等。</p>
 </li>
-<li><p>这就显示连接成功了，下来电脑端也连接”OneNET”，打开网络调试助手，设置如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2.png" alt=""></p>
+<li><p>视频信号帧的裁剪，这里涉及到两个结构体</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">struct v4l2_crop        //视频信号矩形边框</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">struct v4l2_cropcap   //可裁剪区域描述</span><br></pre></td></tr></table></figure>
+<p>v4l2_cropcap 这个结构体就是限定了，我们可以裁剪的区域范围大小</p>
+<p>我们通过对结构体v4l2_crop，赋值，来进行裁剪 </p>
 </li>
-<li><p>上面四步我们就将手机和电脑作为TCP client 连接到电脑了，下面测试通信。</p>
+<li><p>重新设置帧的格式包括，宽度和高度等</p>
 </li>
-</ol>
-<h2 id="通信"><a href="#通信" class="headerlink" title="通信"></a>通信</h2><h3 id="ESP8266接收"><a href="#ESP8266接收" class="headerlink" title="ESP8266接收"></a>ESP8266接收</h3><ol>
-<li><p>手机端发送如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_5.jpg" alt=""></p>
+<li><p>接下来就是我们需要对帧缓冲区和内存进行分配，因为在驱动模块用户空间和内核空间是分开的，我们如果需要读取内核空间的内容的话，可以通过内存映射，或者是通过特定的函数(read )进行访问，也可以使用用户指针的方式，这里我们使用mmap函数将内核空间的内存映射到用户空间</p>
 </li>
-<li><p>电脑端发送如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_3.png" alt=""></p>
+<li><p>接下来，初始化完成之后，我们就要开启数据流，这里我们在上面一步会设定缓存数量，不能超过5帧，启动数据流就是说，我们用户取出一帧，设备采集到一帧放入队列</p>
 </li>
-<li><p>ESP8266串口显示</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_4.png" alt=""></p>
+<li><p>然后将所取到的数据，进行格式转换。，这里数据转换的时候可以将RGB/YUV 转换成MJPEG，MJPEG是运动静止图像压缩技术，可以单独的压缩每一帧图像。生成序列化的运动图像。它就是一种数字压缩格式，只对帧内的空间<a href="http://baike.baidu.com/view/104445.htm" target="_blank" rel="noopener">冗余</a>进行压缩，不对帧间的时间<a href="http://baike.baidu.com/view/104445.htm" target="_blank" rel="noopener">冗余</a>进行压缩，压缩效率低</p>
 </li>
-</ol>
-<h3 id="ESP8266发送"><a href="#ESP8266发送" class="headerlink" title="ESP8266发送"></a>ESP8266发送</h3><ol>
-<li><p>ESP82266多链接最多可以连接5个设备，上面我们知道手机分配的ID为0，电脑ID为1</p>
+</ul>
 </li>
-<li><p>先给手机端发送，执行命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AT+CIPSEND=&lt;link ID&gt;,&lt;length&gt;</span><br><span class="line">AT+CIPSEND=0,11（给ID0发送11个字节数据）</span><br><span class="line">OK</span><br><span class="line">&gt;</span><br><span class="line">Hello,PHONE</span><br></pre></td></tr></table></figure>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_8.jpg" alt=""></p>
-</li>
-<li><p>给电脑端发送，执行命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">AT+CIPSEND=1,11（给ID1发送11个字节数据）</span><br><span class="line">OK</span><br><span class="line">&gt;</span><br><span class="line">Hello,PC</span><br></pre></td></tr></table></figure>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_7.png" alt=""></p>
-</li>
-</ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>使用AT指令开发ESP8266，比较简单，但是ESP8266内置MCU，这使得浪费了硬件资源。这篇文章是基于TCP多连接的通信，至于单连接，就更简单了。</p>
+<li><p>具体流程图如图：</p>
+<p><img src="http://cdn.funful.ink/2019-5-25.png" alt=""></p>
+<h1 id="移植Qt的具体代码"><a href="#移植Qt的具体代码" class="headerlink" title="移植Qt的具体代码"></a>移植Qt的具体代码</h1></li>
+<li><p>V4L2_QT.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"v4l2_qt.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ui_v4l2_qt.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"v4l2_heade.h"</span></span></span><br><span class="line">V4L2_QT::V4L2_QT(QWidget *parent) :</span><br><span class="line">    QMainWindow(parent),</span><br><span class="line">    ui(<span class="keyword">new</span> Ui::V4L2_QT)</span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;setupUi(<span class="keyword">this</span>);</span><br><span class="line">    Camera_fd = <span class="number">-1</span>;</span><br><span class="line">     buffers = <span class="literal">NULL</span>;</span><br><span class="line">     n_buffers = <span class="number">0</span>;</span><br><span class="line">    device   =  <span class="string">"/dev/video0"</span>;<span class="comment">//linux</span></span><br><span class="line">    device_2 = <span class="string">"/dev/video4"</span>;<span class="comment">//</span></span><br><span class="line">    pixel_format = V4L2_PIX_FMT_YUYV;	<span class="comment">//视频格式为MJPEG</span></span><br><span class="line">    pre_w = WIDTH;	<span class="comment">//预览窗口w</span></span><br><span class="line">    pre_h = HEIGHT;	<span class="comment">//预览窗口h</span></span><br><span class="line">    timer=<span class="keyword">new</span> QTimer(<span class="keyword">this</span>);</span><br><span class="line">    frame=<span class="keyword">new</span> QImage(rgb,WIDTH,HEIGHT,QImage::Format_RGB888);</span><br><span class="line">    <span class="keyword">this</span>-&gt;setMaximumSize(<span class="number">640</span>,<span class="number">480</span>);</span><br><span class="line">    <span class="keyword">this</span>-&gt;setMinimumSize(<span class="number">640</span>,<span class="number">480</span>);</span><br><span class="line">    ui-&gt;label-&gt;setMaximumSize(<span class="number">640</span>,<span class="number">480</span>);</span><br><span class="line">    ui-&gt;label-&gt;setMinimumSize(<span class="number">640</span>,<span class="number">480</span>);</span><br><span class="line"></span><br><span class="line">     readCamera();  <span class="comment">//camera 初始化，开启视频流</span></span><br><span class="line">    connect(timer,SIGNAL(timeout()),<span class="keyword">this</span>,SLOT(post_preview()));  <span class="comment">//将视频流post到preview窗口中，实现预览</span></span><br><span class="line">    timer-&gt;start(<span class="number">100</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">V4L2_QT::~V4L2_QT()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">delete</span> ui;</span><br><span class="line">    releaseCamera();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> V4L2_QT::xioctl(<span class="keyword">int</span> fd, <span class="keyword">int</span> request, <span class="keyword">void</span> *arg)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> r;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">        r = ioctl(fd, request, arg);</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">-1</span> == r &amp;&amp; EINTR == errno);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">void</span> V4L2_QT::errno_exit(<span class="keyword">const</span> <span class="keyword">char</span> *s)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"%s error %d, %s\n"</span>, s, errno, strerror(errno));</span><br><span class="line">    <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>int  V4L2_QT::opendevice(char*device)<br>{</p>
+<pre><code> Camera_fd=open(device,O_RDWR);
+ if(Camera_fd&lt;0)
+ {
+     fprintf(stderr,&quot;Cann&apos;t Open %s,%d,%s/n&quot;,device,errno ,strerror(errno));
+      return errno;
+ }
+else
+    {
+     PRINTK(&quot;OPen video Success\n&quot;);
+    return 1;
+ }
+</code></pre><p>}<br>//Memory Requset<br>void V4L2_QT::init_mmap()<br>{</p>
+<pre><code>struct v4l2_requestbuffers reqbufs;//向驱动申请帧缓冲的请求，里面包含申请的个数
+CLEAR(reqbufs);//clear
+reqbufs.count=4;//缓存数量，也就是说在缓存队列里保持4张照片
+reqbufs.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;//数据流格式
+reqbufs.memory = V4L2_MEMORY_MMAP;
+if(-1==xioctl(Camera_fd,VIDIOC_REQBUFS,&amp;reqbufs))
+   {
+    if (EINVAL == errno){
+        fprintf(stderr, &quot;%s does not support memory mapping\n&quot;, device);
+        exit(EXIT_FAILURE);
+        }
+    else{
+    errno_exit(&quot;VIDIOC_REQBUFS&quot;);
 
+        }
+
+   }
+if (reqbufs.count &lt; 2)
+{
+    fprintf(stderr, &quot;Insufficient buffer memory on %s\n&quot;, device);
+    exit(EXIT_FAILURE);
+}
+buffers = (struct buffer *)calloc(reqbufs.count, sizeof(*buffers));
+if (!buffers)
+{
+    fprintf(stderr, &quot;Out of memory\n&quot;);
+    exit(EXIT_FAILURE);
+}
+for (n_buffers = 0; n_buffers &lt; reqbufs.count; ++n_buffers)
+{
+    struct v4l2_buffer buf;
+
+    CLEAR(buf);
+
+    buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    buf.memory = V4L2_MEMORY_MMAP;
+    buf.index = n_buffers;
+
+    if (-1 == xioctl(Camera_fd, VIDIOC_QUERYBUF, &amp;buf))
+        errno_exit(&quot;VIDIOC_QUERYBUF&quot;);
+
+    buffers[n_buffers].length=buf.length;
+    buffers[n_buffers].start = (unsigned char *)mmap(NULL,buf.length,PROT_READ | PROT_WRITE ,MAP_SHARED ,Camera_fd, buf.m.offset);
+    if (MAP_FAILED == buffers[n_buffers].start)
+        errno_exit(&quot;mmap&quot;);
+}
+PRINTK(&quot;init_mmap Success\n&quot;);
+</code></pre><p>}</p>
+<p>int V4L2_QT::init_device(unsigned int w, unsigned int h)<br>{</p>
+<pre><code>struct v4l2_capability cap;//这个设备的功能，比如是否是视频输入设备
+
+struct v4l2_format fmt;//帧的格式，比如宽度，高度等
+</code></pre></li>
+</ul>
+<pre><code> struct v4l2_cropcap  cropcap; //输入设备裁剪
+  struct v4l2_crop crop; //输入设备裁剪
+if(xioctl(Camera_fd,VIDIOC_QUERYCAP,&amp;cap))//Check vedio input
+{
+    if(EINVAL==errno)
+    {
+       fprintf(stderr,&quot;%s is no V4l2 device \n&quot;,device);
+       return(EXIT_FAILURE);
+    }
+    else
+    {
+        errno_exit(&quot;VIDIOC_QUERYCAP&quot;);
+    }
+}
+if(!(cap.capabilities&amp;V4L2_CAP_VIDEO_CAPTURE))
+ {
+    fprintf(stderr, &quot;no video capture device\n&quot;);
+            exit(EXIT_FAILURE);
+}
+cropcap.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+if(-1==xioctl(Camera_fd,VIDIOC_CROPCAP,&amp;cropcap))
+     errno_exit(&quot;VIDIOC_CROPCA&quot;);
+crop.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+crop.c = cropcap.defrect;
+if (-1 == xioctl(Camera_fd, VIDIOC_S_CROP, &amp;crop))
+{
+switch (errno)
+{
+    case EINVAL:
+        break;
+    default:
+        break;
+        }
+}
+CLEAR(fmt);//清除帧的格式
+//重新设置帧的格式
+fmt.type=V4L2_BUF_TYPE_VIDEO_CAPTURE;// 数据流类型，必须永远是//V4L2_BUF_TYPE_VIDEO_CAPTURE
+fmt.fmt.pix.width=w;
+fmt.fmt.pix.pixelformat = pixel_format;
+fmt.fmt.pix.field = V4L2_FIELD_ANY;
+
+if (-1 == xioctl(Camera_fd, VIDIOC_S_FMT, &amp;fmt))//把刚才的帧格式写入
+    errno_exit(&quot;VIDIOC_S_FMT&quot;);
+if ((fmt.fmt.pix.width != w) || (fmt.fmt.pix.height != h))//判断是否写入
+{
+    qWarning(&quot;  Frame size:   %ux%u (requested size %ux%u is not supported by device)\n&quot;,
+        fmt.fmt.pix.width, fmt.fmt.pix.height, w, h);
+    w = fmt.fmt.pix.width;
+    h = fmt.fmt.pix.height;
+}
+else {
+    qWarning(&quot;  Frame size:   %dx%d\n&quot;, w, h);
+}
+</code></pre><p>  PRINTK(“init_device Success\n”);<br>    //配置完成之后，接下来进行内存分配<br>    init_mmap();<br>  }<br>  void V4L2_QT::readCamera()<br>  {<br>    if(opendevice(device)){<br>       init_device(pre_w,pre_h);<br>       stream_on();<br>      }<br>     else{<br>     opendevice(device_2);<br>     init_device(pre_w,pre_h);<br>      stream_on();<br>      }<br>    PRINTK(“readCamera Success\n”);<br>  }<br>  void V4L2_QT::process_image(unsigned char *buf, int size)<br>  {</p>
+<pre><code> qDebug()&lt;&lt;size&lt;&lt;endl;
+
+
+ PRINTK(&quot;process_image get in&quot;);
+  //showPicData(buf, size);
+ convertMJPEG2Mat(buf);
+ PRINTK(&quot;yuv--&gt;rgb Success out \n&quot;);
+
+//convertMJPEG2Mat(buf);
+</code></pre><p>  }<br>  void V4L2_QT::stream_on()<br>  {<br>      unsigned int i;<br>       enum v4l2_buf_type type;<br>     struct v4l2_buffer buf;//代表驱动中的一帧<br>     for(i=0;i&lt;n_buffers;++i)<br>     {<br>         CLEAR(buf);<br>         buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;<br>         buf.memory = V4L2_MEMORY_MMAP;<br>         buf.index=i;<br>         if (-1 == xioctl(Camera_fd, VIDIOC_QBUF, &amp;buf))<br>             errno_exit(“VIDIOC_QBUF”);<br>     }<br>     type = V4L2_BUF_TYPE_VIDEO_CAPTURE;</p>
+<pre><code>if (-1 == xioctl(Camera_fd, VIDIOC_STREAMON, &amp;type))
+    errno_exit(&quot;VIDIOC_STREAMON&quot;);
+PRINTK(&quot;stream_on Success\n&quot;);
+</code></pre><p>  }<br>  void V4L2_QT::post_preview()<br>  {<br>      struct v4l2_buffer buf;<br>      CLEAR(buf);<br>      buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;<br>      buf.memory = V4L2_MEMORY_MMAP;<br>      if (-1 == xioctl(Camera_fd, VIDIOC_DQBUF, &amp;buf))<br>          errno_exit(“VIDIOC_DQBUF”);<br>       assert(buf.index &lt; n_buffers);</p>
+<pre><code>PRINTK(&quot;post_preview---&gt;process_images\n&quot;);
+process_image(buffers[buf.index].start, buf.bytesused);
+PRINTK(&quot;process_image Sucess\n&quot;);
+
+v4l2_buffer queue_buf;
+CLEAR(queue_buf);
+queue_buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+queue_buf.memory = V4L2_MEMORY_MMAP;
+queue_buf.index =buf.index;
+</code></pre><p>   if (-1 == xioctl(Camera_fd, VIDIOC_QBUF, &amp;queue_buf))<br>       errno_exit(“VIDIOC_QBUF”);<br>       PRINTK(“number=%d\n”,number++);<br>  }</p>
+<p>  void V4L2_QT::releaseCamera()<br>  {<br>     unsigned int i;<br>      for (i = 0; i &lt; n_buffers; ++i)<br>      {<br>          munmap(buffers[i].start, buffers[i].length);<br>      }<br>      free(buffers);<br>      if (-1 == ::close(Camera_fd))<br>          errno_exit(“close”);<br>      Camera_fd = -1;<br>      timer-&gt;stop();<br>  }</p>
+<p>  int V4L2_QT::convert_yuv_to_rgb_pixel(int y, int u, int v)  //<br>  {<br>      unsigned int pixel32 = 0;<br>      unsigned char <em>pixel = (unsigned char </em>)&pixel32;<br>      int r, g, b;<br>      r = y + (1.370705 <em> (v-128));<br>      g = y - (0.698001 </em> (v-128)) - (0.337633 <em> (u-128));<br>      b = y + (1.732446 </em> (u-128));<br>      if(r &gt; 255) r = 255;<br>      if(g &gt; 255) g = 255;<br>      if(b &gt; 255) b = 255;<br>      if(r &lt; 0) r = 0;<br>      if(g &lt; 0) g = 0;<br>      if(b &lt; 0) b = 0;<br>      pixel[0] = r <em> 220 / 256;<br>      pixel[1] = g </em> 220 / 256;<br>      pixel[2] = b * 220 / 256;</p>
+<pre><code>return pixel32;
+</code></pre><p>  }<br>  //yuv422×ªRGB24<br>  int V4L2_QT::convert_yuv_to_rgb_buffer(unsigned char <em>yuv, unsigned char </em>rgb, unsigned int width, unsigned int height)    //Êý×é ÏñËØÑÕÉ«×ª»»yuv ×ª»»rgb<br>  {<br>      unsigned int in;<br>      unsigned int out = 0;<br>      unsigned int pixel_16=0;<br>      unsigned char pixel_24[3];<br>      unsigned int pixel32;<br>      int y0, u, y1, v;</p>
+<pre><code>for(in = 0; in &lt; width * height * 2; in += 4)
+{
+    pixel_16 = yuv[in + 3] &lt;&lt; 24 |
+               yuv[in + 2] &lt;&lt; 16 |
+               yuv[in + 1] &lt;&lt;  8 |
+               yuv[in + 0];
+    y0 = (pixel_16 &amp; 0x000000ff);
+    u  = (pixel_16 &amp; 0x0000ff00) &gt;&gt;  8;
+    y1 = (pixel_16 &amp; 0x00ff0000) &gt;&gt; 16;
+    v  = (pixel_16 &amp; 0xff000000) &gt;&gt; 24;
+
+    pixel32 = convert_yuv_to_rgb_pixel(y0, u, v);//YUV UV·ÖÁ¿×÷ÓÃ²»Ã÷ÏÔ ŒõÐ¡UV·ÖÁ¿ ÔÚŒÆËãRGBµÄÊ±ºòÓÃÁÙœüµÄŽúÌæ
+    pixel_24[0] = (pixel32 &amp; 0x000000ff);
+    pixel_24[1] = (pixel32 &amp; 0x0000ff00) &gt;&gt; 8;
+    pixel_24[2] = (pixel32 &amp; 0x00ff0000) &gt;&gt; 16;
+    rgb[out++] = pixel_24[0];
+    rgb[out++] = pixel_24[1];
+    rgb[out++] = pixel_24[2];
+
+    pixel32 = convert_yuv_to_rgb_pixel(y1, u, v);//YUV UV·ÖÁ¿×÷ÓÃ²»Ã÷ÏÔ ŒõÐ¡UV·ÖÁ¿ ÔÚŒÆËãRGBµÄÊ±ºòÓÃÁÙœüµÄŽúÌæ
+    pixel_24[0] = (pixel32 &amp; 0x000000ff);
+    pixel_24[1] = (pixel32 &amp; 0x0000ff00) &gt;&gt; 8;
+    pixel_24[2] = (pixel32 &amp; 0x00ff0000) &gt;&gt; 16;
+    rgb[out++] = pixel_24[0];
+    rgb[out++] = pixel_24[1];
+    rgb[out++] = pixel_24[2];
+}
+return 0;
+</code></pre><p>  }<br>  void V4L2_QT::convertMJPEG2Mat(unsigned char<em>mjpeg)<br>  {<br>  //    Image = Mat::zeros(WIDTH,HEIGHT,CV_8UC3);<br>  //     CvMat cvmat;<br>  //     cvmat = cvMat (WIDTH,HEIGHT,CV_8UC3,(void</em>)mjpeg);<br>  //     IplImage <em>img = cvDecodeImage(&amp;cvmat,1);<br>  //     Mat mat(img,1);<br>  //     Image = mat;<br>  //     cvReleaseImage(&amp;img);<br>      convert_yuv_to_rgb_buffer(mjpeg,rgb,WIDTH,HEIGHT);<br>  // frame-&gt;loadFromData((uchar </em>)rgb,WIDTH <em> HEIGHT</em> 3 <em> sizeof(char));<br>  //    ui-&gt;label-&gt;setPixmap(QPixmap::fromImage(</em>frame,Qt::AutoColor));</p>
+<pre><code> pixmap = QPixmap::fromImage(*frame);
+ ui-&gt;label-&gt;setPixmap(pixmap);
+PRINTK(&quot;yuv--&gt;rgb Success\n&quot;);
+</code></pre><p>  //sprintf(ImageName,”ImageName%04ld.jpg”,ImageNum++);<br>  //imwrite(ImageName,RGBImage);<br>  }<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  ​</span><br><span class="line"></span><br><span class="line">* V4L2_QT.h</span><br></pre></td></tr></table></figure></p>
+<p>  #ifndef V4L2_QT_H</p>
+<p>  #define V4L2_QT_H</p>
+<p>  #include <qmainwindow></qmainwindow></p>
+<p>  #include <qdebug></qdebug></p>
+<p>  #include <qlabel></qlabel></p>
+<p>  #include<qwidget></qwidget></p>
+<p>  #include<qpixmap></qpixmap></p>
+<p>  #include<qlabel></qlabel></p>
+<p>  #include<qpainter></qpainter></p>
+<p>  #include<qtimer></qtimer></p>
+<p>  #include <qwidget></qwidget></p>
+<p>  #include &lt;opencv2/highgui/highgui.hpp&gt;</p>
+<p>  #include &lt;opencv2/core/core.hpp&gt;</p>
+<p>  #include &lt;qtimer.h&gt;</p>
+<p>  #include &lt;opencv2/highgui/highgui_c.h&gt;</p>
+<p>  //Kernel Header file</p>
+<p>  #include &lt;stdio.h&gt;</p>
+<p>  #include &lt;stdlib.h&gt;</p>
+<p>  #include &lt;linux/fs.h&gt;</p>
+<p>  #include &lt;linux/stat.h&gt;</p>
+<p>  #include &lt;linux/types.h&gt;</p>
+<p>  #include &lt;linux/videodev2.h&gt;</p>
+<p>  #include &lt;fcntl.h&gt;</p>
+<p>  #include &lt;errno.h&gt;</p>
+<p>  #include &lt;sys/time.h&gt;</p>
+<p>  #include &lt;sys/mman.h&gt; //memory</p>
+<p>  #include &lt;sys/ioctl.h&gt;</p>
+<p>  #include &lt;sys/stat.h&gt;</p>
+<p>  #include &lt;sys/types.h&gt;</p>
+<p>  #include &lt;assert.h&gt;  //invok the assert()  function</p>
+<pre><code> namespace Ui {
+ class V4L2_QT;
+ }
+ class V4L2_QT : public QMainWindow
+ Q_OBJECT
+ public slots:
+    void post_preview();
+ public:
+ explicit V4L2_QT(QWidget *parent = 0);
+ ~V4L2_QT();
+   unsigned char rgb[WIDTH*HEIGHT*3];
+ private:
+
+ Ui::V4L2_QT *ui;
+ struct buffer
+ {
+     unsigned char *start;
+     size_t length;
+ };
+
+ QTimer *timer;
+ QImage *frame;
+QPixmap pixmap;
+ struct buffer *buffers;
+ unsigned int n_buffers ;
+ int number;
+ char *device;
+ char *device_2;
+ int Camera_fd;
+  int index;
+ unsigned int pre_w;//预览窗口w
+ unsigned int pre_h;//预览窗口h
+
+ int pixel_format;
+
+int  xioctl(int fd, int request, void *arg);
+void errno_exit(const char *s);
+void init_mmap();
+int  opendevice(char*device);
+int init_device(unsigned int w, unsigned int h);
+void readCamera();
+void stream_on();
+void releaseCamera();
+void process_image(unsigned char *buf,int size);
+int  convert_yuv_to_rgb_pixel(int y, int u, int v);
+int  convert_yuv_to_rgb_buffer(unsigned char *yuv, unsigned char *rgb, unsigned int width, unsigned int height);
+void convertMJPEG2Mat(unsigned char*mjpeg);
+</code></pre>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">​</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -577,7 +820,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接:</strong>
-    <a href="http://www.funful.ink/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/" title="ES8266模块AT操作<多连接TCP通信>">http://www.funful.ink/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/</a>
+    <a href="http://www.funful.ink/2019/05/25/2019-05-25-V4L2/" title="Video for Linux two">http://www.funful.ink/2019/05/25/2019-05-25-V4L2/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明: </strong>
@@ -592,11 +835,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/AT指令集/" rel="tag"><i class="fa fa-tag"></i> AT指令集</a>
+            <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
           
-            <a href="/tags/ESP8266/" rel="tag"><i class="fa fa-tag"></i> ESP8266</a>
-          
-            <a href="/tags/TCP通信/" rel="tag"><i class="fa fa-tag"></i> TCP通信</a>
+            <a href="/tags/V4L2/" rel="tag"><i class="fa fa-tag"></i> V4L2</a>
           
         </div>
       
@@ -609,8 +850,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/03/Orange's_Implementation_of_an_operating_system_1th_build_environment/" rel="next" title="Orange's:一个操作系统的实现_1th_环境搭建">
-                <i class="fa fa-chevron-left"></i> Orange's:一个操作系统的实现_1th_环境搭建
+              <a href="/2019/03/30/2019-3-30_SSH/" rel="next" title="SSH基本原理及使用<一>">
+                <i class="fa fa-chevron-left"></i> SSH基本原理及使用<一>
               </a>
             
           </div>
@@ -618,10 +859,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/11/14/STM32_FreeRTOS_config_1/" rel="prev" title="STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1>">
-                STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1> <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -784,7 +1021,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#文档"><span class="nav-number">1.</span> <span class="nav-text">文档</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#步骤"><span class="nav-number">2.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ESP8266的AT操作"><span class="nav-number">2.1.</span> <span class="nav-text">ESP8266的AT操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#手机端-amp-PC连接"><span class="nav-number">2.2.</span> <span class="nav-text">手机端&amp;PC连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通信"><span class="nav-number">2.3.</span> <span class="nav-text">通信</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ESP8266接收"><span class="nav-number">2.3.1.</span> <span class="nav-text">ESP8266接收</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ESP8266发送"><span class="nav-number">2.3.2.</span> <span class="nav-text">ESP8266发送</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#V4L2（Video-for-Linux-two-）流程"><span class="nav-number">1.</span> <span class="nav-text">V4L2（Video for Linux two ）流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#移植Qt的具体代码"><span class="nav-number">2.</span> <span class="nav-text">移植Qt的具体代码</span></a></li></ol></div>
             
 
           </div>
@@ -955,9 +1192,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://www.funful.ink/2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/';
-          this.page.identifier = '2018/11/07/ESP8266_Connect_TO_PhoneAndPC_WithTCP/';
-          this.page.title = 'ES8266模块AT操作<多连接TCP通信>';
+          this.page.url = 'http://www.funful.ink/2019/05/25/2019-05-25-V4L2/';
+          this.page.identifier = '2019/05/25/2019-05-25-V4L2/';
+          this.page.title = 'Video for Linux two';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://.disqus.com/embed.js';
