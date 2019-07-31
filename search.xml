@@ -152,8 +152,8 @@
         <category>ESP8266</category>
       </categories>
       <tags>
-        <tag>AT指令集</tag>
         <tag>ESP8266</tag>
+        <tag>AT指令集</tag>
         <tag>TCP通信</tag>
       </tags>
   </entry>
@@ -179,8 +179,8 @@
         <category>ESP8266</category>
       </categories>
       <tags>
-        <tag>ESP8266</tag>
         <tag>SDK</tag>
+        <tag>ESP8266</tag>
         <tag>MQTT</tag>
         <tag>局域网</tag>
       </tags>
@@ -193,8 +193,8 @@
         <category>ESP8266</category>
       </categories>
       <tags>
-        <tag>ESP8266</tag>
         <tag>SDK</tag>
+        <tag>ESP8266</tag>
       </tags>
   </entry>
   <entry>
