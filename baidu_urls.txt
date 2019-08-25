@@ -1,1 +1,1 @@
-http://www.funful.ink/2019/07/30/2019-07-30-QEMU-ARM-A9-TFTP-NFS.md/
+http://www.funful.ink/2019/08/24/2019-08-24-C-Assembly/
