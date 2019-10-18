@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.funful.ink/2019/05/19/STM32_FreeRTOS_config_2/</loc>
+    
+    <lastmod>2019-10-18T16:54:10.921Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.funful.ink/2019/05/13/JZ2440_uboot_2009_11_transplant_3_nor_flash/</loc>
     
     <lastmod>2019-10-18T16:53:17.507Z</lastmod>
@@ -152,13 +159,6 @@
     <loc>http://www.funful.ink/2018/05/25/linux+Qt_c_conplicationMplayer/</loc>
     
     <lastmod>2018-11-21T16:56:48.055Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.funful.ink/2019/10/19/STM32_FreeRTOS_config_2/</loc>
-    
-    <lastmod>2018-11-17T16:44:53.599Z</lastmod>
     
   </url>
   

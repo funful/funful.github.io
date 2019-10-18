@@ -12,19 +12,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[STM2F407与FreeRTOS的FreeRTOSConfig.h详解]]></title>
-    <url>%2F2019%2F10%2F19%2FSTM32_FreeRTOS_config_2%2F</url>
-    <content type="text"><![CDATA[上一篇，对config宏的基础配置和部分相关的配置，有些宏我们暂时没有用上，所以对这些宏定义的概念不太清楚，这章节是对余下部分解析。 config_*FreeRTOS与钩子函数有关的配置选项configUSE_IDLE_HOOK为1的话，就是使能空闲任务回调函数，也就是如果系统调用空闲函数的话，就会回调钩子函数，我们自己去实现这个函数，函数声明如下： 1void vApplicationIdleHook( void ); configUSE_TICK_HOOK为1的话使能时间片钩子函数，但是需要我们自己去实现这个函数，函数声明如下： 1void vApplicationTickHook( void ); FreeRTOS与运行时间和任务状态收集有关的配置选项configGENERATE_RUN_TIME_STATS为1 的话开启时间统计功能，如果定义这个宏的话，就必须还有定义另外两个宏，这个在后面的任务查询的时候我们有可能会配置，这两个宏分别是： 12portCONFIGURE_TIMER_FOR_RUN_TIME_STATSportALT_GET_RUN_TIME_COUNTER_VALUE configUSE_TRACE_FACILITY为1的话启动可视化跟踪调试，会增加一些结构体成员和API函数。 configUSE_STATS_FORMATTING_FUNCTIONSSet configUSE_TRACE_FACILITY and configUSE_STATS_FORMATTING_FUNCTIONS to 1to include the vTaskList() and vTaskGetRunTimeStats() FreeRTOS与协程有关的配置选项（现在的MCU很强大，不需要节约资源，所以基本不配置协程）configUSE_CO_ROUTINES为1的话，工程需要编译协程，需要把协程文件包含进来，相应的API函数才会被编译。 configMAX_CO_ROUTINE_PRIORITIES设置协程的最大优先级，设置完之后，协程使用的优先级范围0~configMAX_CO_ROUTINE_PRIORITIES-1 FreeRTOS与软件定时器有关的配置选项configUSE_TIMERS为1则启动软件定时器，还有三个宏也需要定义， 123configTIMER_TASK_PRIORITYconfigTIMER_QUEUE_LENGTH configTIMER_TASK_STACK_DEPTHxxxxxxxxxx configTIMER_TASK_PRIORITY设置定时器任务的优先级，0~configMAX_PRIORITIES-1，如果定时器任务的优先级高的话，定时器的队列和回调函数会及时处理。 configTIMER_QUEUE_LENGTH设置定时器队列的队列长度。 configTIMER_TASK_STACK_DEPTH定时器任务的堆栈，可以根据定时器回调函数的大小，定义定时器任务堆栈大小。 FreeRTOS与中断有关的配置选项__NVIC_PRIO_BITS设置优先级位数，STMF407,是高四位，也就是BIT4，5，6，7 configLIBRARY_LOWEST_INTERRUPT_PRIORITY设置最低优先级，因为STM32的NVIC配置的组4，也就是16位抢占优先级，所以最低优先级为15，ARM的0优先级最大。 configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITYFreeRTOS可以管理的最低优先级，如果设为5的话，0-5不归FREERTOS管，其余的RTOS可以通过API函数管理。与BASEPRI这个寄存器相关。 configKERNEL_INTERRUPT_PRIORITY这个是设置内核中断优先级，也就是系统中断的PenSV和SysTick（滴答定时器） configMAX_SYSCALL_INTERRUPT_PRIORITY设置FreeRTOS的API函数的优先级，低于此优先级的中断可以安全调用FREERTOS的API函数，高于此优先级时，如果调用API函数，中断也可以打断。 总结上面有些宏，从字面意思理解并不难，但是我们需要结合相应的功能，才能熟练运用。]]></content>
-      <categories>
-        <category>STM32</category>
-      </categories>
-      <tags>
-        <tag>Stm32F407</tag>
-        <tag>FreeRTOS</tag>
-        <tag>MDK5</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[C内嵌ARM汇编]]></title>
     <url>%2F2019%2F08%2F24%2F2019-08-24-C-Assembly%2F</url>
     <content type="text"><![CDATA[汇编语言经常会用在启动引导文件中，设置好相应的堆栈和必要的功能外设，才会跳转到C入口，但是我们只是知道汇编指令的功能，看不到每一步的具体实现。下面通过C语言内嵌汇编，做一些简单的例子。 C语言内嵌汇编基本格式C语言内嵌汇编有两种基本格式，volatile表明编译其不要优化代码， 12345678910111213141516__asm__ __volatile__( "xxxxxxxxxxxx\n" ；指令1 用“\n”换行 "xxxxxxxxxxxx\n" ；指令2 用“\n”换行 "xxxxxxxxxxxx\n" ；指令3 用“\n”换行 ：声明输出或输入变量；“=&amp;r” 输出变量；“+r”输入输出变量 ：声明输入变量 ； “r” 输入变量 ：声明保护寄存器；“r0” 。。。。);asm volatile( "xxxxxxxxxxxx\n" ；指令1 用“\n”换行 "xxxxxxxxxxxx\n" ；指令2 用“\n”换行 "xxxxxxxxxxxx\n" ；指令3 用“\n”换行 ：声明输出或输入变量；“=&amp;r” 输出变量；“+r”输入输出变量 ：声明输入变量 ； “r” 输入变量 ：声明保护寄存器；“r0” 。。。。); 例11234567891011121314151617#include &lt;stdio.h&gt;#include &lt;stdlib.h&gt; int main()&#123; unsigned int register a asm(&quot;r5&quot;); printf(&quot;a = %d\r\n&quot;,a); __asm__ __volatile__( &quot;mov r5,#100\n&quot; : : :&quot;r5&quot; ); printf(&quot;a = %d\r\n&quot;,a); return 0; &#125; 上面简单例子是将a变量和r5通用寄存器进行绑定，在内嵌汇编里面对r5寄存器操作a的值也会相应改变 例2123456789101112131415161718192021222324#include &lt;stdio.h&gt; #include &lt;stdlib.h&gt; int main()&#123; unsigned int a=1, b=2,c=3; int d,e,f; __asm__ __volatile__( &quot;mov r0, %[a]\n&quot; &quot;mov r1, %[b]\n&quot; &quot;mov r2, %[c]\n&quot; &quot;mov %[d], r0\n&quot; &quot;mov %[e], r1\n&quot; &quot;mov %[f], r2\n&quot; :[d]&quot;=&amp;r&quot;(d),[e]&quot;=&amp;r&quot;(e),[f]&quot;=&amp;r&quot;(f) :[a]&quot;r&quot;(a),[b]&quot;r&quot;(b),[c]&quot;r&quot;(c) :&quot;r0&quot;,&quot;r1&quot;,&quot;r2&quot; ); printf(&quot;d = %d\r\n&quot;,d); printf(&quot;e = %d\r\n&quot;,e); printf(&quot;f = %d\r\n&quot;,f); return 0; &#125; 上面内嵌汇编的功能就是将变量a,b,c的值赋值给变量d，e，f。第一个冒号后面将C函数的变量声明为输出变量名且别名位%[d] %[e]%[f]。也可以使用默认的%0 %1 依次对C函数的变量进行操作 例3123456789101112131415161718192021222324252627 #include &lt;stdio.h&gt; int mysum(int num1,int num2)&#123; int sum1,sum2; __asm__ __volatile__( "ldr r0 ,=0xfffffff8\n" "ldr r1 ,=0xa\n" "adds %[sum1] ,r0,r1\n" "ldr r0, =1\n" "ldr r1, =1\n" "adc %[sum2],r0,r1\n" :[sum1]"=&amp;r"(sum1),[sum2]"=&amp;r"(sum2) :[num1]"r"(num1),[num2]"r"(num2) :"r0","r1" ); printf("sum1 = %ld\n",sum1); printf("sum2 = %ld\n",sum2); return sum2; &#125; int main(void) &#123; int a=0xfffffff4 ,b =0x11; printf("sum =a+b= %ld\r\n",mysum(a,b)); return 0;&#125; 上面例子是add指令的使用，add是基础的加指令，CSPR_C不会产生进位结合借位。adds会产生CSPR_C不会产生进位结合借位。adc在相加的时候会将CSPR_C的位相加。 这里ldr是一个伪指令：ldr可以将任意值赋值给寄存器。在这里mov指令需要满足三个条件中的一个才能使用： 立即数小于255 ； eg：mov r0 ，254 立即数右移偶数次小于255 ； eg： mov r0 ，0xf100 ； 0xff00右移8位，0xf1小于0xff， 立即数是特殊值；0xfffffff 总结这里举的例子都是比较简单的，虽然汇编使用不多，但是在能看懂汇编语言我们才可以在其基础上修改，例如堆栈的大小和基地址。]]></content>
@@ -73,6 +60,19 @@
         <tag>SDK</tag>
         <tag>MQTT</tag>
         <tag>局域网</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[STM2F407与FreeRTOS的FreeRTOSConfig.h详解]]></title>
+    <url>%2F2019%2F05%2F19%2FSTM32_FreeRTOS_config_2%2F</url>
+    <content type="text"><![CDATA[上一篇，对config宏的基础配置和部分相关的配置，有些宏我们暂时没有用上，所以对这些宏定义的概念不太清楚，这章节是对余下部分解析。 config_*FreeRTOS与钩子函数有关的配置选项configUSE_IDLE_HOOK为1的话，就是使能空闲任务回调函数，也就是如果系统调用空闲函数的话，就会回调钩子函数，我们自己去实现这个函数，函数声明如下： 1void vApplicationIdleHook( void ); configUSE_TICK_HOOK为1的话使能时间片钩子函数，但是需要我们自己去实现这个函数，函数声明如下： 1void vApplicationTickHook( void ); FreeRTOS与运行时间和任务状态收集有关的配置选项configGENERATE_RUN_TIME_STATS为1 的话开启时间统计功能，如果定义这个宏的话，就必须还有定义另外两个宏，这个在后面的任务查询的时候我们有可能会配置，这两个宏分别是： 12portCONFIGURE_TIMER_FOR_RUN_TIME_STATSportALT_GET_RUN_TIME_COUNTER_VALUE configUSE_TRACE_FACILITY为1的话启动可视化跟踪调试，会增加一些结构体成员和API函数。 configUSE_STATS_FORMATTING_FUNCTIONSSet configUSE_TRACE_FACILITY and configUSE_STATS_FORMATTING_FUNCTIONS to 1to include the vTaskList() and vTaskGetRunTimeStats() FreeRTOS与协程有关的配置选项（现在的MCU很强大，不需要节约资源，所以基本不配置协程）configUSE_CO_ROUTINES为1的话，工程需要编译协程，需要把协程文件包含进来，相应的API函数才会被编译。 configMAX_CO_ROUTINE_PRIORITIES设置协程的最大优先级，设置完之后，协程使用的优先级范围0~configMAX_CO_ROUTINE_PRIORITIES-1 FreeRTOS与软件定时器有关的配置选项configUSE_TIMERS为1则启动软件定时器，还有三个宏也需要定义， 123configTIMER_TASK_PRIORITYconfigTIMER_QUEUE_LENGTH configTIMER_TASK_STACK_DEPTHxxxxxxxxxx configTIMER_TASK_PRIORITY设置定时器任务的优先级，0~configMAX_PRIORITIES-1，如果定时器任务的优先级高的话，定时器的队列和回调函数会及时处理。 configTIMER_QUEUE_LENGTH设置定时器队列的队列长度。 configTIMER_TASK_STACK_DEPTH定时器任务的堆栈，可以根据定时器回调函数的大小，定义定时器任务堆栈大小。 FreeRTOS与中断有关的配置选项__NVIC_PRIO_BITS设置优先级位数，STMF407,是高四位，也就是BIT4，5，6，7 configLIBRARY_LOWEST_INTERRUPT_PRIORITY设置最低优先级，因为STM32的NVIC配置的组4，也就是16位抢占优先级，所以最低优先级为15，ARM的0优先级最大。 configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITYFreeRTOS可以管理的最低优先级，如果设为5的话，0-5不归FREERTOS管，其余的RTOS可以通过API函数管理。与BASEPRI这个寄存器相关。 configKERNEL_INTERRUPT_PRIORITY这个是设置内核中断优先级，也就是系统中断的PenSV和SysTick（滴答定时器） configMAX_SYSCALL_INTERRUPT_PRIORITY设置FreeRTOS的API函数的优先级，低于此优先级的中断可以安全调用FREERTOS的API函数，高于此优先级时，如果调用API函数，中断也可以打断。 总结上面有些宏，从字面意思理解并不难，但是我们需要结合相应的功能，才能熟练运用。]]></content>
+      <categories>
+        <category>STM32</category>
+      </categories>
+      <tags>
+        <tag>Stm32F407</tag>
+        <tag>FreeRTOS</tag>
+        <tag>MDK5</tag>
       </tags>
   </entry>
   <entry>
