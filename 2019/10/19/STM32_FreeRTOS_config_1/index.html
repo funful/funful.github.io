@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-bounce.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Stm32F407,FreeRTOS,MDK5," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="FreeRTOS是一个RTOS类的嵌入式实时操作系统，并且是开源免费的，与其他实时操作系统相比，是一个很好的选择。在移植好FreeRTOS到STM32上面之后，需要根据板子外设配置相应的功能，FreeRTOSConfig.h里面的宏完成对系统的裁剪和配置。">
+<meta name="keywords" content="Stm32F407,FreeRTOS,MDK5">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STM2F407与FreeRTOS的FreeRTOSConfig.h详解&lt;1&gt;">
+<meta property="og:url" content="http://www.funful.ink/2019/10/19/STM32_FreeRTOS_config_1/index.html">
+<meta property="og:site_name" content="FunfulBlog">
+<meta property="og:description" content="FreeRTOS是一个RTOS类的嵌入式实时操作系统，并且是开源免费的，与其他实时操作系统相比，是一个很好的选择。在移植好FreeRTOS到STM32上面之后，需要根据板子外设配置相应的功能，FreeRTOSConfig.h里面的宏完成对系统的裁剪和配置。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-14T15:15:55.251Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="STM2F407与FreeRTOS的FreeRTOSConfig.h详解&lt;1&gt;">
+<meta name="twitter:description" content="FreeRTOS是一个RTOS类的嵌入式实时操作系统，并且是开源免费的，与其他实时操作系统相比，是一个很好的选择。在移植好FreeRTOS到STM32上面之后，需要根据板子外设配置相应的功能，FreeRTOSConfig.h里面的宏完成对系统的裁剪和配置。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.funful.ink/2019/10/19/STM32_FreeRTOS_config_1/"/>
+
+
+
+
+
+  <title>STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1> | FunfulBlog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">FunfulBlog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Funful的个人博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-文章分类">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-categories"></i> <br />
+            
+            文章分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-标签">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-归档">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archives"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-关于">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-about"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/10/19/STM32_FreeRTOS_config_1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ZhaoH.T">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FunfulBlog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1></h1>
+        
+
+        <div class="post-meta">
+       
+                <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-19T00:31:20+08:00">
+                2019-10-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/STM32/" itemprop="url" rel="index">
+                    <span itemprop="name">STM32</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/19/STM32_FreeRTOS_config_1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2019/10/19/STM32_FreeRTOS_config_1/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+      
+
+          
+          
+             <span id="/2019/10/19/STM32_FreeRTOS_config_1/" class="leancloud_visitors" data-flag-title="STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1>">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+<span>&nbsp;|&nbsp;</span>
+          
+
+          
+            <span class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,447
+                </span>
+              
+
+              
+
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>FreeRTOS是一个RTOS类的嵌入式实时操作系统，并且是开源免费的，与其他实时操作系统相比，是一个很好的选择。在移植好FreeRTOS到STM32上面之后，需要根据板子外设配置相应的功能，FreeRTOSConfig.h里面的宏完成对系统的裁剪和配置。</p>
+<a id="more"></a>
+<h1 id="系统配置文件FreeRTOSConfig-h"><a href="#系统配置文件FreeRTOSConfig-h" class="headerlink" title="系统配置文件FreeRTOSConfig.h"></a>系统配置文件FreeRTOSConfig.h</h1><p>在编译移植好的FreeROTS工程之后，需要都这个系统配置文件进行宏配置，这个配置文件与我们在编译kernel时的menuconfig类似，里面定义的宏，是对板子外设的和功能的裁剪配置。这个里面主要分为两个类的宏，一个是“INCLUDE_”开始的宏，一个是“config”开始的宏。FreeRTOSConfig.h是我们自己填充的.h文件，RTOS工程自带一个FreeRTOS.h文件，我们在FreeRTOSConfig.h定义的宏会对FreeRTOS.h进行条件编译。</p>
+<h1 id="INCLUDE"><a href="#INCLUDE" class="headerlink" title="INCLUDE_*"></a>INCLUDE_*</h1><p>这个宏的主要功能就是使能或者是失能，FreeRTOS中的API函数的，如果我们需要使用某个api函数就需要把这个宏置1，否则就是置0。在FreeRTOSConfig.h，在上面部分是宏的声明，在对应的.c文件里面会有条件编译，这个就可以达到减少系统占有的ROM和RAM。</p>
+<h3 id="INCLUDE-xTaskGetSchedulerState"><a href="#INCLUDE-xTaskGetSchedulerState" class="headerlink" title="INCLUDE_xTaskGetSchedulerState"></a>INCLUDE_xTaskGetSchedulerState</h3><p>这个宏是对xTaskGetSchedulerState函数的条件判断，是获取任务调度表状态的函数。</p>
+<h3 id="INCLUDE-vTaskPrioritySet"><a href="#INCLUDE-vTaskPrioritySet" class="headerlink" title="INCLUDE_vTaskPrioritySet"></a>INCLUDE_vTaskPrioritySet</h3><p>这个宏是对vTaskPrioritySet函数的条件判断，是任务优先级设置的函数。</p>
+<h4 id="INCLUDE-uxTaskPriorityGet"><a href="#INCLUDE-uxTaskPriorityGet" class="headerlink" title="INCLUDE_uxTaskPriorityGet"></a>INCLUDE_uxTaskPriorityGet</h4><p>这个宏是对uxTaskPriorityGet函数的条件判断，是获得任务优先级的函数。</p>
+<h3 id="INCLUDE-vTaskDelete"><a href="#INCLUDE-vTaskDelete" class="headerlink" title="INCLUDE_vTaskDelete"></a>INCLUDE_vTaskDelete</h3><p>这个宏是对vTaskDelete函数的条件判断，是获得任务优先级的函数。</p>
+<h3 id="INCLUDE-vTaskCleanUpResources"><a href="#INCLUDE-vTaskCleanUpResources" class="headerlink" title="INCLUDE_vTaskCleanUpResources"></a>INCLUDE_vTaskCleanUpResources</h3><p>这个宏是对vTaskCleanUpResources函数的条件判断，是对删除的任务进行资源回收的函数。</p>
+<h3 id="INCLUDE-vTaskSuspend"><a href="#INCLUDE-vTaskSuspend" class="headerlink" title="INCLUDE_vTaskSuspend"></a>INCLUDE_vTaskSuspend</h3><p>这个宏是对vTaskSuspend函数的条件判断，是对任务进行挂起的函数。</p>
+<h3 id="INCLUDE-vTaskDelayUntil"><a href="#INCLUDE-vTaskDelayUntil" class="headerlink" title="INCLUDE_vTaskDelayUntil"></a>INCLUDE_vTaskDelayUntil</h3><p>这个宏是对vTaskDelayUntil函数的条件判断，是设置任务延迟绝对时间的函数。</p>
+<h3 id="INCLUDE-vTaskDelay"><a href="#INCLUDE-vTaskDelay" class="headerlink" title="INCLUDE_vTaskDelay"></a>INCLUDE_vTaskDelay</h3><p>这个宏是对vTaskDelay函数的条件判断，是设置任务延迟相对时间的函数。</p>
+<h3 id="INCLUDE-eTaskGetState"><a href="#INCLUDE-eTaskGetState" class="headerlink" title="INCLUDE_eTaskGetState"></a>INCLUDE_eTaskGetState</h3><p>这个宏是对eTaskGetState函数的条件判断，是获得某个任务的状态的函数。</p>
+<h3 id="INCLUDE-xTimerPendFunctionCall"><a href="#INCLUDE-xTimerPendFunctionCall" class="headerlink" title="INCLUDE_xTimerPendFunctionCall"></a>INCLUDE_xTimerPendFunctionCall</h3><p>这个宏是对xTimerPendFunctionCall函数的条件判断，是获得某个任务的状态的函数</p>
+<h1 id="config"><a href="#config" class="headerlink" title="config_*"></a>config_*</h1><h2 id="FreeRTOS基础配置选项"><a href="#FreeRTOS基础配置选项" class="headerlink" title="FreeRTOS基础配置选项"></a>FreeRTOS基础配置选项</h2><h3 id="1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换"><a href="#1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换" class="headerlink" title="1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换:"></a>1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换:</h3><ol>
+<li>一个任务调用函数taskYIELD();</li>
+<li>一个任务调用可以使任务进入阻塞状态的API函数；</li>
+<li>应用程序明确定义了在中断中执行上下文切换；</li>
+</ol>
+<h3 id="configUSE-TIME-SLICING"><a href="#configUSE-TIME-SLICING" class="headerlink" title="configUSE_TIME_SLICING"></a>configUSE_TIME_SLICING</h3><p>为1的话，在相同优先级下的任务使用合作式调度器，也就是时间片轮流执行。为0的话则不会。</p>
+<h3 id="configUSE-PORT-OPTIMISED-TASK-SELECTION"><a href="#configUSE-PORT-OPTIMISED-TASK-SELECTION" class="headerlink" title="configUSE_PORT_OPTIMISED_TASK_SELECTION"></a>configUSE_PORT_OPTIMISED_TASK_SELECTION</h3><p>选择下一个要执行的任务，为0是通用的方法，为1是特殊方法，使用硬件指令计算。</p>
+<h3 id="configUSE-TICKLESS-IDLE"><a href="#configUSE-TICKLESS-IDLE" class="headerlink" title="configUSE_TICKLESS_IDLE"></a>configUSE_TICKLESS_IDLE</h3><p>FreerRTOS支持低功耗tickless模式，为1使能，tickless低功耗模式是RTOS通过的低功耗方法，</p>
+<h3 id="configUSE-QUEUE-SETS"><a href="#configUSE-QUEUE-SETS" class="headerlink" title="configUSE_QUEUE_SETS"></a>configUSE_QUEUE_SETS</h3><p>设置成1使能队列集功能（可以阻塞、挂起到多个队列和信号量），设置成0取消队列集功能。</p>
+<h3 id="configCPU-CLOCK-HZ"><a href="#configCPU-CLOCK-HZ" class="headerlink" title="configCPU_CLOCK_HZ"></a>configCPU_CLOCK_HZ</h3><p>设置CPU工作的频率。</p>
+<h3 id="configTICK-RATE-HZ"><a href="#configTICK-RATE-HZ" class="headerlink" title="configTICK_RATE_HZ"></a>configTICK_RATE_HZ</h3><p>设置滴答定时器的中断频率，这里设置为1000，周期就是1ms。</p>
+<h3 id="configMAX-PRIORITIES"><a href="#configMAX-PRIORITIES" class="headerlink" title="configMAX_PRIORITIES"></a>configMAX_PRIORITIES</h3><p>设置优先级的数量，范围为0~（configMAX_PRIORITIES-1），0为最低优先级，值越大优先级越高，而且我们的任务不可使用0优先级，</p>
+<h3 id="configMINIMAL-STACK-SIZE"><a href="#configMINIMAL-STACK-SIZE" class="headerlink" title="configMINIMAL_STACK_SIZE"></a>configMINIMAL_STACK_SIZE</h3><p>设置最小任务堆栈大小，也就是空闲任务大小，单位是字，</p>
+<h3 id="configMAX-TASK-NAME-LEN"><a href="#configMAX-TASK-NAME-LEN" class="headerlink" title="configMAX_TASK_NAME_LEN"></a>configMAX_TASK_NAME_LEN</h3><p>设置任务名最大长度，字节为单位</p>
+<h3 id="configUSE-16-BIT-TICKS"><a href="#configUSE-16-BIT-TICKS" class="headerlink" title="configUSE_16_BIT_TICKS"></a>configUSE_16_BIT_TICKS</h3><p>设置系统节拍计数器变量数据类型。设为 1后portTickType 将被定义为无符号的16位整形类型，configUSE_16_BIT_TICKS 设为0 后portTickType 则被定义为无符号的32位整型。</p>
+<h3 id="configIDLE-SHOULD-YIELD"><a href="#configIDLE-SHOULD-YIELD" class="headerlink" title="configIDLE_SHOULD_YIELD"></a>configIDLE_SHOULD_YIELD</h3><p>这宏的作用是定义了与空闲任务（idle task）和其他任务处于同等优先级时，为1时，时间片轮到空闲任务的时候，空闲任务会将cpu的使用权交给其他任务    。</p>
+<h3 id="configUSE-TASK-NOTIFICATIONS"><a href="#configUSE-TASK-NOTIFICATIONS" class="headerlink" title="configUSE_TASK_NOTIFICATIONS"></a>configUSE_TASK_NOTIFICATIONS</h3><p>为1 则开启任务通知功能。</p>
+<h3 id="configUSE-MUTEXES"><a href="#configUSE-MUTEXES" class="headerlink" title="configUSE_MUTEXES"></a>configUSE_MUTEXES</h3><p>为1使用互斥信号量。</p>
+<h3 id="configQUEUE-REGISTRY-SIZE"><a href="#configQUEUE-REGISTRY-SIZE" class="headerlink" title="configQUEUE_REGISTRY_SIZE"></a>configQUEUE_REGISTRY_SIZE</h3><p>设置可以注册队列和信号量的最大数量，在内核调试器查询队列和信号量的时候需要设置这个宏，</p>
+<h3 id="configCHECK-FOR-STACK-OVERFLOW"><a href="#configCHECK-FOR-STACK-OVERFLOW" class="headerlink" title="configCHECK_FOR_STACK_OVERFLOW"></a>configCHECK_FOR_STACK_OVERFLOW</h3><p>设置堆栈溢出检测，每个任务的堆栈是从FreeRTOS的ucHeap中分配的，如果任务的堆栈溢出的话，会造成程序不稳定，为1的话则设置为堆栈溢出检测功能，需要和钩子函数结合使用，也就是一个回调函数，当溢出是会调用这个回调函数。</p>
+<h3 id="configUSE-RECURSIVE-MUTEXES"><a href="#configUSE-RECURSIVE-MUTEXES" class="headerlink" title="configUSE_RECURSIVE_MUTEXES"></a>configUSE_RECURSIVE_MUTEXES</h3><p>为1的话是使能递归互斥信号量。</p>
+<h3 id="configUSE-MALLOC-FAILED-HOOK"><a href="#configUSE-MALLOC-FAILED-HOOK" class="headerlink" title="configUSE_MALLOC_FAILED_HOOK"></a>configUSE_MALLOC_FAILED_HOOK</h3><p>为1使用内存分配失败的钩子函数，</p>
+<h3 id="configUSE-APPLICATION-TASK-TAG"><a href="#configUSE-APPLICATION-TASK-TAG" class="headerlink" title="configUSE_APPLICATION_TASK_TAG"></a>configUSE_APPLICATION_TASK_TAG</h3><p>这个宏为1是使能两个函数进行编译：</p>
+<ol>
+<li>configUSE_APPLICATION_TASK_TAGF（）这个函数</li>
+<li>vTaskSetApplicationTaskTag（）,这个函数是为任务分配一个标签值。</li>
+</ol>
+<h3 id="configUSE-COUNTING-SEMAPHORES"><a href="#configUSE-COUNTING-SEMAPHORES" class="headerlink" title="configUSE_COUNTING_SEMAPHORES"></a>configUSE_COUNTING_SEMAPHORES</h3><p>设置1会启动计数型信号量，</p>
+<h2 id="FreeRTOS与内存申请有关配置选项"><a href="#FreeRTOS与内存申请有关配置选项" class="headerlink" title="FreeRTOS与内存申请有关配置选项"></a>FreeRTOS与内存申请有关配置选项</h2><h3 id="configSUPPORT-DYNAMIC-ALLOCATION"><a href="#configSUPPORT-DYNAMIC-ALLOCATION" class="headerlink" title="configSUPPORT_DYNAMIC_ALLOCATION"></a>configSUPPORT_DYNAMIC_ALLOCATION</h3><p>定义为1的话FreeRTOS内核对象所需要的RAM会从FREERTOS的堆中动态的获取内存，为0则需要内核对象自己提供。</p>
+<h3 id="configTOTAL-HEAP-SIZE"><a href="#configTOTAL-HEAP-SIZE" class="headerlink" title="configTOTAL_HEAP_SIZE"></a>configTOTAL_HEAP_SIZE</h3><p>设置堆空间（Heap）的大小。只有当程序中采用FreeRTOS 提供的内存分配算法时才会用到。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>总是我们没有用到的宏有些不会在FreeRTOSConfig.h定义，需要在FreeRTOS.h中查找，并且上面和针对config的宏还有部分配置解释。</p>
+
+      
+    </div>
+    
+    
+    
+      <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+      </div>
+      <div>
+      
+        
+      
+      </div>
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者:</strong>
+    ZhaoH.T
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接:</strong>
+    <a href="http://www.funful.ink/2019/10/19/STM32_FreeRTOS_config_1/" title="STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1>">http://www.funful.ink/2019/10/19/STM32_FreeRTOS_config_1/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明: </strong>
+    本博客所有文章除特别声明外，均采用 CC BY-NC-SA 4.0 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Stm32F407/" rel="tag"><i class="fa fa-tag"></i> Stm32F407</a>
+          
+            <a href="/tags/FreeRTOS/" rel="tag"><i class="fa fa-tag"></i> FreeRTOS</a>
+          
+            <a href="/tags/MDK5/" rel="tag"><i class="fa fa-tag"></i> MDK5</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/24/2019-08-24-C-Assembly/" rel="next" title="C内嵌ARM汇编">
+                <i class="fa fa-chevron-left"></i> C内嵌ARM汇编
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/19/ESP8266_Connect_TO_PhoneAndPC_WithTCP/" rel="prev" title="ES8266模块AT操作<多连接TCP通信>">
+                ES8266模块AT操作<多连接TCP通信> <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="ZhaoH.T" />
+            
+              <p class="site-author-name" itemprop="name">ZhaoH.T</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/funful" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:funful@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#系统配置文件FreeRTOSConfig-h"><span class="nav-number">1.</span> <span class="nav-text">系统配置文件FreeRTOSConfig.h</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#INCLUDE"><span class="nav-number">2.</span> <span class="nav-text">INCLUDE_*</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-xTaskGetSchedulerState"><span class="nav-number">2.0.1.</span> <span class="nav-text">INCLUDE_xTaskGetSchedulerState</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskPrioritySet"><span class="nav-number">2.0.2.</span> <span class="nav-text">INCLUDE_vTaskPrioritySet</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#INCLUDE-uxTaskPriorityGet"><span class="nav-number">2.0.2.1.</span> <span class="nav-text">INCLUDE_uxTaskPriorityGet</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskDelete"><span class="nav-number">2.0.3.</span> <span class="nav-text">INCLUDE_vTaskDelete</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskCleanUpResources"><span class="nav-number">2.0.4.</span> <span class="nav-text">INCLUDE_vTaskCleanUpResources</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskSuspend"><span class="nav-number">2.0.5.</span> <span class="nav-text">INCLUDE_vTaskSuspend</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskDelayUntil"><span class="nav-number">2.0.6.</span> <span class="nav-text">INCLUDE_vTaskDelayUntil</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskDelay"><span class="nav-number">2.0.7.</span> <span class="nav-text">INCLUDE_vTaskDelay</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-eTaskGetState"><span class="nav-number">2.0.8.</span> <span class="nav-text">INCLUDE_eTaskGetState</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-xTimerPendFunctionCall"><span class="nav-number">2.0.9.</span> <span class="nav-text">INCLUDE_xTimerPendFunctionCall</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#config"><span class="nav-number">3.</span> <span class="nav-text">config_*</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#FreeRTOS基础配置选项"><span class="nav-number">3.1.</span> <span class="nav-text">FreeRTOS基础配置选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换"><span class="nav-number">3.1.1.</span> <span class="nav-text">1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-TIME-SLICING"><span class="nav-number">3.1.2.</span> <span class="nav-text">configUSE_TIME_SLICING</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-PORT-OPTIMISED-TASK-SELECTION"><span class="nav-number">3.1.3.</span> <span class="nav-text">configUSE_PORT_OPTIMISED_TASK_SELECTION</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-TICKLESS-IDLE"><span class="nav-number">3.1.4.</span> <span class="nav-text">configUSE_TICKLESS_IDLE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-QUEUE-SETS"><span class="nav-number">3.1.5.</span> <span class="nav-text">configUSE_QUEUE_SETS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configCPU-CLOCK-HZ"><span class="nav-number">3.1.6.</span> <span class="nav-text">configCPU_CLOCK_HZ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configTICK-RATE-HZ"><span class="nav-number">3.1.7.</span> <span class="nav-text">configTICK_RATE_HZ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configMAX-PRIORITIES"><span class="nav-number">3.1.8.</span> <span class="nav-text">configMAX_PRIORITIES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configMINIMAL-STACK-SIZE"><span class="nav-number">3.1.9.</span> <span class="nav-text">configMINIMAL_STACK_SIZE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configMAX-TASK-NAME-LEN"><span class="nav-number">3.1.10.</span> <span class="nav-text">configMAX_TASK_NAME_LEN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-16-BIT-TICKS"><span class="nav-number">3.1.11.</span> <span class="nav-text">configUSE_16_BIT_TICKS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configIDLE-SHOULD-YIELD"><span class="nav-number">3.1.12.</span> <span class="nav-text">configIDLE_SHOULD_YIELD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-TASK-NOTIFICATIONS"><span class="nav-number">3.1.13.</span> <span class="nav-text">configUSE_TASK_NOTIFICATIONS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-MUTEXES"><span class="nav-number">3.1.14.</span> <span class="nav-text">configUSE_MUTEXES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configQUEUE-REGISTRY-SIZE"><span class="nav-number">3.1.15.</span> <span class="nav-text">configQUEUE_REGISTRY_SIZE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configCHECK-FOR-STACK-OVERFLOW"><span class="nav-number">3.1.16.</span> <span class="nav-text">configCHECK_FOR_STACK_OVERFLOW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-RECURSIVE-MUTEXES"><span class="nav-number">3.1.17.</span> <span class="nav-text">configUSE_RECURSIVE_MUTEXES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-MALLOC-FAILED-HOOK"><span class="nav-number">3.1.18.</span> <span class="nav-text">configUSE_MALLOC_FAILED_HOOK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-APPLICATION-TASK-TAG"><span class="nav-number">3.1.19.</span> <span class="nav-text">configUSE_APPLICATION_TASK_TAG</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-COUNTING-SEMAPHORES"><span class="nav-number">3.1.20.</span> <span class="nav-text">configUSE_COUNTING_SEMAPHORES</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FreeRTOS与内存申请有关配置选项"><span class="nav-number">3.2.</span> <span class="nav-text">FreeRTOS与内存申请有关配置选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#configSUPPORT-DYNAMIC-ALLOCATION"><span class="nav-number">3.2.1.</span> <span class="nav-text">configSUPPORT_DYNAMIC_ALLOCATION</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configTOTAL-HEAP-SIZE"><span class="nav-number">3.2.2.</span> <span class="nav-text">configTOTAL_HEAP_SIZE</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhaoH.T</span>
+
+  
+</div>
+
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+<font size="3" color="#0000CD"> 访问人数: </font><span id="busuanzi_value_site_uv"></span> 人 | |
+</span>  
+<span id="busuanzi_container_site_pv">
+<font size="3" color="#0000CD"> 访问量: </font><span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+
+
+  <span class="post-meta-divider"></span>
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://www.funful.ink/2019/10/19/STM32_FreeRTOS_config_1/';
+          this.page.identifier = '2019/10/19/STM32_FreeRTOS_config_1/';
+          this.page.title = 'STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1>';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('5');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'manual') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("Lkdgp40r5EzS5xw13XjE2odj-gzGzoHsz", "PqMXuVWSIC5UeQX1QYbRL9Tv");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/exturl.js?v=5.1.4"></script>
+
+
+
+</body>
+</html>
