@@ -1,1 +1,1 @@
-http://www.funful.ink/2019/10/19/ESP8266_SDK_MQTT_LED/
+http://www.funful.ink/2019/10/19/2019-10-19-全志A64编译固件报Fault/

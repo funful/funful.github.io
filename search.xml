@@ -1,31 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[JZ2440的uboot-2009-11移植_支持Nor Flash]]></title>
-    <url>%2F2019%2F10%2F19%2FJZ2440_uboot_2009_11_transplant_3_nor_flash%2F</url>
-    <content type="text"><![CDATA[这一节是对第二阶段的代码进行移植，来支持Nor Flash 硬件环境Nor Flash介绍Nor Flash 是一种存储芯片，支持掉电存储、支持Executensil On Chip（片上程序运行）。所以很适合作为嵌入式中启动程序的存储介质。但是由于低写速度和擦除速度影响着他的性能，在1~16MB的闪存中较为常见。 MX29LV160D T/B 芯片 2MB的Flash（8位/16位） ,JZ2440选用数据宽度的16位 扇区分布; | 大小 | 8K-Byte | 16K-Byte | 32K-Byte | 64K-Byte || —- | ——- | ——– | ——– | ——– || 块数 | 2 | 1 | 1 | 31 | Word/Byte 模式选择，如果选用Word时需要错位连接 工作电压2.7V~3.6V 引脚封装48pin-TSOP/48ball-XFLGA/WFBGA 至少可靠性保存数据20年，擦除、编程次数10万个周期 代码分析我们之前顺腾摸瓜，从start.S-&gt;crt0.S，在crt0.S中分别调用了两个函数：board_init_f和board_init_r。 位置12board_init_f 位于u-boot-2016.09\common\Board_f.cboard_init_r 位于u-boot-2016.09\common\Board_r.c board_init_f功能1234567主要是初始化下面这些timer_init, /* initialize timer */get_clocks,env_init, init_baud_rate, /* initialze baudrate settings */serial_init, /* serial communications setup */console_init_f, /* stage 1 init of console */ board_init_r功能123board_init,initr_flashinitr_nand, 代码解读所以我们知道nor flash的设置在board_init_r里面， 进入到static int initr_flash(void) ，位于（common\Board_r.c） 123456flash_info[i].flash_id = FLASH_UNKNOWN;从这一句我们可以看出来flash__info是存储Nor flash信息的结构体 if (!flash_detect_legacy(cfi_fla sh_bank_addr(i), i)) flash_detect_legacy(phys_addr_t base, int banknum) if (jedec_flash_match(info, info-&gt;start[0])) int jedec_flash_match(flash_info_t *info, ulong base) 将读取到的板子ID和已有板子信息做对比 &#123; int ret = 0; int i; ulong mask = 0xFFFF; if (info-&gt;chipwidth == 1) mask = 0xFF; for (i = 0; i &lt; ARRAY_SIZE(jedec_table); i++) &#123; if ((jedec_table[i].mfr_id &amp; mask) == (info-&gt;manufacturer_id &amp; mask) &amp;&amp; (jedec_table[i].dev_id &amp; mask) == (info-&gt;device_id &amp; mask)) &#123; fill_info(info, &amp;jedec_table[i], base); ret = 1; break; &#125; return ret; &#125; 1234567#### 代码修改1上面分析完 ，我们就可以知道，我们只要将上面函数的饿 jedec_table结构体增加我们对应的信息就行了 ```c修改添加 static const struct amd_flash_info jedec_table[] 结构体 位置1drivers\mtd\Jedec_flash.c 添加1234567891011 在结构体补充相应的信息&#123; /* sheldon add for JZ2440_V2 Nor_Flash ： MT29LV160DB */ .mfr_id = (u16)MX_MANUFACT, //厂家 id .dev_id = 0x2249, //设备 id .name = &quot;MX29LV160D&quot;, .uaddr = &#123; [1] = MTD_UADDR_0x0555_0x02AA /* 1:x16 ,NOR Flash 的解锁地址 */ &#125;, .DevSize = SIZE_2MiB, //整个 nor flash 的大小 .CmdSet = P_ID_AMD_STD, .NumEraseRegions= 4, //擦除域，有几种大小的块就有几个擦除域， .regions = &#123; //查看芯片手册设置擦除块 ERASEINFO(0x10000, 31), //参照芯片手册里面的块信息 ERASEINFO(0x08000, 1), ERASEINFO(0x02000, 2), ERASEINFO(0x04000, 1), &#125; 代码修改2 我们还要修改myff244.h的一个宏 /#define CONFIG_SYS_MAX_FLASH_SECT (128) 因为我们的最大快区大于19了 测试重新编译uboot 下载到板子里面，就可以看到成功。 虽然我们看到串口打印出来的信息显示支持Flash，但是我们要测试下是否真的支持了 进入到uboot的命令行 输入：flinfo 可见扇区地址，扇区数、设备ID和厂商ID都是正确的。接下来进一步确认正确与否 查看命令 md.b A0000 10 查看0x50000地址开始的10个字节数据（） 拷贝命令 cp 30008000 A0000 10 将30008000的10个字节拷贝到A0000（A0000的地址不能低于uboot.bin的size，如果低于u-boot.bin的size ，一旦拷贝就会损坏u-boot） 擦除命令 erase A0000 Affff 擦除A0000~Affff之间的内容 以上这几个操作均正常，说明设备已经支持Nor flash NOR FLASH 移植成功 ​ ​ ​ ​]]></content>
+    <title><![CDATA[全志A64编译固件报Fault]]></title>
+    <url>%2F2019%2F10%2F19%2F2019-10-19-%E5%85%A8%E5%BF%97A64%E7%BC%96%E8%AF%91%E5%9B%BA%E4%BB%B6%E6%8A%A5Fault%2F</url>
+    <content type="text"><![CDATA[环境 Ubuntu： Ubuntu 19.04 固件： 全志CQA64-LinuxQT arm交叉编译器：crosstool-NG linaro-1.13.1-4.9-2014.09 - Linaro GCC 4.9-2014.09 时间：19-10-2019 错误描述 123freadahead.c: In function 'freadahead':freadahead.c:92:3: error: #error "Please port gnulib freadahead.c to your platform! Look at the definition of fflush, fread, ungetc on your system, then report this to bug-gnulib." #error "Please port gnulib freadahead.c to your platform! Look at the definition of fflush, fread, ungetc on your system, then report this to bug-gnulib." 解决 进入host-m4-1.4.18/lib中，对fflush.c，fpending.c，fpurge.c，freadahead.c，freading.c，fseeko.c中”_IO_ftrylockfile“ 替换为“_IO_EOF_SEEN” 进入host-m4-1.4.18/lib中，对stdio-impl.h中添加 123456+/* Glibc 2.28 made _IO_IN_BACKUP private. For now, work around this+ problem by defining it ourselves. FIXME: Do not rely on glibc+ internals. */+#if !defined _IO_IN_BACKUP &amp;&amp; defined _IO_EOF_SEEN+# define _IO_IN_BACKUP 0x100+#endif 参考Patch：m4.patch]]></content>
       <categories>
-        <category>uboot移植</category>
+        <category>BUG调试</category>
       </categories>
       <tags>
-        <tag>移植</tag>
-        <tag>arm</tag>
-        <tag>linux</tag>
-        <tag>Nor Flash</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[ES8266模块二次开发SDK之MQTT局域网控制LED]]></title>
-    <url>%2F2019%2F10%2F19%2FESP8266_SDK_MQTT_LED%2F</url>
-    <content type="text"><![CDATA[根据乐鑫官网的提供的Pro，已经提供了 支持MQTT协议，，在乐鑫pro 基础上再局域网下面控制led 准备工程文档准备 下载链接 乐鑫 选用的平台NON-OS SDK 使用安信可一体化编程软件打开，文档的导入具体去安信可官网搜索，这里直接讲解导入后的操作。 删除third_party,将esp_mqtt_proj从example拉出来，将driver_lib的Makefile添加后.bak,目的是为了不讲driver_lib不编译进工程 如图， MQTT的windows环境准备 下载EMQ压缩包，根据你的windows环境选择，下载地址链接 解压到不带中文的目录下，打开windows命令，进入到该解压目录的bin文件夹下面， 在终端执行”emqttd console”，如果卡顿就重新执行 在浏览器输入”127.0.0.1:18083” 此时会进入EMQ的界面SSID为admin，Passwd为public 此时MQTT服务器已经搭建完成 硬件环境准备 一块MODEMCU或者是ESP8266的最小系统 一个USB转TTL或者是数据线 软件环境 烧录工具，可以在安信可官网下载 链接 串口工具，使用任意一款都可以， 步骤搭建测试环境 在工程中打开user_main.c和mqtt_config.h， 在mqtt_config.h需要修改以下几个宏 | CFG_HOLDER | 更新配置到FLASH中，只要数值和本次不一样就行， || —————– | —————————————- || MQTT_HOST | MQTT服务器的IP || MQTT_PORT | MQTT服务器的PORT || MQTT_CLIENT_ID | 客户端ID || MQTT_USER | MQTT服务器的登录账号”admin” || MQTT_PASS | MQTT服务器的登录”admin” || STA_SSID | ESP8266和电脑端连接的路由账号 || STA_PASS | ESP8266和电脑端连接的路由密码 || PROTOCOL_NAMEv311 | 根据MQTT协议的兼容性，在前面加#define，PROTOCOL_NAMEv31注释掉 || | | 右击该工程，Clean Project &amp;&amp;Build Project 可以看到顺利通过编译，如图 依照安信可官方提供的烧录方法可以知道， blank.bin、esp_init_data_default_v05.bin是乐鑫SDK提供的，而eagle.flash.bin和eagle.irom0text.bin是编译工程生成的，，下载地址需要我们将工程给的地址和安信可提供地址组合得到，如图 | SPI SPEED | 40MHz || ———- | ————– || SPI MODE | DOUT || FLASH SIZE | 32Mbit（根据板子而定） || | | 使用烧写工具擦写和下载， 将MQTT服务器Runing，(MQTT服务器和ESP8266需要在同一个局域网下面) 重启ESP8266模块，打开串口 BAUD 115200 在浏览器登录MQTT，可以看到会话界面，有刚才客户端ID,主题界面有工程中注册的主题如图 ​ 主题，是我们在user_main.c的mqttConnectedCb函数注册的主题 如图 串口也会打印出来 到这一步，我们整个MQTT的局域网服务器已经搭建起来，下面测试一下， 在EMQ界面切换到websocket测试，首先连接 订阅主题”/mqtt/topic/1” 给主题”/mqtt/topic/1” 发送”Hello World!” 如图 在串口端会打印出”Hello World!”,如图 ​ 这里整体的测试环境已经搭建完成，我们下面开始进行局域网，点亮LED 局域网点亮LED 回到工程进入user_main.c， 在user_init 函数中添加 12PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO5_U, FUNC_GPIO5); //选择GPIO5GPIO_OUTPUT_SET(GPIO_ID_PIN(5), 1); //默认GPIO5为高 ​ 在mqttConnectedCb函数中注册一个主题 1MQTT_Subscribe(client, "/hangtong/led/control", 0); 在mqttDataCb对收到的值解析 123456789101112if (data[0] == '0') &#123; GPIO_OUTPUT_SET(GPIO_ID_PIN(5), 0); MQTT_Publish(client, "/xuhong/LED/out", "LED status is open ...", strlen("LED status is open ..."), 0, 0); &#125; //接收到指令是0，GPIO15为高,也就是LED关灯，同时发布消息，主题是/xuhong/LED/out，信息是LED status is off ... if (data[0] == '1') &#123; GPIO_OUTPUT_SET(GPIO_ID_PIN(5), 1); MQTT_Publish(client, "/xuhong/LED/out", "LED status is off ...", strlen("LED status is off ..."), 0, 0); &#125; ​ Clean Project &amp;&amp;build Project 重复上面步骤， 在EMQ服务器上面我们，会发现出现了”/hangtong/led/control” 主题 ，在websocket向”/hangtong/led/control”主题发送0则GPIO5为低电平。发送1则GPIO5为高电平 成功， 总结 MQTT服务器的IP需要我们在电脑端查询得到， 局域网的控制，所以电脑端和ESP8266需要连接同一个路由]]></content>
+    <title><![CDATA[关于七牛云测试域名回收解决方案]]></title>
+    <url>%2F2019%2F10%2F19%2FTechnical_articles_1%2F</url>
+    <content type="text"><![CDATA[之前写更新的几篇文章,没有注意到七牛云测试域名要回收的信息,今天突然发现测试域名复制外链的时候,竟然无法复制,而且提示错误:5402Bucket域名失败,所以就决定自定义一个个人域名解决. 融合 CDN 测试域名公告 但是发现之前文章的测试域名还能在blog中正常显示，所以先不管这个呢．先创建自定义域名． 解决方案自定义域名123本站域名:funful.ink七牛绑定域名:cdn.funful.ink 登录七牛云,进入对象存储,再进入到相应的存储空间,在空间概览,点击自定义域名.如图: 如图:点击自定义域名之后,会进入域名管理-&gt;创建域名里面,我们只需要填写一个加速域名,也就是二级域名,这里我的funful.ink已经备案了,所以我就在我的主域名前加一个字符串,然后点击创建就可以了.如图: 这是后再次去存储空间-&gt;空间概览会发现域名状态是: 处理中 配置CNAME 获得CNAME 上图点击我们的自定义域名就可以看到这个域名的基本信息,包括CNAME:将其复制下来. 打开阿里云官网-&gt;控制台-&gt;域名,在主域名下点击解析-&gt;添加记录 会出现如图设置: 上图的记录类型:选择CNAME;主机记录:就是我们七牛云自定义域名前缀;记录值:就是CNAME值;其他值默认就可以. 点击确认就配置好了CNAME 返回到七牛云我们的存储空间-&gt;空间概览会发现,融合CDN加速域名里面的域名状态已经成功了,如果是等待CNAME的话可能是需要等待几分钟. 使用存储空间上面已经配置好 进入储存空间-&gt;内容管理.选择外链默认域名之后就可以正常使用了,(外链域名不能使用七牛云的测试域名,因为这个测试域名只能使用一个月)]]></content>
+      <categories>
+        <category>各个方面方案解决</category>
+      </categories>
+  </entry>
+  <entry>
+    <title><![CDATA[ES8266模块二次开发SDK之]]></title>
+    <url>%2F2019%2F10%2F19%2FESP8266_SDK_api_HelloWorld%2F</url>
+    <content type="text"><![CDATA[根据安信可官方文档，通过修改安信可提供的SDK，使串口输出Hello，World！ 准备 开发环境搭建： 链接 最新烧录工具： ESP FLASH TOOL 1.54版本的SDK： ESP8266_NONOS_SDK_v1.54 开发板(以下三种都可以）： ESP8266模块 NodeMcu 安信可开发板 下面根据我使用的NodeMcu，，前提是开发环境已经搭建完成，手中也有一块板子 ，需要的工具也已经下载了，记录一下，该教程操作步骤！ 步骤SDK编译生成BIN文件 打开AiThinker_IDE File- &gt;Import-&gt;C/C++-&gt;Existing Code as MakeFile Project，点击 Next 选择我们刚才下载的最新SDK的路径，取消C++，选中Cygwin GCC， 点击Finish 这样我们的工程就建立好了 在工程中，打开app，进入user，打开user_main.c 在user_init函数中添加一句 os_printf(“\r\nHello，World!\r\n”); 选中该工程右键选择Clean Project，然后再Build Project。 然后就可以 看到下面提示 下面就开始烧录 烧录 参考安信可官方的 ESP 系列模组烧录固件的指导： NodeMcu, 不需要我们手动的将GPIO0拉低， 根据我们上面的生成的两个bin文件可以知道，我们下载的1.54版本的SDK是支持云端升级的boot的 | 文件名称 | 8Mbit 地址分配 | 16Mbit 地址分配 | 32Mbit 地址分配 | 备注 || ————————- | :——–: | ———– | ———– | ———————– || boot.bin | 0x00000 | 0x00000 | 0x00000 | 由乐鑫在 SDK 中提供，建议一直使用最新版本 || user1.bin | 0x01000 | 0x01000 | 0x01000 | 主程序，由代码编译生成 || user2.bin | 0x81000 | 0x81000 | 0x81000 | 主程序，由代码编译生成 || esp_init_data_default.bin | 0xFC000 | 0x1FC000 | 0x3FC000 | 由乐鑫在 SDK 中提供 || blank.bin | 0xFE000 | 0x1FE000 | 0x3FE000 | 由乐鑫在 SDK 中提供 | 参考上图我们自己的烧录设置是（NodeMcu是32Mbit的） | boot_v1.5.bin | 0x00000 || ————————- | ——– || user1.1024.new.2.bin | 0x01000 || esp_init_data_default.bin | 0x3FC000 || blank.bin | 0x3FE000 || | | 烧录工具的设置 如图： 选好COM口，BAUD选的越大，下载速度越快，如果下载失败，可以将波特率降低 下载好之后，我们重启开发板，连接串口调试助手，波特率76800-1-8-0，如图 可以看到输出 Hello,World！ 总结 这个ESP8266的入门教程我们需要注意几点，第一是安信可提供的烧录指南的分两种情况，一种是支持云端升级的(BOOT)，另一种是不支持云端升级（No BOOT）。我们使用的1.5.4的SDK是支持云端升级的，1.2版本的不支持云端升级，两者下载的时候选的BIN文件，不相同。 使用ESP8266模块的下载的时候需要将GPIO0拉低。 ​]]></content>
       <categories>
         <category>ESP8266</category>
       </categories>
       <tags>
         <tag>ESP8266</tag>
         <tag>SDK</tag>
-        <tag>MQTT</tag>
-        <tag>局域网</tag>
       </tags>
   </entry>
   <entry>
@@ -43,29 +46,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[ES8266模块二次开发SDK之]]></title>
-    <url>%2F2019%2F10%2F19%2FESP8266_SDK_api_HelloWorld%2F</url>
-    <content type="text"><![CDATA[根据安信可官方文档，通过修改安信可提供的SDK，使串口输出Hello，World！ 准备 开发环境搭建： 链接 最新烧录工具： ESP FLASH TOOL 1.54版本的SDK： ESP8266_NONOS_SDK_v1.54 开发板(以下三种都可以）： ESP8266模块 NodeMcu 安信可开发板 下面根据我使用的NodeMcu，，前提是开发环境已经搭建完成，手中也有一块板子 ，需要的工具也已经下载了，记录一下，该教程操作步骤！ 步骤SDK编译生成BIN文件 打开AiThinker_IDE File- &gt;Import-&gt;C/C++-&gt;Existing Code as MakeFile Project，点击 Next 选择我们刚才下载的最新SDK的路径，取消C++，选中Cygwin GCC， 点击Finish 这样我们的工程就建立好了 在工程中，打开app，进入user，打开user_main.c 在user_init函数中添加一句 os_printf(“\r\nHello，World!\r\n”); 选中该工程右键选择Clean Project，然后再Build Project。 然后就可以 看到下面提示 下面就开始烧录 烧录 参考安信可官方的 ESP 系列模组烧录固件的指导： NodeMcu, 不需要我们手动的将GPIO0拉低， 根据我们上面的生成的两个bin文件可以知道，我们下载的1.54版本的SDK是支持云端升级的boot的 | 文件名称 | 8Mbit 地址分配 | 16Mbit 地址分配 | 32Mbit 地址分配 | 备注 || ————————- | :——–: | ———– | ———– | ———————– || boot.bin | 0x00000 | 0x00000 | 0x00000 | 由乐鑫在 SDK 中提供，建议一直使用最新版本 || user1.bin | 0x01000 | 0x01000 | 0x01000 | 主程序，由代码编译生成 || user2.bin | 0x81000 | 0x81000 | 0x81000 | 主程序，由代码编译生成 || esp_init_data_default.bin | 0xFC000 | 0x1FC000 | 0x3FC000 | 由乐鑫在 SDK 中提供 || blank.bin | 0xFE000 | 0x1FE000 | 0x3FE000 | 由乐鑫在 SDK 中提供 | 参考上图我们自己的烧录设置是（NodeMcu是32Mbit的） | boot_v1.5.bin | 0x00000 || ————————- | ——– || user1.1024.new.2.bin | 0x01000 || esp_init_data_default.bin | 0x3FC000 || blank.bin | 0x3FE000 || | | 烧录工具的设置 如图： 选好COM口，BAUD选的越大，下载速度越快，如果下载失败，可以将波特率降低 下载好之后，我们重启开发板，连接串口调试助手，波特率76800-1-8-0，如图 可以看到输出 Hello,World！ 总结 这个ESP8266的入门教程我们需要注意几点，第一是安信可提供的烧录指南的分两种情况，一种是支持云端升级的(BOOT)，另一种是不支持云端升级（No BOOT）。我们使用的1.5.4的SDK是支持云端升级的，1.2版本的不支持云端升级，两者下载的时候选的BIN文件，不相同。 使用ESP8266模块的下载的时候需要将GPIO0拉低。 ​]]></content>
-      <categories>
-        <category>ESP8266</category>
-      </categories>
-      <tags>
-        <tag>ESP8266</tag>
-        <tag>SDK</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[关于七牛云测试域名回收解决方案]]></title>
-    <url>%2F2019%2F10%2F19%2FTechnical_articles_1%2F</url>
-    <content type="text"><![CDATA[之前写更新的几篇文章,没有注意到七牛云测试域名要回收的信息,今天突然发现测试域名复制外链的时候,竟然无法复制,而且提示错误:5402Bucket域名失败,所以就决定自定义一个个人域名解决. 融合 CDN 测试域名公告 但是发现之前文章的测试域名还能在blog中正常显示，所以先不管这个呢．先创建自定义域名． 解决方案自定义域名123本站域名:funful.ink七牛绑定域名:cdn.funful.ink 登录七牛云,进入对象存储,再进入到相应的存储空间,在空间概览,点击自定义域名.如图: 如图:点击自定义域名之后,会进入域名管理-&gt;创建域名里面,我们只需要填写一个加速域名,也就是二级域名,这里我的funful.ink已经备案了,所以我就在我的主域名前加一个字符串,然后点击创建就可以了.如图: 这是后再次去存储空间-&gt;空间概览会发现域名状态是: 处理中 配置CNAME 获得CNAME 上图点击我们的自定义域名就可以看到这个域名的基本信息,包括CNAME:将其复制下来. 打开阿里云官网-&gt;控制台-&gt;域名,在主域名下点击解析-&gt;添加记录 会出现如图设置: 上图的记录类型:选择CNAME;主机记录:就是我们七牛云自定义域名前缀;记录值:就是CNAME值;其他值默认就可以. 点击确认就配置好了CNAME 返回到七牛云我们的存储空间-&gt;空间概览会发现,融合CDN加速域名里面的域名状态已经成功了,如果是等待CNAME的话可能是需要等待几分钟. 使用存储空间上面已经配置好 进入储存空间-&gt;内容管理.选择外链默认域名之后就可以正常使用了,(外链域名不能使用七牛云的测试域名,因为这个测试域名只能使用一个月)]]></content>
-      <categories>
-        <category>各个方面方案解决</category>
-      </categories>
-  </entry>
-  <entry>
     <title><![CDATA[STM2F407与FreeRTOS的FreeRTOSConfig.h详解]]></title>
-    <url>%2F2019%2F10%2F19%2FSTM32_FreeRTOS_config_2%2F</url>
-    <content type="text"><![CDATA[上一篇，对config宏的基础配置和部分相关的配置，有些宏我们暂时没有用上，所以对这些宏定义的概念不太清楚，这章节是对余下部分解析。 config_*FreeRTOS与钩子函数有关的配置选项configUSE_IDLE_HOOK为1的话，就是使能空闲任务回调函数，也就是如果系统调用空闲函数的话，就会回调钩子函数，我们自己去实现这个函数，函数声明如下： 1void vApplicationIdleHook( void ); configUSE_TICK_HOOK为1的话使能时间片钩子函数，但是需要我们自己去实现这个函数，函数声明如下： 1void vApplicationTickHook( void ); FreeRTOS与运行时间和任务状态收集有关的配置选项configGENERATE_RUN_TIME_STATS为1 的话开启时间统计功能，如果定义这个宏的话，就必须还有定义另外两个宏，这个在后面的任务查询的时候我们有可能会配置，这两个宏分别是： 12portCONFIGURE_TIMER_FOR_RUN_TIME_STATSportALT_GET_RUN_TIME_COUNTER_VALUE configUSE_TRACE_FACILITY为1的话启动可视化跟踪调试，会增加一些结构体成员和API函数。 configUSE_STATS_FORMATTING_FUNCTIONSSet configUSE_TRACE_FACILITY and configUSE_STATS_FORMATTING_FUNCTIONS to 1to include the vTaskList() and vTaskGetRunTimeStats() FreeRTOS与协程有关的配置选项（现在的MCU很强大，不需要节约资源，所以基本不配置协程）configUSE_CO_ROUTINES为1的话，工程需要编译协程，需要把协程文件包含进来，相应的API函数才会被编译。 configMAX_CO_ROUTINE_PRIORITIES设置协程的最大优先级，设置完之后，协程使用的优先级范围0~configMAX_CO_ROUTINE_PRIORITIES-1 FreeRTOS与软件定时器有关的配置选项configUSE_TIMERS为1则启动软件定时器，还有三个宏也需要定义， 123configTIMER_TASK_PRIORITYconfigTIMER_QUEUE_LENGTH configTIMER_TASK_STACK_DEPTHxxxxxxxxxx configTIMER_TASK_PRIORITY设置定时器任务的优先级，0~configMAX_PRIORITIES-1，如果定时器任务的优先级高的话，定时器的队列和回调函数会及时处理。 configTIMER_QUEUE_LENGTH设置定时器队列的队列长度。 configTIMER_TASK_STACK_DEPTH定时器任务的堆栈，可以根据定时器回调函数的大小，定义定时器任务堆栈大小。 FreeRTOS与中断有关的配置选项__NVIC_PRIO_BITS设置优先级位数，STMF407,是高四位，也就是BIT4，5，6，7 configLIBRARY_LOWEST_INTERRUPT_PRIORITY设置最低优先级，因为STM32的NVIC配置的组4，也就是16位抢占优先级，所以最低优先级为15，ARM的0优先级最大。 configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITYFreeRTOS可以管理的最低优先级，如果设为5的话，0-5不归FREERTOS管，其余的RTOS可以通过API函数管理。与BASEPRI这个寄存器相关。 configKERNEL_INTERRUPT_PRIORITY这个是设置内核中断优先级，也就是系统中断的PenSV和SysTick（滴答定时器） configMAX_SYSCALL_INTERRUPT_PRIORITY设置FreeRTOS的API函数的优先级，低于此优先级的中断可以安全调用FREERTOS的API函数，高于此优先级时，如果调用API函数，中断也可以打断。 总结上面有些宏，从字面意思理解并不难，但是我们需要结合相应的功能，才能熟练运用。]]></content>
+    <url>%2F2019%2F10%2F19%2FSTM32_FreeRTOS_config_1%2F</url>
+    <content type="text"><![CDATA[FreeRTOS是一个RTOS类的嵌入式实时操作系统，并且是开源免费的，与其他实时操作系统相比，是一个很好的选择。在移植好FreeRTOS到STM32上面之后，需要根据板子外设配置相应的功能，FreeRTOSConfig.h里面的宏完成对系统的裁剪和配置。 系统配置文件FreeRTOSConfig.h在编译移植好的FreeROTS工程之后，需要都这个系统配置文件进行宏配置，这个配置文件与我们在编译kernel时的menuconfig类似，里面定义的宏，是对板子外设的和功能的裁剪配置。这个里面主要分为两个类的宏，一个是“INCLUDE_”开始的宏，一个是“config”开始的宏。FreeRTOSConfig.h是我们自己填充的.h文件，RTOS工程自带一个FreeRTOS.h文件，我们在FreeRTOSConfig.h定义的宏会对FreeRTOS.h进行条件编译。 INCLUDE_*这个宏的主要功能就是使能或者是失能，FreeRTOS中的API函数的，如果我们需要使用某个api函数就需要把这个宏置1，否则就是置0。在FreeRTOSConfig.h，在上面部分是宏的声明，在对应的.c文件里面会有条件编译，这个就可以达到减少系统占有的ROM和RAM。 INCLUDE_xTaskGetSchedulerState这个宏是对xTaskGetSchedulerState函数的条件判断，是获取任务调度表状态的函数。 INCLUDE_vTaskPrioritySet这个宏是对vTaskPrioritySet函数的条件判断，是任务优先级设置的函数。 INCLUDE_uxTaskPriorityGet这个宏是对uxTaskPriorityGet函数的条件判断，是获得任务优先级的函数。 INCLUDE_vTaskDelete这个宏是对vTaskDelete函数的条件判断，是获得任务优先级的函数。 INCLUDE_vTaskCleanUpResources这个宏是对vTaskCleanUpResources函数的条件判断，是对删除的任务进行资源回收的函数。 INCLUDE_vTaskSuspend这个宏是对vTaskSuspend函数的条件判断，是对任务进行挂起的函数。 INCLUDE_vTaskDelayUntil这个宏是对vTaskDelayUntil函数的条件判断，是设置任务延迟绝对时间的函数。 INCLUDE_vTaskDelay这个宏是对vTaskDelay函数的条件判断，是设置任务延迟相对时间的函数。 INCLUDE_eTaskGetState这个宏是对eTaskGetState函数的条件判断，是获得某个任务的状态的函数。 INCLUDE_xTimerPendFunctionCall这个宏是对xTimerPendFunctionCall函数的条件判断，是获得某个任务的状态的函数 config_*FreeRTOS基础配置选项1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换: 一个任务调用函数taskYIELD(); 一个任务调用可以使任务进入阻塞状态的API函数； 应用程序明确定义了在中断中执行上下文切换； configUSE_TIME_SLICING为1的话，在相同优先级下的任务使用合作式调度器，也就是时间片轮流执行。为0的话则不会。 configUSE_PORT_OPTIMISED_TASK_SELECTION选择下一个要执行的任务，为0是通用的方法，为1是特殊方法，使用硬件指令计算。 configUSE_TICKLESS_IDLEFreerRTOS支持低功耗tickless模式，为1使能，tickless低功耗模式是RTOS通过的低功耗方法， configUSE_QUEUE_SETS设置成1使能队列集功能（可以阻塞、挂起到多个队列和信号量），设置成0取消队列集功能。 configCPU_CLOCK_HZ设置CPU工作的频率。 configTICK_RATE_HZ设置滴答定时器的中断频率，这里设置为1000，周期就是1ms。 configMAX_PRIORITIES设置优先级的数量，范围为0~（configMAX_PRIORITIES-1），0为最低优先级，值越大优先级越高，而且我们的任务不可使用0优先级， configMINIMAL_STACK_SIZE设置最小任务堆栈大小，也就是空闲任务大小，单位是字， configMAX_TASK_NAME_LEN设置任务名最大长度，字节为单位 configUSE_16_BIT_TICKS设置系统节拍计数器变量数据类型。设为 1后portTickType 将被定义为无符号的16位整形类型，configUSE_16_BIT_TICKS 设为0 后portTickType 则被定义为无符号的32位整型。 configIDLE_SHOULD_YIELD这宏的作用是定义了与空闲任务（idle task）和其他任务处于同等优先级时，为1时，时间片轮到空闲任务的时候，空闲任务会将cpu的使用权交给其他任务 。 configUSE_TASK_NOTIFICATIONS为1 则开启任务通知功能。 configUSE_MUTEXES为1使用互斥信号量。 configQUEUE_REGISTRY_SIZE设置可以注册队列和信号量的最大数量，在内核调试器查询队列和信号量的时候需要设置这个宏， configCHECK_FOR_STACK_OVERFLOW设置堆栈溢出检测，每个任务的堆栈是从FreeRTOS的ucHeap中分配的，如果任务的堆栈溢出的话，会造成程序不稳定，为1的话则设置为堆栈溢出检测功能，需要和钩子函数结合使用，也就是一个回调函数，当溢出是会调用这个回调函数。 configUSE_RECURSIVE_MUTEXES为1的话是使能递归互斥信号量。 configUSE_MALLOC_FAILED_HOOK为1使用内存分配失败的钩子函数， configUSE_APPLICATION_TASK_TAG这个宏为1是使能两个函数进行编译： configUSE_APPLICATION_TASK_TAGF（）这个函数 vTaskSetApplicationTaskTag（）,这个函数是为任务分配一个标签值。 configUSE_COUNTING_SEMAPHORES设置1会启动计数型信号量， FreeRTOS与内存申请有关配置选项configSUPPORT_DYNAMIC_ALLOCATION定义为1的话FreeRTOS内核对象所需要的RAM会从FREERTOS的堆中动态的获取内存，为0则需要内核对象自己提供。 configTOTAL_HEAP_SIZE设置堆空间（Heap）的大小。只有当程序中采用FreeRTOS 提供的内存分配算法时才会用到。 总结总是我们没有用到的宏有些不会在FreeRTOSConfig.h定义，需要在FreeRTOS.h中查找，并且上面和针对config的宏还有部分配置解释。]]></content>
       <categories>
         <category>STM32</category>
       </categories>
@@ -89,6 +72,20 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[ES8266模块二次开发SDK之MQTT局域网控制LED]]></title>
+    <url>%2F2019%2F10%2F19%2FESP8266_SDK_MQTT_LED%2F</url>
+    <content type="text"><![CDATA[根据乐鑫官网的提供的Pro，已经提供了 支持MQTT协议，，在乐鑫pro 基础上再局域网下面控制led 准备工程文档准备 下载链接 乐鑫 选用的平台NON-OS SDK 使用安信可一体化编程软件打开，文档的导入具体去安信可官网搜索，这里直接讲解导入后的操作。 删除third_party,将esp_mqtt_proj从example拉出来，将driver_lib的Makefile添加后.bak,目的是为了不讲driver_lib不编译进工程 如图， MQTT的windows环境准备 下载EMQ压缩包，根据你的windows环境选择，下载地址链接 解压到不带中文的目录下，打开windows命令，进入到该解压目录的bin文件夹下面， 在终端执行”emqttd console”，如果卡顿就重新执行 在浏览器输入”127.0.0.1:18083” 此时会进入EMQ的界面SSID为admin，Passwd为public 此时MQTT服务器已经搭建完成 硬件环境准备 一块MODEMCU或者是ESP8266的最小系统 一个USB转TTL或者是数据线 软件环境 烧录工具，可以在安信可官网下载 链接 串口工具，使用任意一款都可以， 步骤搭建测试环境 在工程中打开user_main.c和mqtt_config.h， 在mqtt_config.h需要修改以下几个宏 | CFG_HOLDER | 更新配置到FLASH中，只要数值和本次不一样就行， || —————– | —————————————- || MQTT_HOST | MQTT服务器的IP || MQTT_PORT | MQTT服务器的PORT || MQTT_CLIENT_ID | 客户端ID || MQTT_USER | MQTT服务器的登录账号”admin” || MQTT_PASS | MQTT服务器的登录”admin” || STA_SSID | ESP8266和电脑端连接的路由账号 || STA_PASS | ESP8266和电脑端连接的路由密码 || PROTOCOL_NAMEv311 | 根据MQTT协议的兼容性，在前面加#define，PROTOCOL_NAMEv31注释掉 || | | 右击该工程，Clean Project &amp;&amp;Build Project 可以看到顺利通过编译，如图 依照安信可官方提供的烧录方法可以知道， blank.bin、esp_init_data_default_v05.bin是乐鑫SDK提供的，而eagle.flash.bin和eagle.irom0text.bin是编译工程生成的，，下载地址需要我们将工程给的地址和安信可提供地址组合得到，如图 | SPI SPEED | 40MHz || ———- | ————– || SPI MODE | DOUT || FLASH SIZE | 32Mbit（根据板子而定） || | | 使用烧写工具擦写和下载， 将MQTT服务器Runing，(MQTT服务器和ESP8266需要在同一个局域网下面) 重启ESP8266模块，打开串口 BAUD 115200 在浏览器登录MQTT，可以看到会话界面，有刚才客户端ID,主题界面有工程中注册的主题如图 ​ 主题，是我们在user_main.c的mqttConnectedCb函数注册的主题 如图 串口也会打印出来 到这一步，我们整个MQTT的局域网服务器已经搭建起来，下面测试一下， 在EMQ界面切换到websocket测试，首先连接 订阅主题”/mqtt/topic/1” 给主题”/mqtt/topic/1” 发送”Hello World!” 如图 在串口端会打印出”Hello World!”,如图 ​ 这里整体的测试环境已经搭建完成，我们下面开始进行局域网，点亮LED 局域网点亮LED 回到工程进入user_main.c， 在user_init 函数中添加 12PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO5_U, FUNC_GPIO5); //选择GPIO5GPIO_OUTPUT_SET(GPIO_ID_PIN(5), 1); //默认GPIO5为高 ​ 在mqttConnectedCb函数中注册一个主题 1MQTT_Subscribe(client, "/hangtong/led/control", 0); 在mqttDataCb对收到的值解析 123456789101112if (data[0] == '0') &#123; GPIO_OUTPUT_SET(GPIO_ID_PIN(5), 0); MQTT_Publish(client, "/xuhong/LED/out", "LED status is open ...", strlen("LED status is open ..."), 0, 0); &#125; //接收到指令是0，GPIO15为高,也就是LED关灯，同时发布消息，主题是/xuhong/LED/out，信息是LED status is off ... if (data[0] == '1') &#123; GPIO_OUTPUT_SET(GPIO_ID_PIN(5), 1); MQTT_Publish(client, "/xuhong/LED/out", "LED status is off ...", strlen("LED status is off ..."), 0, 0); &#125; ​ Clean Project &amp;&amp;build Project 重复上面步骤， 在EMQ服务器上面我们，会发现出现了”/hangtong/led/control” 主题 ，在websocket向”/hangtong/led/control”主题发送0则GPIO5为低电平。发送1则GPIO5为高电平 成功， 总结 MQTT服务器的IP需要我们在电脑端查询得到， 局域网的控制，所以电脑端和ESP8266需要连接同一个路由]]></content>
+      <categories>
+        <category>ESP8266</category>
+      </categories>
+      <tags>
+        <tag>ESP8266</tag>
+        <tag>SDK</tag>
+        <tag>MQTT</tag>
+        <tag>局域网</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[ES8266模块AT操作]]></title>
     <url>%2F2019%2F10%2F19%2FESP8266_Connect_TO_PhoneAndPC_WithTCP%2F</url>
     <content type="text"><![CDATA[这个教程是基于ESP8266和手机与电脑的TCP通信。 文档 AT的指令集 AT的示例教程 Android版的TCP调试助手可以去软件库里面下载 PC版的调试助手可以去CSDN下载，链接 Download 步骤ESP8266的AT操作 AT+RST（重启） AT+RESTORE（恢复出厂设置，第一次操作建议不要，如果不能正常工作的话，可以执行该命令） AT+CWMODE_DEF=3（WIFI模式（STA/AP/STA+AP）） AT+CWSAP=”OneNET”,”123456789”,1,3（设置ssoftAP的ssid，密码，通道号1，WAP2_PSK加密） AT+CIPMUX=1（多连接） AT+CIPSERVER=1,8080（设置TCP server 的端口号8080） 这样我们就设置好了，手机和电脑都可以正常连接到“OneNET”，我们还要注意下ESP8266的IP和端口，上面已经知道端口号是8080，服务器IP是192.168.4.1，可以使用”AT+CIFSR”得知。 手机端&amp;PC连接 手机开启wifi连接OneNET 手机端打开TCP调试助手，设置如图，点击connect 电脑连接ESP8266的串口显示 这就显示连接成功了，下来电脑端也连接”OneNET”，打开网络调试助手，设置如图 上面四步我们就将手机和电脑作为TCP client 连接到电脑了，下面测试通信。 通信ESP8266接收 手机端发送如图 电脑端发送如图 ESP8266串口显示 ESP8266发送 ESP82266多链接最多可以连接5个设备，上面我们知道手机分配的ID为0，电脑ID为1 先给手机端发送，执行命令 12345AT+CIPSEND=&lt;link ID&gt;,&lt;length&gt;AT+CIPSEND=0,11（给ID0发送11个字节数据）OK&gt;Hello,PHONE 给电脑端发送，执行命令 1234AT+CIPSEND=1,11（给ID1发送11个字节数据）OK&gt;Hello,PC 总结使用AT指令开发ESP8266，比较简单，但是ESP8266内置MCU，这使得浪费了硬件资源。这篇文章是基于TCP多连接的通信，至于单连接，就更简单了。]]></content>
@@ -99,6 +96,19 @@
         <tag>AT指令集</tag>
         <tag>ESP8266</tag>
         <tag>TCP通信</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[STM2F407与FreeRTOS的FreeRTOSConfig.h详解]]></title>
+    <url>%2F2019%2F10%2F19%2FSTM32_FreeRTOS_config_2%2F</url>
+    <content type="text"><![CDATA[上一篇，对config宏的基础配置和部分相关的配置，有些宏我们暂时没有用上，所以对这些宏定义的概念不太清楚，这章节是对余下部分解析。 config_*FreeRTOS与钩子函数有关的配置选项configUSE_IDLE_HOOK为1的话，就是使能空闲任务回调函数，也就是如果系统调用空闲函数的话，就会回调钩子函数，我们自己去实现这个函数，函数声明如下： 1void vApplicationIdleHook( void ); configUSE_TICK_HOOK为1的话使能时间片钩子函数，但是需要我们自己去实现这个函数，函数声明如下： 1void vApplicationTickHook( void ); FreeRTOS与运行时间和任务状态收集有关的配置选项configGENERATE_RUN_TIME_STATS为1 的话开启时间统计功能，如果定义这个宏的话，就必须还有定义另外两个宏，这个在后面的任务查询的时候我们有可能会配置，这两个宏分别是： 12portCONFIGURE_TIMER_FOR_RUN_TIME_STATSportALT_GET_RUN_TIME_COUNTER_VALUE configUSE_TRACE_FACILITY为1的话启动可视化跟踪调试，会增加一些结构体成员和API函数。 configUSE_STATS_FORMATTING_FUNCTIONSSet configUSE_TRACE_FACILITY and configUSE_STATS_FORMATTING_FUNCTIONS to 1to include the vTaskList() and vTaskGetRunTimeStats() FreeRTOS与协程有关的配置选项（现在的MCU很强大，不需要节约资源，所以基本不配置协程）configUSE_CO_ROUTINES为1的话，工程需要编译协程，需要把协程文件包含进来，相应的API函数才会被编译。 configMAX_CO_ROUTINE_PRIORITIES设置协程的最大优先级，设置完之后，协程使用的优先级范围0~configMAX_CO_ROUTINE_PRIORITIES-1 FreeRTOS与软件定时器有关的配置选项configUSE_TIMERS为1则启动软件定时器，还有三个宏也需要定义， 123configTIMER_TASK_PRIORITYconfigTIMER_QUEUE_LENGTH configTIMER_TASK_STACK_DEPTHxxxxxxxxxx configTIMER_TASK_PRIORITY设置定时器任务的优先级，0~configMAX_PRIORITIES-1，如果定时器任务的优先级高的话，定时器的队列和回调函数会及时处理。 configTIMER_QUEUE_LENGTH设置定时器队列的队列长度。 configTIMER_TASK_STACK_DEPTH定时器任务的堆栈，可以根据定时器回调函数的大小，定义定时器任务堆栈大小。 FreeRTOS与中断有关的配置选项__NVIC_PRIO_BITS设置优先级位数，STMF407,是高四位，也就是BIT4，5，6，7 configLIBRARY_LOWEST_INTERRUPT_PRIORITY设置最低优先级，因为STM32的NVIC配置的组4，也就是16位抢占优先级，所以最低优先级为15，ARM的0优先级最大。 configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITYFreeRTOS可以管理的最低优先级，如果设为5的话，0-5不归FREERTOS管，其余的RTOS可以通过API函数管理。与BASEPRI这个寄存器相关。 configKERNEL_INTERRUPT_PRIORITY这个是设置内核中断优先级，也就是系统中断的PenSV和SysTick（滴答定时器） configMAX_SYSCALL_INTERRUPT_PRIORITY设置FreeRTOS的API函数的优先级，低于此优先级的中断可以安全调用FREERTOS的API函数，高于此优先级时，如果调用API函数，中断也可以打断。 总结上面有些宏，从字面意思理解并不难，但是我们需要结合相应的功能，才能熟练运用。]]></content>
+      <categories>
+        <category>STM32</category>
+      </categories>
+      <tags>
+        <tag>Stm32F407</tag>
+        <tag>FreeRTOS</tag>
+        <tag>MDK5</tag>
       </tags>
   </entry>
   <entry>
@@ -115,16 +125,17 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[STM2F407与FreeRTOS的FreeRTOSConfig.h详解]]></title>
-    <url>%2F2019%2F10%2F19%2FSTM32_FreeRTOS_config_1%2F</url>
-    <content type="text"><![CDATA[FreeRTOS是一个RTOS类的嵌入式实时操作系统，并且是开源免费的，与其他实时操作系统相比，是一个很好的选择。在移植好FreeRTOS到STM32上面之后，需要根据板子外设配置相应的功能，FreeRTOSConfig.h里面的宏完成对系统的裁剪和配置。 系统配置文件FreeRTOSConfig.h在编译移植好的FreeROTS工程之后，需要都这个系统配置文件进行宏配置，这个配置文件与我们在编译kernel时的menuconfig类似，里面定义的宏，是对板子外设的和功能的裁剪配置。这个里面主要分为两个类的宏，一个是“INCLUDE_”开始的宏，一个是“config”开始的宏。FreeRTOSConfig.h是我们自己填充的.h文件，RTOS工程自带一个FreeRTOS.h文件，我们在FreeRTOSConfig.h定义的宏会对FreeRTOS.h进行条件编译。 INCLUDE_*这个宏的主要功能就是使能或者是失能，FreeRTOS中的API函数的，如果我们需要使用某个api函数就需要把这个宏置1，否则就是置0。在FreeRTOSConfig.h，在上面部分是宏的声明，在对应的.c文件里面会有条件编译，这个就可以达到减少系统占有的ROM和RAM。 INCLUDE_xTaskGetSchedulerState这个宏是对xTaskGetSchedulerState函数的条件判断，是获取任务调度表状态的函数。 INCLUDE_vTaskPrioritySet这个宏是对vTaskPrioritySet函数的条件判断，是任务优先级设置的函数。 INCLUDE_uxTaskPriorityGet这个宏是对uxTaskPriorityGet函数的条件判断，是获得任务优先级的函数。 INCLUDE_vTaskDelete这个宏是对vTaskDelete函数的条件判断，是获得任务优先级的函数。 INCLUDE_vTaskCleanUpResources这个宏是对vTaskCleanUpResources函数的条件判断，是对删除的任务进行资源回收的函数。 INCLUDE_vTaskSuspend这个宏是对vTaskSuspend函数的条件判断，是对任务进行挂起的函数。 INCLUDE_vTaskDelayUntil这个宏是对vTaskDelayUntil函数的条件判断，是设置任务延迟绝对时间的函数。 INCLUDE_vTaskDelay这个宏是对vTaskDelay函数的条件判断，是设置任务延迟相对时间的函数。 INCLUDE_eTaskGetState这个宏是对eTaskGetState函数的条件判断，是获得某个任务的状态的函数。 INCLUDE_xTimerPendFunctionCall这个宏是对xTimerPendFunctionCall函数的条件判断，是获得某个任务的状态的函数 config_*FreeRTOS基础配置选项1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换: 一个任务调用函数taskYIELD(); 一个任务调用可以使任务进入阻塞状态的API函数； 应用程序明确定义了在中断中执行上下文切换； configUSE_TIME_SLICING为1的话，在相同优先级下的任务使用合作式调度器，也就是时间片轮流执行。为0的话则不会。 configUSE_PORT_OPTIMISED_TASK_SELECTION选择下一个要执行的任务，为0是通用的方法，为1是特殊方法，使用硬件指令计算。 configUSE_TICKLESS_IDLEFreerRTOS支持低功耗tickless模式，为1使能，tickless低功耗模式是RTOS通过的低功耗方法， configUSE_QUEUE_SETS设置成1使能队列集功能（可以阻塞、挂起到多个队列和信号量），设置成0取消队列集功能。 configCPU_CLOCK_HZ设置CPU工作的频率。 configTICK_RATE_HZ设置滴答定时器的中断频率，这里设置为1000，周期就是1ms。 configMAX_PRIORITIES设置优先级的数量，范围为0~（configMAX_PRIORITIES-1），0为最低优先级，值越大优先级越高，而且我们的任务不可使用0优先级， configMINIMAL_STACK_SIZE设置最小任务堆栈大小，也就是空闲任务大小，单位是字， configMAX_TASK_NAME_LEN设置任务名最大长度，字节为单位 configUSE_16_BIT_TICKS设置系统节拍计数器变量数据类型。设为 1后portTickType 将被定义为无符号的16位整形类型，configUSE_16_BIT_TICKS 设为0 后portTickType 则被定义为无符号的32位整型。 configIDLE_SHOULD_YIELD这宏的作用是定义了与空闲任务（idle task）和其他任务处于同等优先级时，为1时，时间片轮到空闲任务的时候，空闲任务会将cpu的使用权交给其他任务 。 configUSE_TASK_NOTIFICATIONS为1 则开启任务通知功能。 configUSE_MUTEXES为1使用互斥信号量。 configQUEUE_REGISTRY_SIZE设置可以注册队列和信号量的最大数量，在内核调试器查询队列和信号量的时候需要设置这个宏， configCHECK_FOR_STACK_OVERFLOW设置堆栈溢出检测，每个任务的堆栈是从FreeRTOS的ucHeap中分配的，如果任务的堆栈溢出的话，会造成程序不稳定，为1的话则设置为堆栈溢出检测功能，需要和钩子函数结合使用，也就是一个回调函数，当溢出是会调用这个回调函数。 configUSE_RECURSIVE_MUTEXES为1的话是使能递归互斥信号量。 configUSE_MALLOC_FAILED_HOOK为1使用内存分配失败的钩子函数， configUSE_APPLICATION_TASK_TAG这个宏为1是使能两个函数进行编译： configUSE_APPLICATION_TASK_TAGF（）这个函数 vTaskSetApplicationTaskTag（）,这个函数是为任务分配一个标签值。 configUSE_COUNTING_SEMAPHORES设置1会启动计数型信号量， FreeRTOS与内存申请有关配置选项configSUPPORT_DYNAMIC_ALLOCATION定义为1的话FreeRTOS内核对象所需要的RAM会从FREERTOS的堆中动态的获取内存，为0则需要内核对象自己提供。 configTOTAL_HEAP_SIZE设置堆空间（Heap）的大小。只有当程序中采用FreeRTOS 提供的内存分配算法时才会用到。 总结总是我们没有用到的宏有些不会在FreeRTOSConfig.h定义，需要在FreeRTOS.h中查找，并且上面和针对config的宏还有部分配置解释。]]></content>
+    <title><![CDATA[JZ2440的uboot-2009-11移植_支持Nor Flash]]></title>
+    <url>%2F2019%2F10%2F19%2FJZ2440_uboot_2009_11_transplant_3_nor_flash%2F</url>
+    <content type="text"><![CDATA[这一节是对第二阶段的代码进行移植，来支持Nor Flash 硬件环境Nor Flash介绍Nor Flash 是一种存储芯片，支持掉电存储、支持Executensil On Chip（片上程序运行）。所以很适合作为嵌入式中启动程序的存储介质。但是由于低写速度和擦除速度影响着他的性能，在1~16MB的闪存中较为常见。 MX29LV160D T/B 芯片 2MB的Flash（8位/16位） ,JZ2440选用数据宽度的16位 扇区分布; | 大小 | 8K-Byte | 16K-Byte | 32K-Byte | 64K-Byte || —- | ——- | ——– | ——– | ——– || 块数 | 2 | 1 | 1 | 31 | Word/Byte 模式选择，如果选用Word时需要错位连接 工作电压2.7V~3.6V 引脚封装48pin-TSOP/48ball-XFLGA/WFBGA 至少可靠性保存数据20年，擦除、编程次数10万个周期 代码分析我们之前顺腾摸瓜，从start.S-&gt;crt0.S，在crt0.S中分别调用了两个函数：board_init_f和board_init_r。 位置12board_init_f 位于u-boot-2016.09\common\Board_f.cboard_init_r 位于u-boot-2016.09\common\Board_r.c board_init_f功能1234567主要是初始化下面这些timer_init, /* initialize timer */get_clocks,env_init, init_baud_rate, /* initialze baudrate settings */serial_init, /* serial communications setup */console_init_f, /* stage 1 init of console */ board_init_r功能123board_init,initr_flashinitr_nand, 代码解读所以我们知道nor flash的设置在board_init_r里面， 进入到static int initr_flash(void) ，位于（common\Board_r.c） 123456flash_info[i].flash_id = FLASH_UNKNOWN;从这一句我们可以看出来flash__info是存储Nor flash信息的结构体 if (!flash_detect_legacy(cfi_fla sh_bank_addr(i), i)) flash_detect_legacy(phys_addr_t base, int banknum) if (jedec_flash_match(info, info-&gt;start[0])) int jedec_flash_match(flash_info_t *info, ulong base) 将读取到的板子ID和已有板子信息做对比 &#123; int ret = 0; int i; ulong mask = 0xFFFF; if (info-&gt;chipwidth == 1) mask = 0xFF; for (i = 0; i &lt; ARRAY_SIZE(jedec_table); i++) &#123; if ((jedec_table[i].mfr_id &amp; mask) == (info-&gt;manufacturer_id &amp; mask) &amp;&amp; (jedec_table[i].dev_id &amp; mask) == (info-&gt;device_id &amp; mask)) &#123; fill_info(info, &amp;jedec_table[i], base); ret = 1; break; &#125; return ret; &#125; 1234567#### 代码修改1上面分析完 ，我们就可以知道，我们只要将上面函数的饿 jedec_table结构体增加我们对应的信息就行了 ```c修改添加 static const struct amd_flash_info jedec_table[] 结构体 位置1drivers\mtd\Jedec_flash.c 添加1234567891011 在结构体补充相应的信息&#123; /* sheldon add for JZ2440_V2 Nor_Flash ： MT29LV160DB */ .mfr_id = (u16)MX_MANUFACT, //厂家 id .dev_id = 0x2249, //设备 id .name = &quot;MX29LV160D&quot;, .uaddr = &#123; [1] = MTD_UADDR_0x0555_0x02AA /* 1:x16 ,NOR Flash 的解锁地址 */ &#125;, .DevSize = SIZE_2MiB, //整个 nor flash 的大小 .CmdSet = P_ID_AMD_STD, .NumEraseRegions= 4, //擦除域，有几种大小的块就有几个擦除域， .regions = &#123; //查看芯片手册设置擦除块 ERASEINFO(0x10000, 31), //参照芯片手册里面的块信息 ERASEINFO(0x08000, 1), ERASEINFO(0x02000, 2), ERASEINFO(0x04000, 1), &#125; 代码修改2 我们还要修改myff244.h的一个宏 /#define CONFIG_SYS_MAX_FLASH_SECT (128) 因为我们的最大快区大于19了 测试重新编译uboot 下载到板子里面，就可以看到成功。 虽然我们看到串口打印出来的信息显示支持Flash，但是我们要测试下是否真的支持了 进入到uboot的命令行 输入：flinfo 可见扇区地址，扇区数、设备ID和厂商ID都是正确的。接下来进一步确认正确与否 查看命令 md.b A0000 10 查看0x50000地址开始的10个字节数据（） 拷贝命令 cp 30008000 A0000 10 将30008000的10个字节拷贝到A0000（A0000的地址不能低于uboot.bin的size，如果低于u-boot.bin的size ，一旦拷贝就会损坏u-boot） 擦除命令 erase A0000 Affff 擦除A0000~Affff之间的内容 以上这几个操作均正常，说明设备已经支持Nor flash NOR FLASH 移植成功 ​ ​ ​ ​]]></content>
       <categories>
-        <category>STM32</category>
+        <category>uboot移植</category>
       </categories>
       <tags>
-        <tag>Stm32F407</tag>
-        <tag>FreeRTOS</tag>
-        <tag>MDK5</tag>
+        <tag>移植</tag>
+        <tag>arm</tag>
+        <tag>linux</tag>
+        <tag>Nor Flash</tag>
       </tags>
   </entry>
   <entry>
@@ -186,17 +197,6 @@
       <tags>
         <tag>RAID</tag>
         <tag>独立冗余磁盘阵列</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[全志A64编译固件报Fault]]></title>
-    <url>%2F2019%2F01%2F19%2F2019-10-19-%E5%85%A8%E5%BF%97A64%E7%BC%96%E8%AF%91%E5%9B%BA%E4%BB%B6%E6%8A%A5Fault%2F</url>
-    <content type="text"><![CDATA[环境 Ubuntu： Ubuntu 19.04 固件： 全志CQA64-LinuxQT arm交叉编译器：crosstool-NG linaro-1.13.1-4.9-2014.09 - Linaro GCC 4.9-2014.09 时间：19-10-2019 错误描述 123freadahead.c: In function 'freadahead':freadahead.c:92:3: error: #error "Please port gnulib freadahead.c to your platform! Look at the definition of fflush, fread, ungetc on your system, then report this to bug-gnulib." #error "Please port gnulib freadahead.c to your platform! Look at the definition of fflush, fread, ungetc on your system, then report this to bug-gnulib." 解决 进入host-m4-1.4.18/lib中，对fflush.c，fpending.c，fpurge.c，freadahead.c，freading.c，fseeko.c中”_IO_ftrylockfile“ 替换为“_IO_EOF_SEEN” 进入host-m4-1.4.18/lib中，对stdio-impl.h中添加 123456+/* Glibc 2.28 made _IO_IN_BACKUP private. For now, work around this+ problem by defining it ourselves. FIXME: Do not rely on glibc+ internals. */+#if !defined _IO_IN_BACKUP &amp;&amp; defined _IO_EOF_SEEN+# define _IO_IN_BACKUP 0x100+#endif 参考Patch：m4.patch]]></content>
-      <categories>
-        <category>BUG调试</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
