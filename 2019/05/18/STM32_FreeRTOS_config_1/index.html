@@ -118,7 +118,7 @@
 
 
 
-  <meta name="keywords" content="移植,arm,linux,Nor Flash," />
+  <meta name="keywords" content="Stm32F407,FreeRTOS,MDK5," />
 
 
 
@@ -129,21 +129,18 @@
 
 
 
-<meta name="description" content="这一节是对第二阶段的代码进行移植，来支持Nor Flash">
-<meta name="keywords" content="移植,arm,linux,Nor Flash">
+<meta name="description" content="FreeRTOS是一个RTOS类的嵌入式实时操作系统，并且是开源免费的，与其他实时操作系统相比，是一个很好的选择。在移植好FreeRTOS到STM32上面之后，需要根据板子外设配置相应的功能，FreeRTOSConfig.h里面的宏完成对系统的裁剪和配置。">
+<meta name="keywords" content="Stm32F407,FreeRTOS,MDK5">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JZ2440的uboot-2009-11移植&lt;3&gt;_支持Nor Flash">
-<meta property="og:url" content="http://www.funful.ink/2019/10/19/JZ2440_uboot_2009_11_transplant_3_nor_flash/index.html">
+<meta property="og:title" content="STM2F407与FreeRTOS的FreeRTOSConfig.h详解&lt;1&gt;">
+<meta property="og:url" content="http://www.funful.ink/2019/05/18/STM32_FreeRTOS_config_1/index.html">
 <meta property="og:site_name" content="FunfulBlog">
-<meta property="og:description" content="这一节是对第二阶段的代码进行移植，来支持Nor Flash">
+<meta property="og:description" content="FreeRTOS是一个RTOS类的嵌入式实时操作系统，并且是开源免费的，与其他实时操作系统相比，是一个很好的选择。在移植好FreeRTOS到STM32上面之后，需要根据板子外设配置相应的功能，FreeRTOSConfig.h里面的宏完成对系统的裁剪和配置。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/2.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/3.png">
-<meta property="og:updated_time" content="2018-06-12T02:57:54.322Z">
+<meta property="og:updated_time" content="2019-10-18T16:50:30.571Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JZ2440的uboot-2009-11移植&lt;3&gt;_支持Nor Flash">
-<meta name="twitter:description" content="这一节是对第二阶段的代码进行移植，来支持Nor Flash">
-<meta name="twitter:image" content="http://p9zz81nyl.bkt.clouddn.com/2.png">
+<meta name="twitter:title" content="STM2F407与FreeRTOS的FreeRTOSConfig.h详解&lt;1&gt;">
+<meta name="twitter:description" content="FreeRTOS是一个RTOS类的嵌入式实时操作系统，并且是开源免费的，与其他实时操作系统相比，是一个很好的选择。在移植好FreeRTOS到STM32上面之后，需要根据板子外设配置相应的功能，FreeRTOSConfig.h里面的宏完成对系统的裁剪和配置。">
 
 
 
@@ -173,13 +170,13 @@
 
 
 
-  <link rel="canonical" href="http://www.funful.ink/2019/10/19/JZ2440_uboot_2009_11_transplant_3_nor_flash/"/>
+  <link rel="canonical" href="http://www.funful.ink/2019/05/18/STM32_FreeRTOS_config_1/"/>
 
 
 
 
 
-  <title>JZ2440的uboot-2009-11移植<3>_支持Nor Flash | FunfulBlog</title>
+  <title>STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1> | FunfulBlog</title>
   
 
 
@@ -350,7 +347,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/10/19/JZ2440_uboot_2009_11_transplant_3_nor_flash/">
+    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/05/18/STM32_FreeRTOS_config_1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ZhaoH.T">
@@ -367,7 +364,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">JZ2440的uboot-2009-11移植<3>_支持Nor Flash</h1>
+          <h1 class="post-title" itemprop="name headline">STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1></h1>
         
 
         <div class="post-meta">
@@ -380,8 +377,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-19T00:31:20+08:00">
-                2019-10-18
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-18T00:00:00Z">
+                2019-05-18
               </time>
             
 
@@ -403,8 +400,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/uboot移植/" itemprop="url" rel="index">
-                    <span itemprop="name">uboot移植</span>
+                  <a href="/categories/STM32/" itemprop="url" rel="index">
+                    <span itemprop="name">STM32</span>
                   </a>
                 </span>
 
@@ -421,9 +418,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/10/19/JZ2440_uboot_2009_11_transplant_3_nor_flash/#comments" itemprop="discussionUrl">
+                <a href="/2019/05/18/STM32_FreeRTOS_config_1/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2019/10/19/JZ2440_uboot_2009_11_transplant_3_nor_flash/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2019/05/18/STM32_FreeRTOS_config_1/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -432,7 +429,7 @@
 
           
           
-             <span id="/2019/10/19/JZ2440_uboot_2009_11_transplant_3_nor_flash/" class="leancloud_visitors" data-flag-title="JZ2440的uboot-2009-11移植<3>_支持Nor Flash">
+             <span id="/2019/05/18/STM32_FreeRTOS_config_1/" class="leancloud_visitors" data-flag-title="STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1>">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -457,7 +454,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  901
+                  1,447
                 </span>
               
 
@@ -482,67 +479,51 @@
       
 
       
-        <p>这一节是对第二阶段的代码进行移植，来支持Nor Flash</p>
+        <p>FreeRTOS是一个RTOS类的嵌入式实时操作系统，并且是开源免费的，与其他实时操作系统相比，是一个很好的选择。在移植好FreeRTOS到STM32上面之后，需要根据板子外设配置相应的功能，FreeRTOSConfig.h里面的宏完成对系统的裁剪和配置。</p>
 <a id="more"></a>
-<h2 id="硬件环境"><a href="#硬件环境" class="headerlink" title="硬件环境"></a>硬件环境</h2><h3 id="Nor-Flash介绍"><a href="#Nor-Flash介绍" class="headerlink" title="Nor Flash介绍"></a>Nor Flash介绍</h3><p>Nor Flash 是一种存储芯片，支持掉电存储、支持Executensil On Chip（片上程序运行）。所以很适合作为嵌入式中启动程序的存储介质。但是由于低写速度和擦除速度影响着他的性能，在1~16MB的闪存中较为常见。</p>
-<h3 id="MX29LV160D-T-B-芯片"><a href="#MX29LV160D-T-B-芯片" class="headerlink" title="MX29LV160D T/B 芯片"></a>MX29LV160D T/B 芯片</h3><ol>
-<li><p>2MB的Flash（8位/16位） ,JZ2440选用数据宽度的16位</p>
-</li>
-<li><p>扇区分布;</p>
-<p>| 大小   | 8K-Byte | 16K-Byte | 32K-Byte | 64K-Byte |<br>| —- | ——- | ——– | ——– | ——– |<br>| 块数   | 2       | 1        | 1        | 31       |</p>
-</li>
-<li><p>Word/Byte 模式选择，如果选用Word时需要错位连接</p>
-</li>
-<li><p>工作电压2.7V~3.6V</p>
-</li>
-<li><p>引脚封装48pin-TSOP/48ball-XFLGA/WFBGA</p>
-</li>
-<li><p>至少可靠性保存数据20年，擦除、编程次数10万个周期</p>
-</li>
+<h1 id="系统配置文件FreeRTOSConfig-h"><a href="#系统配置文件FreeRTOSConfig-h" class="headerlink" title="系统配置文件FreeRTOSConfig.h"></a>系统配置文件FreeRTOSConfig.h</h1><p>在编译移植好的FreeROTS工程之后，需要都这个系统配置文件进行宏配置，这个配置文件与我们在编译kernel时的menuconfig类似，里面定义的宏，是对板子外设的和功能的裁剪配置。这个里面主要分为两个类的宏，一个是“INCLUDE_”开始的宏，一个是“config”开始的宏。FreeRTOSConfig.h是我们自己填充的.h文件，RTOS工程自带一个FreeRTOS.h文件，我们在FreeRTOSConfig.h定义的宏会对FreeRTOS.h进行条件编译。</p>
+<h1 id="INCLUDE"><a href="#INCLUDE" class="headerlink" title="INCLUDE_*"></a>INCLUDE_*</h1><p>这个宏的主要功能就是使能或者是失能，FreeRTOS中的API函数的，如果我们需要使用某个api函数就需要把这个宏置1，否则就是置0。在FreeRTOSConfig.h，在上面部分是宏的声明，在对应的.c文件里面会有条件编译，这个就可以达到减少系统占有的ROM和RAM。</p>
+<h3 id="INCLUDE-xTaskGetSchedulerState"><a href="#INCLUDE-xTaskGetSchedulerState" class="headerlink" title="INCLUDE_xTaskGetSchedulerState"></a>INCLUDE_xTaskGetSchedulerState</h3><p>这个宏是对xTaskGetSchedulerState函数的条件判断，是获取任务调度表状态的函数。</p>
+<h3 id="INCLUDE-vTaskPrioritySet"><a href="#INCLUDE-vTaskPrioritySet" class="headerlink" title="INCLUDE_vTaskPrioritySet"></a>INCLUDE_vTaskPrioritySet</h3><p>这个宏是对vTaskPrioritySet函数的条件判断，是任务优先级设置的函数。</p>
+<h4 id="INCLUDE-uxTaskPriorityGet"><a href="#INCLUDE-uxTaskPriorityGet" class="headerlink" title="INCLUDE_uxTaskPriorityGet"></a>INCLUDE_uxTaskPriorityGet</h4><p>这个宏是对uxTaskPriorityGet函数的条件判断，是获得任务优先级的函数。</p>
+<h3 id="INCLUDE-vTaskDelete"><a href="#INCLUDE-vTaskDelete" class="headerlink" title="INCLUDE_vTaskDelete"></a>INCLUDE_vTaskDelete</h3><p>这个宏是对vTaskDelete函数的条件判断，是获得任务优先级的函数。</p>
+<h3 id="INCLUDE-vTaskCleanUpResources"><a href="#INCLUDE-vTaskCleanUpResources" class="headerlink" title="INCLUDE_vTaskCleanUpResources"></a>INCLUDE_vTaskCleanUpResources</h3><p>这个宏是对vTaskCleanUpResources函数的条件判断，是对删除的任务进行资源回收的函数。</p>
+<h3 id="INCLUDE-vTaskSuspend"><a href="#INCLUDE-vTaskSuspend" class="headerlink" title="INCLUDE_vTaskSuspend"></a>INCLUDE_vTaskSuspend</h3><p>这个宏是对vTaskSuspend函数的条件判断，是对任务进行挂起的函数。</p>
+<h3 id="INCLUDE-vTaskDelayUntil"><a href="#INCLUDE-vTaskDelayUntil" class="headerlink" title="INCLUDE_vTaskDelayUntil"></a>INCLUDE_vTaskDelayUntil</h3><p>这个宏是对vTaskDelayUntil函数的条件判断，是设置任务延迟绝对时间的函数。</p>
+<h3 id="INCLUDE-vTaskDelay"><a href="#INCLUDE-vTaskDelay" class="headerlink" title="INCLUDE_vTaskDelay"></a>INCLUDE_vTaskDelay</h3><p>这个宏是对vTaskDelay函数的条件判断，是设置任务延迟相对时间的函数。</p>
+<h3 id="INCLUDE-eTaskGetState"><a href="#INCLUDE-eTaskGetState" class="headerlink" title="INCLUDE_eTaskGetState"></a>INCLUDE_eTaskGetState</h3><p>这个宏是对eTaskGetState函数的条件判断，是获得某个任务的状态的函数。</p>
+<h3 id="INCLUDE-xTimerPendFunctionCall"><a href="#INCLUDE-xTimerPendFunctionCall" class="headerlink" title="INCLUDE_xTimerPendFunctionCall"></a>INCLUDE_xTimerPendFunctionCall</h3><p>这个宏是对xTimerPendFunctionCall函数的条件判断，是获得某个任务的状态的函数</p>
+<h1 id="config"><a href="#config" class="headerlink" title="config_*"></a>config_*</h1><h2 id="FreeRTOS基础配置选项"><a href="#FreeRTOS基础配置选项" class="headerlink" title="FreeRTOS基础配置选项"></a>FreeRTOS基础配置选项</h2><h3 id="1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换"><a href="#1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换" class="headerlink" title="1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换:"></a>1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换:</h3><ol>
+<li>一个任务调用函数taskYIELD();</li>
+<li>一个任务调用可以使任务进入阻塞状态的API函数；</li>
+<li>应用程序明确定义了在中断中执行上下文切换；</li>
 </ol>
-<h3 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h3><p>我们之前顺腾摸瓜，从start.S-&gt;crt0.S，在crt0.S中分别调用了两个函数：board_init_f和board_init_r。</p>
-<h4 id="位置"><a href="#位置" class="headerlink" title="位置"></a>位置</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">board_init_f 位于u-boot<span class="number">-2016.09</span>\common\Board_f.c</span><br><span class="line">board_init_r 位于u-boot<span class="number">-2016.09</span>\common\Board_r.c</span><br></pre></td></tr></table></figure>
-<h4 id="board-init-f功能"><a href="#board-init-f功能" class="headerlink" title="board_init_f功能"></a>board_init_f功能</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">主要是初始化下面这些</span><br><span class="line">timer_init,        <span class="comment">/* initialize timer */</span></span><br><span class="line">get_clocks,</span><br><span class="line">env_init,        </span><br><span class="line">init_baud_rate,        <span class="comment">/* initialze baudrate settings */</span></span><br><span class="line">serial_init,        <span class="comment">/* serial communications setup */</span></span><br><span class="line">console_init_f,        <span class="comment">/* stage 1 init of console */</span></span><br></pre></td></tr></table></figure>
-<h4 id="board-init-r功能"><a href="#board-init-r功能" class="headerlink" title="board_init_r功能"></a>board_init_r功能</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">board_init,</span><br><span class="line">initr_flash</span><br><span class="line">initr_nand,</span><br></pre></td></tr></table></figure>
-<h4 id="代码解读"><a href="#代码解读" class="headerlink" title="代码解读"></a>代码解读</h4><p>所以我们知道nor flash的设置在board_init_r里面，</p>
+<h3 id="configUSE-TIME-SLICING"><a href="#configUSE-TIME-SLICING" class="headerlink" title="configUSE_TIME_SLICING"></a>configUSE_TIME_SLICING</h3><p>为1的话，在相同优先级下的任务使用合作式调度器，也就是时间片轮流执行。为0的话则不会。</p>
+<h3 id="configUSE-PORT-OPTIMISED-TASK-SELECTION"><a href="#configUSE-PORT-OPTIMISED-TASK-SELECTION" class="headerlink" title="configUSE_PORT_OPTIMISED_TASK_SELECTION"></a>configUSE_PORT_OPTIMISED_TASK_SELECTION</h3><p>选择下一个要执行的任务，为0是通用的方法，为1是特殊方法，使用硬件指令计算。</p>
+<h3 id="configUSE-TICKLESS-IDLE"><a href="#configUSE-TICKLESS-IDLE" class="headerlink" title="configUSE_TICKLESS_IDLE"></a>configUSE_TICKLESS_IDLE</h3><p>FreerRTOS支持低功耗tickless模式，为1使能，tickless低功耗模式是RTOS通过的低功耗方法，</p>
+<h3 id="configUSE-QUEUE-SETS"><a href="#configUSE-QUEUE-SETS" class="headerlink" title="configUSE_QUEUE_SETS"></a>configUSE_QUEUE_SETS</h3><p>设置成1使能队列集功能（可以阻塞、挂起到多个队列和信号量），设置成0取消队列集功能。</p>
+<h3 id="configCPU-CLOCK-HZ"><a href="#configCPU-CLOCK-HZ" class="headerlink" title="configCPU_CLOCK_HZ"></a>configCPU_CLOCK_HZ</h3><p>设置CPU工作的频率。</p>
+<h3 id="configTICK-RATE-HZ"><a href="#configTICK-RATE-HZ" class="headerlink" title="configTICK_RATE_HZ"></a>configTICK_RATE_HZ</h3><p>设置滴答定时器的中断频率，这里设置为1000，周期就是1ms。</p>
+<h3 id="configMAX-PRIORITIES"><a href="#configMAX-PRIORITIES" class="headerlink" title="configMAX_PRIORITIES"></a>configMAX_PRIORITIES</h3><p>设置优先级的数量，范围为0~（configMAX_PRIORITIES-1），0为最低优先级，值越大优先级越高，而且我们的任务不可使用0优先级，</p>
+<h3 id="configMINIMAL-STACK-SIZE"><a href="#configMINIMAL-STACK-SIZE" class="headerlink" title="configMINIMAL_STACK_SIZE"></a>configMINIMAL_STACK_SIZE</h3><p>设置最小任务堆栈大小，也就是空闲任务大小，单位是字，</p>
+<h3 id="configMAX-TASK-NAME-LEN"><a href="#configMAX-TASK-NAME-LEN" class="headerlink" title="configMAX_TASK_NAME_LEN"></a>configMAX_TASK_NAME_LEN</h3><p>设置任务名最大长度，字节为单位</p>
+<h3 id="configUSE-16-BIT-TICKS"><a href="#configUSE-16-BIT-TICKS" class="headerlink" title="configUSE_16_BIT_TICKS"></a>configUSE_16_BIT_TICKS</h3><p>设置系统节拍计数器变量数据类型。设为 1后portTickType 将被定义为无符号的16位整形类型，configUSE_16_BIT_TICKS 设为0 后portTickType 则被定义为无符号的32位整型。</p>
+<h3 id="configIDLE-SHOULD-YIELD"><a href="#configIDLE-SHOULD-YIELD" class="headerlink" title="configIDLE_SHOULD_YIELD"></a>configIDLE_SHOULD_YIELD</h3><p>这宏的作用是定义了与空闲任务（idle task）和其他任务处于同等优先级时，为1时，时间片轮到空闲任务的时候，空闲任务会将cpu的使用权交给其他任务    。</p>
+<h3 id="configUSE-TASK-NOTIFICATIONS"><a href="#configUSE-TASK-NOTIFICATIONS" class="headerlink" title="configUSE_TASK_NOTIFICATIONS"></a>configUSE_TASK_NOTIFICATIONS</h3><p>为1 则开启任务通知功能。</p>
+<h3 id="configUSE-MUTEXES"><a href="#configUSE-MUTEXES" class="headerlink" title="configUSE_MUTEXES"></a>configUSE_MUTEXES</h3><p>为1使用互斥信号量。</p>
+<h3 id="configQUEUE-REGISTRY-SIZE"><a href="#configQUEUE-REGISTRY-SIZE" class="headerlink" title="configQUEUE_REGISTRY_SIZE"></a>configQUEUE_REGISTRY_SIZE</h3><p>设置可以注册队列和信号量的最大数量，在内核调试器查询队列和信号量的时候需要设置这个宏，</p>
+<h3 id="configCHECK-FOR-STACK-OVERFLOW"><a href="#configCHECK-FOR-STACK-OVERFLOW" class="headerlink" title="configCHECK_FOR_STACK_OVERFLOW"></a>configCHECK_FOR_STACK_OVERFLOW</h3><p>设置堆栈溢出检测，每个任务的堆栈是从FreeRTOS的ucHeap中分配的，如果任务的堆栈溢出的话，会造成程序不稳定，为1的话则设置为堆栈溢出检测功能，需要和钩子函数结合使用，也就是一个回调函数，当溢出是会调用这个回调函数。</p>
+<h3 id="configUSE-RECURSIVE-MUTEXES"><a href="#configUSE-RECURSIVE-MUTEXES" class="headerlink" title="configUSE_RECURSIVE_MUTEXES"></a>configUSE_RECURSIVE_MUTEXES</h3><p>为1的话是使能递归互斥信号量。</p>
+<h3 id="configUSE-MALLOC-FAILED-HOOK"><a href="#configUSE-MALLOC-FAILED-HOOK" class="headerlink" title="configUSE_MALLOC_FAILED_HOOK"></a>configUSE_MALLOC_FAILED_HOOK</h3><p>为1使用内存分配失败的钩子函数，</p>
+<h3 id="configUSE-APPLICATION-TASK-TAG"><a href="#configUSE-APPLICATION-TASK-TAG" class="headerlink" title="configUSE_APPLICATION_TASK_TAG"></a>configUSE_APPLICATION_TASK_TAG</h3><p>这个宏为1是使能两个函数进行编译：</p>
 <ol>
-<li><p>进入到static int initr_flash(void) ，位于（common\Board_r.c）</p>
-</li>
-<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">flash_info[i].flash_id = FLASH_UNKNOWN;从这一句我们可以看出来flash__info是存储Nor flash信息的结构体</span><br><span class="line"> if (!flash_detect_legacy(cfi_fla sh_bank_addr(i), i))</span><br><span class="line">  flash_detect_legacy(phys_addr_t base, int banknum)</span><br><span class="line">       if (jedec_flash_match(info, info-&gt;start[0]))</span><br><span class="line">          int jedec_flash_match(flash_info_t *info, ulong base)    将读取到的板子ID和已有板子信息做对比</span><br><span class="line">           &#123;                                                                                             int ret = 0;                                                                                  int i;                                                                                      ulong mask = 0xFFFF;                                                                         if (info-&gt;chipwidth == 1)                                                                     mask = 0xFF;                                                                             for (i = 0; i &lt; ARRAY_SIZE(jedec_table); i++) &#123;                                               if ((jedec_table[i].mfr_id &amp; mask) == (info-&gt;manufacturer_id &amp; mask) &amp;&amp;                          (jedec_table[i].dev_id &amp; mask) == (info-&gt;device_id &amp; mask)) &#123;                                  fill_info(info, &amp;jedec_table[i], base);                                                        ret = 1;                                                                                  break;                                                                      &#125;                                                                                           return ret;                                                                             &#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 代码修改1</span><br><span class="line"></span><br><span class="line">上面分析完 ，我们就可以知道，我们只要将上面函数的饿 jedec_table结构体增加我们对应的信息就行了</span><br><span class="line"></span><br><span class="line"> ```c</span><br><span class="line">修改添加  static const struct amd_flash_info jedec_table[]   结构体</span><br></pre></td></tr></table></figure>
-</li>
+<li>configUSE_APPLICATION_TASK_TAGF（）这个函数</li>
+<li>vTaskSetApplicationTaskTag（）,这个函数是为任务分配一个标签值。</li>
 </ol>
-<h5 id="位置-1"><a href="#位置-1" class="headerlink" title="位置"></a>位置</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drivers\mtd\Jedec_flash.c</span><br></pre></td></tr></table></figure>
-<h5 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> 在结构体补充相应的信息</span><br><span class="line">&#123;      /*  sheldon add for JZ2440_V2 Nor_Flash ： MT29LV160DB */                                         .mfr_id     = (u16)MX_MANUFACT,   //厂家 id                                                     .dev_id     = 0x2249,   //设备 id                                                      </span><br><span class="line">        .name       = &quot;MX29LV160D&quot;,                                                   </span><br><span class="line">        .uaddr      = &#123;                                                               </span><br><span class="line">          [1] = MTD_UADDR_0x0555_0x02AA /* 1:x16 ,NOR Flash 的解锁地址 */</span><br><span class="line">               &#125;,                                                                            </span><br><span class="line">          .DevSize    = SIZE_2MiB,              //整个 nor flash 的大小                                      .CmdSet     = P_ID_AMD_STD,                                          </span><br><span class="line">           .NumEraseRegions= 4,       //擦除域，有几种大小的块就有几个擦除域，                                .regions    = &#123;    //查看芯片手册设置擦除块                                                         ERASEINFO(0x10000, 31),             //参照芯片手册里面的块信息                                     ERASEINFO(0x08000, 1),                                                    </span><br><span class="line">	      ERASEINFO(0x02000, 2),                                                    </span><br><span class="line">            ERASEINFO(0x04000, 1),                                                    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="代码修改2"><a href="#代码修改2" class="headerlink" title="代码修改2"></a>代码修改2</h4><p> 我们还要修改myff244.h的一个宏   </p>
-<p> /#define CONFIG_SYS_MAX_FLASH_SECT    (128)                     </p>
-<p> 因为我们的最大快区大于19了</p>
-<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>重新编译uboot 下载到板子里面，就可以看到成功。</p>
-<p>虽然我们看到串口打印出来的信息显示支持Flash，但是我们要测试下是否真的支持了</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/2.png" alt=""></p>
-<ol>
-<li><p>进入到uboot的命令行</p>
-</li>
-<li><p>输入：flinfo</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/3.png" alt="img"></p>
-<p> 可见扇区地址，扇区数、设备ID和厂商ID都是正确的。接下来进一步确认正确与否</p>
-</li>
-<li><p>查看命令 </p>
-<p>md.b  A0000 10   查看0x50000地址开始的10个字节数据（）</p>
-</li>
-<li><p>拷贝命令</p>
-<p>  cp 30008000  A0000 10  将30008000的10个字节拷贝到A0000（A0000的地址不能低于uboot.bin的size，如果低于u-boot.bin的size ，一旦拷贝就会损坏u-boot）</p>
-</li>
-<li><p>擦除命令   </p>
-<p> erase  A0000  Affff   擦除A0000~Affff之间的内容</p>
-<p>以上这几个操作均正常，说明设备已经支持Nor flash </p>
-<p><br> <span> <font color="red" size="7 ">NOR FLASH  移植成功</font></span></p>
-</li>
-</ol>
-<p>   ​</p>
-<p>   ​</p>
-<p>   ​</p>
-<p>   ​</p>
+<h3 id="configUSE-COUNTING-SEMAPHORES"><a href="#configUSE-COUNTING-SEMAPHORES" class="headerlink" title="configUSE_COUNTING_SEMAPHORES"></a>configUSE_COUNTING_SEMAPHORES</h3><p>设置1会启动计数型信号量，</p>
+<h2 id="FreeRTOS与内存申请有关配置选项"><a href="#FreeRTOS与内存申请有关配置选项" class="headerlink" title="FreeRTOS与内存申请有关配置选项"></a>FreeRTOS与内存申请有关配置选项</h2><h3 id="configSUPPORT-DYNAMIC-ALLOCATION"><a href="#configSUPPORT-DYNAMIC-ALLOCATION" class="headerlink" title="configSUPPORT_DYNAMIC_ALLOCATION"></a>configSUPPORT_DYNAMIC_ALLOCATION</h3><p>定义为1的话FreeRTOS内核对象所需要的RAM会从FREERTOS的堆中动态的获取内存，为0则需要内核对象自己提供。</p>
+<h3 id="configTOTAL-HEAP-SIZE"><a href="#configTOTAL-HEAP-SIZE" class="headerlink" title="configTOTAL_HEAP_SIZE"></a>configTOTAL_HEAP_SIZE</h3><p>设置堆空间（Heap）的大小。只有当程序中采用FreeRTOS 提供的内存分配算法时才会用到。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>总是我们没有用到的宏有些不会在FreeRTOSConfig.h定义，需要在FreeRTOS.h中查找，并且上面和针对config的宏还有部分配置解释。</p>
 
       
     </div>
@@ -576,7 +557,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接:</strong>
-    <a href="http://www.funful.ink/2019/10/19/JZ2440_uboot_2009_11_transplant_3_nor_flash/" title="JZ2440的uboot-2009-11移植<3>_支持Nor Flash">http://www.funful.ink/2019/10/19/JZ2440_uboot_2009_11_transplant_3_nor_flash/</a>
+    <a href="http://www.funful.ink/2019/05/18/STM32_FreeRTOS_config_1/" title="STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1>">http://www.funful.ink/2019/05/18/STM32_FreeRTOS_config_1/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明: </strong>
@@ -591,13 +572,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/移植/" rel="tag"><i class="fa fa-tag"></i> 移植</a>
+            <a href="/tags/Stm32F407/" rel="tag"><i class="fa fa-tag"></i> Stm32F407</a>
           
-            <a href="/tags/arm/" rel="tag"><i class="fa fa-tag"></i> arm</a>
+            <a href="/tags/FreeRTOS/" rel="tag"><i class="fa fa-tag"></i> FreeRTOS</a>
           
-            <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
-          
-            <a href="/tags/Nor-Flash/" rel="tag"><i class="fa fa-tag"></i> Nor Flash</a>
+            <a href="/tags/MDK5/" rel="tag"><i class="fa fa-tag"></i> MDK5</a>
           
         </div>
       
@@ -610,8 +589,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/10/19/JZ2440_uboot_2009_11_transplant_1/" rel="next" title="JZ2440的uboot-2009-11 移植<1>">
-                <i class="fa fa-chevron-left"></i> JZ2440的uboot-2009-11 移植<1>
+              <a href="/2019/05/17/Orange's_Implementation_of_an_operating_system_1th_build_environment/" rel="next" title="Orange's:一个操作系统的实现_1th_环境搭建">
+                <i class="fa fa-chevron-left"></i> Orange's:一个操作系统的实现_1th_环境搭建
               </a>
             
           </div>
@@ -620,8 +599,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/10/19/ESP8266_Connect_TO_PhoneAndPC_WithTCP/" rel="prev" title="ES8266模块AT操作<多连接TCP通信>">
-                ES8266模块AT操作<多连接TCP通信> <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/20/ESP8266_SDK_MQTT_LED/" rel="prev" title="ES8266模块二次开发SDK之MQTT局域网控制LED">
+                ES8266模块二次开发SDK之MQTT局域网控制LED <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -785,7 +764,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#硬件环境"><span class="nav-number">1.</span> <span class="nav-text">硬件环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Nor-Flash介绍"><span class="nav-number">1.1.</span> <span class="nav-text">Nor Flash介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MX29LV160D-T-B-芯片"><span class="nav-number">1.2.</span> <span class="nav-text">MX29LV160D T/B 芯片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码分析"><span class="nav-number">1.3.</span> <span class="nav-text">代码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#位置"><span class="nav-number">1.3.1.</span> <span class="nav-text">位置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#board-init-f功能"><span class="nav-number">1.3.2.</span> <span class="nav-text">board_init_f功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#board-init-r功能"><span class="nav-number">1.3.3.</span> <span class="nav-text">board_init_r功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码解读"><span class="nav-number">1.3.4.</span> <span class="nav-text">代码解读</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#位置-1"><span class="nav-number">1.3.4.1.</span> <span class="nav-text">位置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#添加"><span class="nav-number">1.3.4.2.</span> <span class="nav-text">添加</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码修改2"><span class="nav-number">1.3.5.</span> <span class="nav-text">代码修改2</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">2.</span> <span class="nav-text">测试</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#系统配置文件FreeRTOSConfig-h"><span class="nav-number">1.</span> <span class="nav-text">系统配置文件FreeRTOSConfig.h</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#INCLUDE"><span class="nav-number">2.</span> <span class="nav-text">INCLUDE_*</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-xTaskGetSchedulerState"><span class="nav-number">2.0.1.</span> <span class="nav-text">INCLUDE_xTaskGetSchedulerState</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskPrioritySet"><span class="nav-number">2.0.2.</span> <span class="nav-text">INCLUDE_vTaskPrioritySet</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#INCLUDE-uxTaskPriorityGet"><span class="nav-number">2.0.2.1.</span> <span class="nav-text">INCLUDE_uxTaskPriorityGet</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskDelete"><span class="nav-number">2.0.3.</span> <span class="nav-text">INCLUDE_vTaskDelete</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskCleanUpResources"><span class="nav-number">2.0.4.</span> <span class="nav-text">INCLUDE_vTaskCleanUpResources</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskSuspend"><span class="nav-number">2.0.5.</span> <span class="nav-text">INCLUDE_vTaskSuspend</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskDelayUntil"><span class="nav-number">2.0.6.</span> <span class="nav-text">INCLUDE_vTaskDelayUntil</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskDelay"><span class="nav-number">2.0.7.</span> <span class="nav-text">INCLUDE_vTaskDelay</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-eTaskGetState"><span class="nav-number">2.0.8.</span> <span class="nav-text">INCLUDE_eTaskGetState</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-xTimerPendFunctionCall"><span class="nav-number">2.0.9.</span> <span class="nav-text">INCLUDE_xTimerPendFunctionCall</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#config"><span class="nav-number">3.</span> <span class="nav-text">config_*</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#FreeRTOS基础配置选项"><span class="nav-number">3.1.</span> <span class="nav-text">FreeRTOS基础配置选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换"><span class="nav-number">3.1.1.</span> <span class="nav-text">1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-TIME-SLICING"><span class="nav-number">3.1.2.</span> <span class="nav-text">configUSE_TIME_SLICING</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-PORT-OPTIMISED-TASK-SELECTION"><span class="nav-number">3.1.3.</span> <span class="nav-text">configUSE_PORT_OPTIMISED_TASK_SELECTION</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-TICKLESS-IDLE"><span class="nav-number">3.1.4.</span> <span class="nav-text">configUSE_TICKLESS_IDLE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-QUEUE-SETS"><span class="nav-number">3.1.5.</span> <span class="nav-text">configUSE_QUEUE_SETS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configCPU-CLOCK-HZ"><span class="nav-number">3.1.6.</span> <span class="nav-text">configCPU_CLOCK_HZ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configTICK-RATE-HZ"><span class="nav-number">3.1.7.</span> <span class="nav-text">configTICK_RATE_HZ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configMAX-PRIORITIES"><span class="nav-number">3.1.8.</span> <span class="nav-text">configMAX_PRIORITIES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configMINIMAL-STACK-SIZE"><span class="nav-number">3.1.9.</span> <span class="nav-text">configMINIMAL_STACK_SIZE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configMAX-TASK-NAME-LEN"><span class="nav-number">3.1.10.</span> <span class="nav-text">configMAX_TASK_NAME_LEN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-16-BIT-TICKS"><span class="nav-number">3.1.11.</span> <span class="nav-text">configUSE_16_BIT_TICKS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configIDLE-SHOULD-YIELD"><span class="nav-number">3.1.12.</span> <span class="nav-text">configIDLE_SHOULD_YIELD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-TASK-NOTIFICATIONS"><span class="nav-number">3.1.13.</span> <span class="nav-text">configUSE_TASK_NOTIFICATIONS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-MUTEXES"><span class="nav-number">3.1.14.</span> <span class="nav-text">configUSE_MUTEXES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configQUEUE-REGISTRY-SIZE"><span class="nav-number">3.1.15.</span> <span class="nav-text">configQUEUE_REGISTRY_SIZE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configCHECK-FOR-STACK-OVERFLOW"><span class="nav-number">3.1.16.</span> <span class="nav-text">configCHECK_FOR_STACK_OVERFLOW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-RECURSIVE-MUTEXES"><span class="nav-number">3.1.17.</span> <span class="nav-text">configUSE_RECURSIVE_MUTEXES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-MALLOC-FAILED-HOOK"><span class="nav-number">3.1.18.</span> <span class="nav-text">configUSE_MALLOC_FAILED_HOOK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-APPLICATION-TASK-TAG"><span class="nav-number">3.1.19.</span> <span class="nav-text">configUSE_APPLICATION_TASK_TAG</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-COUNTING-SEMAPHORES"><span class="nav-number">3.1.20.</span> <span class="nav-text">configUSE_COUNTING_SEMAPHORES</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FreeRTOS与内存申请有关配置选项"><span class="nav-number">3.2.</span> <span class="nav-text">FreeRTOS与内存申请有关配置选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#configSUPPORT-DYNAMIC-ALLOCATION"><span class="nav-number">3.2.1.</span> <span class="nav-text">configSUPPORT_DYNAMIC_ALLOCATION</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configTOTAL-HEAP-SIZE"><span class="nav-number">3.2.2.</span> <span class="nav-text">configTOTAL_HEAP_SIZE</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
@@ -956,9 +935,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://www.funful.ink/2019/10/19/JZ2440_uboot_2009_11_transplant_3_nor_flash/';
-          this.page.identifier = '2019/10/19/JZ2440_uboot_2009_11_transplant_3_nor_flash/';
-          this.page.title = 'JZ2440的uboot-2009-11移植<3>_支持Nor Flash';
+          this.page.url = 'http://www.funful.ink/2019/05/18/STM32_FreeRTOS_config_1/';
+          this.page.identifier = '2019/05/18/STM32_FreeRTOS_config_1/';
+          this.page.title = 'STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1>';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://.disqus.com/embed.js';

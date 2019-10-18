@@ -118,7 +118,7 @@
 
 
 
-  <meta name="keywords" content="移植,arm,linux," />
+  <meta name="keywords" content="ESP8266,SDK,MQTT,局域网," />
 
 
 
@@ -129,18 +129,28 @@
 
 
 
-<meta name="description" content="整理下自己之前的移植uboot时记录的笔记！">
-<meta name="keywords" content="移植,arm,linux">
+<meta name="description" content="根据乐鑫官网的提供的Pro，已经提供了 支持MQTT协议，，在乐鑫pro 基础上再局域网下面控制led">
+<meta name="keywords" content="ESP8266,SDK,MQTT,局域网">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JZ2440的uboot-2009-11 移植&lt;1&gt;">
-<meta property="og:url" content="http://www.funful.ink/2019/10/19/JZ2440_uboot_2009_11_transplant_1/index.html">
+<meta property="og:title" content="ES8266模块二次开发SDK之MQTT局域网控制LED">
+<meta property="og:url" content="http://www.funful.ink/2019/05/20/ESP8266_SDK_MQTT_LED/index.html">
 <meta property="og:site_name" content="FunfulBlog">
-<meta property="og:description" content="整理下自己之前的移植uboot时记录的笔记！">
+<meta property="og:description" content="根据乐鑫官网的提供的Pro，已经提供了 支持MQTT协议，，在乐鑫pro 基础上再局域网下面控制led">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-06-04T23:41:39.011Z">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-2.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-3.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-4.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-6.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-5.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-7.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-8.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-9.png">
+<meta property="og:updated_time" content="2019-10-18T16:48:19.352Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JZ2440的uboot-2009-11 移植&lt;1&gt;">
-<meta name="twitter:description" content="整理下自己之前的移植uboot时记录的笔记！">
+<meta name="twitter:title" content="ES8266模块二次开发SDK之MQTT局域网控制LED">
+<meta name="twitter:description" content="根据乐鑫官网的提供的Pro，已经提供了 支持MQTT协议，，在乐鑫pro 基础上再局域网下面控制led">
+<meta name="twitter:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25.png">
 
 
 
@@ -170,13 +180,13 @@
 
 
 
-  <link rel="canonical" href="http://www.funful.ink/2019/10/19/JZ2440_uboot_2009_11_transplant_1/"/>
+  <link rel="canonical" href="http://www.funful.ink/2019/05/20/ESP8266_SDK_MQTT_LED/"/>
 
 
 
 
 
-  <title>JZ2440的uboot-2009-11 移植<1> | FunfulBlog</title>
+  <title>ES8266模块二次开发SDK之MQTT局域网控制LED | FunfulBlog</title>
   
 
 
@@ -347,7 +357,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/10/19/JZ2440_uboot_2009_11_transplant_1/">
+    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/05/20/ESP8266_SDK_MQTT_LED/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ZhaoH.T">
@@ -364,7 +374,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">JZ2440的uboot-2009-11 移植<1></h1>
+          <h1 class="post-title" itemprop="name headline">ES8266模块二次开发SDK之MQTT局域网控制LED</h1>
         
 
         <div class="post-meta">
@@ -377,8 +387,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-19T00:31:20+08:00">
-                2019-10-18
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-20T00:00:00Z">
+                2019-05-20
               </time>
             
 
@@ -400,8 +410,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/uboot移植/" itemprop="url" rel="index">
-                    <span itemprop="name">uboot移植</span>
+                  <a href="/categories/ESP8266/" itemprop="url" rel="index">
+                    <span itemprop="name">ESP8266</span>
                   </a>
                 </span>
 
@@ -418,9 +428,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/10/19/JZ2440_uboot_2009_11_transplant_1/#comments" itemprop="discussionUrl">
+                <a href="/2019/05/20/ESP8266_SDK_MQTT_LED/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2019/10/19/JZ2440_uboot_2009_11_transplant_1/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2019/05/20/ESP8266_SDK_MQTT_LED/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -429,7 +439,7 @@
 
           
           
-             <span id="/2019/10/19/JZ2440_uboot_2009_11_transplant_1/" class="leancloud_visitors" data-flag-title="JZ2440的uboot-2009-11 移植<1>">
+             <span id="/2019/05/20/ESP8266_SDK_MQTT_LED/" class="leancloud_visitors" data-flag-title="ES8266模块二次开发SDK之MQTT局域网控制LED">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -454,7 +464,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,058
+                  1,043
                 </span>
               
 
@@ -479,71 +489,104 @@
       
 
       
-        <p>整理下自己之前的移植uboot时记录的笔记！</p>
+        <p>根据乐鑫官网的提供的Pro，已经提供了 支持MQTT协议，，在乐鑫pro</p>
+<p>基础上再局域网下面控制led</p>
 <a id="more"></a>
-<h2 id="移植环境："><a href="#移植环境：" class="headerlink" title="移植环境："></a>移植环境：</h2><p>arm板子：JZ2440</p>
-<p>uboot版本：2009-11</p>
-<p>交叉编译链：arm-none-linux-gcc-4.4.3</p>
-<h2 id="下载："><a href="#下载：" class="headerlink" title="下载："></a>下载：</h2><p>uboot官方下载地址:<a href="ftp://ftp.denx.de/pub/u-boot" target="_blank" rel="noopener">uboot官方下载</a>,  </p>
-<p>交叉编译链:<a href="">github.com/funful/Tools</a></p>
-<h2 id="uboot的启动流程"><a href="#uboot的启动流程" class="headerlink" title="uboot的启动流程"></a>uboot的启动流程</h2><h3 id="第一阶段"><a href="#第一阶段" class="headerlink" title="第一阶段"></a>第一阶段</h3><ol>
-<li>硬件设备初始化</li>
-<li>加载u-boot第二阶段代码到RAM的空间</li>
-<li>设置好栈</li>
-<li>跳转到第二阶段的代码入口</li>
+<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><h2 id="工程文档准备"><a href="#工程文档准备" class="headerlink" title="工程文档准备"></a>工程文档准备</h2><ol>
+<li>下载链接 <a href="https://www.espressif.com/zh-hans/support/download/sdks-demos" target="_blank" rel="noopener">乐鑫</a></li>
+<li>选用的平台NON-OS SDK</li>
+<li>使用安信可一体化编程软件打开，文档的导入具体去安信可官网搜索，这里直接讲解导入后的操作。 删除third_party,将esp_mqtt_proj从example拉出来，将driver_lib的Makefile添加后.bak,目的是为了不讲driver_lib不编译进工程</li>
+<li>如图，<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25.png" alt=""></li>
 </ol>
-<h3 id="第二阶段"><a href="#第二阶段" class="headerlink" title="第二阶段"></a>第二阶段</h3><ol>
-<li>初始化本阶段所使用的硬件设备                                                 </li>
-<li>检测系统内存映射</li>
-<li>将内核从Flash读取到RAM中</li>
-<li>为内核设置启动参数</li>
-<li>调用内核</li>
+<h2 id="MQTT的windows环境准备"><a href="#MQTT的windows环境准备" class="headerlink" title="MQTT的windows环境准备"></a>MQTT的windows环境准备</h2><ol>
+<li>下载EMQ压缩包，根据你的windows环境选择，下载地址<a href="http://www.emqtt.com/downloads" target="_blank" rel="noopener">链接</a></li>
+<li>解压到不带中文的目录下，打开windows命令，进入到该解压目录的bin文件夹下面，</li>
+<li>在终端执行”emqttd console”，如果卡顿就重新执行</li>
+<li>在浏览器输入”127.0.0.1:18083”</li>
+<li>此时会进入EMQ的界面SSID为admin，Passwd为public</li>
+<li>此时MQTT服务器已经搭建完成</li>
 </ol>
-<h2 id="建立2440的配置"><a href="#建立2440的配置" class="headerlink" title="建立2440的配置"></a>建立2440的配置</h2><p>uboot-2009-11和之前的版本相比，有一点变化，我们在u-boot-2016.09/configs 可以看到各种板级支持配置，由于2440和2410相差不大，所以我们根据2410，来添加2440的配置</p>
-<h3 id="修改根目录的Makefile"><a href="#修改根目录的Makefile" class="headerlink" title="修改根目录的Makefile"></a>修改根目录的Makefile</h3><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#设置股下面两个变量</span></span><br><span class="line">ARCH = arm</span><br><span class="line">CROSS_COMPILE = arm-none-linux-gnueabi-</span><br></pre></td></tr></table></figure>
-<h3 id="添加my2440配置文件"><a href="#添加my2440配置文件" class="headerlink" title="添加my2440配置文件"></a>添加my2440配置文件</h3><h4 id="新建配置文件"><a href="#新建配置文件" class="headerlink" title="新建配置文件"></a>新建配置文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp u-boot-2016.05/configs/smdk2410_defconfig   u-boot-2016.05/configs/my2440_defconfig</span><br></pre></td></tr></table></figure>
-<p>上面这条命令新建了my2440的板子配置</p>
-<h4 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-2016.05/configs/my2440_defconfig</span><br></pre></td></tr></table></figure>
-<h4 id="改动前后的内容如下"><a href="#改动前后的内容如下" class="headerlink" title="改动前后的内容如下:"></a>改动前后的内容如下:</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">改动前：</span><br><span class="line">	CONFIG_ARM=y</span><br><span class="line">	CONFIG_TARGET_SMDK2410=y</span><br><span class="line">	CONFIG_HUSH_PARSER=y</span><br><span class="line">	CONFIG_SYS_PROMPT="SMDK2410 # "</span><br><span class="line">	CONFIG_CMD_USB=y</span><br><span class="line"><span class="meta">	#</span> CONFIG_CMD_SETEXPR is not set</span><br><span class="line">	CONFIG_CMD_DHCP=y</span><br><span class="line">	CONFIG_CMD_PING=y</span><br><span class="line">	CONFIG_CMD_CACHE=y</span><br><span class="line">	CONFIG_CMD_EXT2=y</span><br><span class="line">	CONFIG_CMD_FAT=y</span><br><span class="line">改动后：</span><br><span class="line">    CONFIG_ARM=y</span><br><span class="line">    CONFIG_TARGET_MY2440=y      </span><br><span class="line">    CONFIG_HUSH_PARSER=y</span><br><span class="line">    CONFIG_SYS_PROMPT="MY2440 # "  #修改成我们自己板子名称</span><br><span class="line">    CONFIG_CMD_USB=y</span><br><span class="line">    # CONFIG_CMD_SETEXPR is not set</span><br><span class="line">    CONFIG_CMD_DHCP=y</span><br><span class="line">    CONFIG_CMD_PING=y</span><br><span class="line">    CONFIG_CMD_CACHE=y</span><br><span class="line">    CONFIG_CMD_EXT2=y</span><br><span class="line">    CONFIG_CMD_FAT=y</span><br></pre></td></tr></table></figure>
-<h3 id="添加my2440板级支持文件"><a href="#添加my2440板级支持文件" class="headerlink" title="添加my2440板级支持文件"></a>添加my2440板级支持文件</h3><p>上一个步骤我们已经添加了配置文件，下面我们来添加支持文件，让编译器通过.UBoot源码中大部分和板子相关的代码在board目录下</p>
-<h4 id="新建板级支持-c文件"><a href="#新建板级支持-c文件" class="headerlink" title="新建板级支持.c文件"></a>新建板级支持.c文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -rf u-boot-2016.05/board/samsung/smdk2410/     u-boot-2016.05/board/samsung/my2440/</span><br></pre></td></tr></table></figure>
-<h4 id="将板级支持文件和板级配置文件关联"><a href="#将板级支持文件和板级配置文件关联" class="headerlink" title="将板级支持文件和板级配置文件关联"></a>将板级支持文件和板级配置文件关联</h4><ol>
-<li><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-2016.05/arch/arm/Kconfig</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>找到2410的配置，来在下面添加2440配置</p>
-   <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">在：</span><br><span class="line">config TARGET_SMDK2410</span><br><span class="line">	bool <span class="string">"Support smdk2410"</span></span><br><span class="line">	select CPU_ARM920T</span><br><span class="line">添加：  <span class="comment">#注意Kconfig的语法，需要使用[Tab]键，缩进</span></span><br><span class="line">config TARGET_MY2440</span><br><span class="line">	bool <span class="string">"Support my2440"</span></span><br><span class="line">	select CPU_ARM920T</span><br><span class="line">在：</span><br><span class="line">source <span class="string">"board/samsung/smdk2410/Kconfig"</span></span><br><span class="line">添加：</span><br><span class="line">source <span class="string">"board/samsung/myff2440/Kconfig"</span></span><br></pre></td></tr></table></figure>
-</li>
+<h2 id="硬件环境准备"><a href="#硬件环境准备" class="headerlink" title="硬件环境准备"></a>硬件环境准备</h2><ol>
+<li>一块MODEMCU或者是ESP8266的最小系统</li>
+<li>一个USB转TTL或者是数据线</li>
 </ol>
-<h4 id="修改板级支持文件夹里的Kconfig"><a href="#修改板级支持文件夹里的Kconfig" class="headerlink" title="修改板级支持文件夹里的Kconfig"></a>修改板级支持文件夹里的Kconfig</h4><ol>
-<li><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-<span class="number">2016.05</span>/board/samsung/my2440/Kconfig</span><br><span class="line">配置文件打开后，可以看到很多配置还都是smdk2410的配置:</span><br><span class="line"><span class="keyword">if</span> TARGET_SMDK2410</span><br><span class="line">config SYS_BOARD</span><br><span class="line">	default <span class="string">"smdk2410"</span></span><br><span class="line"></span><br><span class="line">config SYS_VENDOR</span><br><span class="line">	default <span class="string">"samsung"</span></span><br><span class="line">config SYS_SOC</span><br><span class="line">	default <span class="string">"s3c24x0"</span></span><br><span class="line">config SYS_CONFIG_NAME</span><br><span class="line">	default <span class="string">"smdk2410"</span></span><br><span class="line"><span class="keyword">endif</span></span><br><span class="line">修改为：</span><br><span class="line"><span class="keyword">if</span> TARGET_MYFF2440</span><br><span class="line"></span><br><span class="line">config SYS_BOARD</span><br><span class="line">	default <span class="string">"myff2440"</span></span><br><span class="line">config SYS_VENDOR</span><br><span class="line"> 	default <span class="string">"samsung"</span></span><br><span class="line">config SYS_SOC</span><br><span class="line">	default <span class="string">"s3c24x0"</span></span><br><span class="line">config SYS_CONFIG_NAME</span><br><span class="line">	default <span class="string">"myff2440"</span></span><br><span class="line"><span class="keyword">endif</span></span><br></pre></td></tr></table></figure>
-</li>
+<h2 id="软件环境"><a href="#软件环境" class="headerlink" title="软件环境"></a>软件环境</h2><ol>
+<li>烧录工具，可以在安信可官网下载 <a href="http://wiki.ai-thinker.com/esp_download" target="_blank" rel="noopener">链接</a></li>
+<li>串口工具，使用任意一款都可以，</li>
 </ol>
-<h4 id="修改板级支持文件名字"><a href="#修改板级支持文件名字" class="headerlink" title="修改板级支持文件名字"></a>修改板级支持文件名字</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv u-boot-2016.05/board/samsung/my2440/smdk2410.c   u-boot-2016.05/board/samsung/my2440/my2440.c</span><br></pre></td></tr></table></figure>
-<h4 id="修改板级支持文件夹里的my2440-c"><a href="#修改板级支持文件夹里的my2440-c" class="headerlink" title="修改板级支持文件夹里的my2440.c"></a>修改板级支持文件夹里的my2440.c</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot<span class="number">-2016.05</span>/board/samsung/my2440/my2440.c</span><br><span class="line">打开后搜索: SMDK2410</span><br><span class="line">将</span><br><span class="line"> gd-&gt;bd-&gt;bi_arch_number = MACH_TYPE_SMDK2410;</span><br><span class="line"> 该为：</span><br><span class="line"> gd-&gt;bd-&gt;bi_arch_number = MACH_TYPE_MINI2440;</span><br></pre></td></tr></table></figure>
-<p>  这里板子底层初始化部分先暂时使用MINI2440板子的参数配置，目的先是为了编译能通过。</p>
-<h4 id="修改板级支持文件夹里的Makefile"><a href="#修改板级支持文件夹里的Makefile" class="headerlink" title="修改板级支持文件夹里的Makefile"></a>修改板级支持文件夹里的Makefile</h4><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-<span class="number">2016.05</span>/board/samsung/my2440/Makefile</span><br><span class="line">修改前：</span><br><span class="line">       obj-y := smdk2410.o</span><br><span class="line">       obj-y += lowlevel_init.o</span><br><span class="line">修改后：</span><br><span class="line">       obj-y:= my2440.o</span><br><span class="line">       obj-y += lowlevel_init.o</span><br></pre></td></tr></table></figure>
-<h4 id="修改my2440-c的头文件"><a href="#修改my2440-c的头文件" class="headerlink" title="修改my2440.c的头文件"></a>修改my2440.c的头文件</h4><ol>
-<li><p>添加my2440的头文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp u-boot-2016.05/include/configs/smdk2410.h</span><br><span class="line">u-boot-2016.05/include/configs/my2440.h</span><br></pre></td></tr></table></figure>
+<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="搭建测试环境"><a href="#搭建测试环境" class="headerlink" title="搭建测试环境"></a>搭建测试环境</h2><ol>
+<li><p>在工程中打开user_main.c和mqtt_config.h，</p>
 </li>
-<li><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gedit   u-boot-2016.05/include/configs/my2440.h</span><br><span class="line">修改前：</span><br><span class="line">       #define CONFIG_S3C24X0 /* This is a SAMSUNG S3C24x0-type SoC */</span><br><span class="line">       #define CONFIG_S3C2410 /* specifically a SAMSUNG S3C2410 SoC */</span><br><span class="line">       #define CONFIG_SMDK2410 /* on a SAMSUNG SMDK2410 Board */</span><br><span class="line">修改后：</span><br><span class="line">       #define CONFIG_S3C24X0 /* This is a SAMSUNG S3C24x0-type SoC */</span><br><span class="line">       #define CONFIG_S3C2440/* specifically a SAMSUNG S3C2440 SoC */</span><br><span class="line">       #define CONFIG_MY2440/* on custom my2440 Board */</span><br></pre></td></tr></table></figure>
+<li><p>在mqtt_config.h需要修改以下几个宏</p>
+<p>| CFG_HOLDER        | 更新配置到FLASH中，只要数值和本次不一样就行，                |<br>| —————– | —————————————- |<br>| MQTT_HOST         | MQTT服务器的IP                               |<br>| MQTT_PORT         | MQTT服务器的PORT                             |<br>| MQTT_CLIENT_ID    | 客户端ID                                    |<br>| MQTT_USER         | MQTT服务器的登录账号”admin”                      |<br>| MQTT_PASS         | MQTT服务器的登录”admin”                        |<br>| STA_SSID          | ESP8266和电脑端连接的路由账号                       |<br>| STA_PASS          | ESP8266和电脑端连接的路由密码                       |<br>| PROTOCOL_NAMEv311 | 根据MQTT协议的兼容性，在前面加#define，PROTOCOL_NAMEv31注释掉 |<br>|                   |                                          |</p>
 </li>
-</ol>
-<h2 id="编译调试"><a href="#编译调试" class="headerlink" title="编译调试"></a>编译调试</h2><ol>
-<li><p>进入源码目录,cd u-boot-2016.09-11</p>
+<li><p>右击该工程，Clean Project &amp;&amp;Build Project</p>
 </li>
-<li><p>在编译前先清空一次目录,sudo make distclean</p>
+<li><p>可以看到顺利通过编译，如图<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-2.png" alt=""></p>
+<p>依照安信可官方提供的烧录方法可以知道，<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-3.png" alt=""></p>
+<p>blank.bin、esp_init_data_default_v05.bin是乐鑫SDK提供的，而eagle.flash.bin和eagle.irom0text.bin是编译工程生成的，，下载地址需要我们将工程给的地址和安信可提供地址组合得到，如图</p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-4.png" alt=""></p>
+<p>| SPI SPEED  | 40MHz          |<br>| ———- | ————– |<br>| SPI MODE   | DOUT           |<br>| FLASH SIZE | 32Mbit（根据板子而定） |<br>|            |                |</p>
 </li>
-<li><p>修改编译配置,make my2440_config</p>
+<li><p>使用烧写工具擦写和下载，</p>
 </li>
-<li><p>make</p>
+<li><p>将MQTT服务器Runing，(MQTT服务器和ESP8266需要在同一个局域网下面)</p>
 </li>
-<li><p>sudo make</p>
+<li><p>重启ESP8266模块，打开串口 BAUD 115200</p>
 </li>
-<li><p>不出意外的话，就能顺利通过，如果没有通过的话，我们可以看看根目录下的.config文件的配置是够正确</p>
+<li><p>在浏览器登录MQTT，可以看到会话界面，有刚才客户端ID,主题界面有工程中注册的主题如图</p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-6.png" alt=""></p>
+<p>​</p>
+</li>
+<li><p>主题，是我们在user_main.c的mqttConnectedCb函数注册的主题 如图 <img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-5.png" alt="">  </p>
+</li>
+<li><p>串口也会打印出来</p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-7.png" alt=""></p>
+</li>
+<li><p>到这一步，我们整个MQTT的局域网服务器已经搭建起来，下面测试一下，</p>
+<ol>
+<li><p>在EMQ界面切换到websocket测试，首先连接</p>
+</li>
+<li><p>订阅主题”/mqtt/topic/1”</p>
+</li>
+<li><p>给主题”/mqtt/topic/1” 发送”Hello World!”</p>
+</li>
+<li><p>如图  <img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-8.png" alt=""></p>
+</li>
+<li><p>在串口端会打印出”Hello World!”,如图<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-9.png" alt=""></p>
 <p>​</p>
 </li>
 </ol>
+<p>这里整体的测试环境已经搭建完成，我们下面开始进行局域网，点亮LED</p>
+</li>
+</ol>
+<h2 id="局域网点亮LED"><a href="#局域网点亮LED" class="headerlink" title="局域网点亮LED"></a>局域网点亮LED</h2><ol>
+<li><p>回到工程进入user_main.c，</p>
+</li>
+<li><p>在user_init 函数中添加</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO5_U, FUNC_GPIO5); <span class="comment">//选择GPIO5</span></span><br><span class="line">GPIO_OUTPUT_SET(GPIO_ID_PIN(<span class="number">5</span>), <span class="number">1</span>); <span class="comment">//默认GPIO5为高</span></span><br></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>在mqttConnectedCb函数中注册一个主题</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MQTT_Subscribe(client, <span class="string">"/hangtong/led/control"</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在mqttDataCb对收到的值解析</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (data[<span class="number">0</span>] == <span class="string">'0'</span>) &#123;</span><br><span class="line">        GPIO_OUTPUT_SET(GPIO_ID_PIN(<span class="number">5</span>), <span class="number">0</span>);</span><br><span class="line">        MQTT_Publish(client, <span class="string">"/xuhong/LED/out"</span>, <span class="string">"LED status is open ..."</span>,</span><br><span class="line">                <span class="built_in">strlen</span>(<span class="string">"LED status is open ..."</span>), <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//接收到指令是0，GPIO15为高,也就是LED关灯，同时发布消息，主题是/xuhong/LED/out，信息是LED status is off ...</span></span><br><span class="line">    <span class="keyword">if</span> (data[<span class="number">0</span>] == <span class="string">'1'</span>) &#123;</span><br><span class="line">        GPIO_OUTPUT_SET(GPIO_ID_PIN(<span class="number">5</span>), <span class="number">1</span>);</span><br><span class="line">        MQTT_Publish(client, <span class="string">"/xuhong/LED/out"</span>, <span class="string">"LED status is off ..."</span>,</span><br><span class="line">                <span class="built_in">strlen</span>(<span class="string">"LED status is off ..."</span>), <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>Clean Project &amp;&amp;build Project</p>
+</li>
+<li><p>重复上面步骤，</p>
+</li>
+<li><p>在EMQ服务器上面我们，会发现出现了”/hangtong/led/control” 主题 ，在websocket向”/hangtong/led/control”主题发送0则GPIO5为低电平。发送1则GPIO5为高电平</p>
+</li>
+<li><p>成功，</p>
+</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li>MQTT服务器的IP需要我们在电脑端查询得到，</li>
+<li>局域网的控制，所以电脑端和ESP8266需要连接同一个路由</li>
+</ul>
 
       
     </div>
@@ -577,7 +620,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接:</strong>
-    <a href="http://www.funful.ink/2019/10/19/JZ2440_uboot_2009_11_transplant_1/" title="JZ2440的uboot-2009-11 移植<1>">http://www.funful.ink/2019/10/19/JZ2440_uboot_2009_11_transplant_1/</a>
+    <a href="http://www.funful.ink/2019/05/20/ESP8266_SDK_MQTT_LED/" title="ES8266模块二次开发SDK之MQTT局域网控制LED">http://www.funful.ink/2019/05/20/ESP8266_SDK_MQTT_LED/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明: </strong>
@@ -592,11 +635,13 @@
       
         <div class="post-tags">
           
-            <a href="/tags/移植/" rel="tag"><i class="fa fa-tag"></i> 移植</a>
+            <a href="/tags/ESP8266/" rel="tag"><i class="fa fa-tag"></i> ESP8266</a>
           
-            <a href="/tags/arm/" rel="tag"><i class="fa fa-tag"></i> arm</a>
+            <a href="/tags/SDK/" rel="tag"><i class="fa fa-tag"></i> SDK</a>
           
-            <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
+            <a href="/tags/MQTT/" rel="tag"><i class="fa fa-tag"></i> MQTT</a>
+          
+            <a href="/tags/局域网/" rel="tag"><i class="fa fa-tag"></i> 局域网</a>
           
         </div>
       
@@ -609,8 +654,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/24/2019-08-24-C-Assembly/" rel="next" title="C内嵌ARM汇编">
-                <i class="fa fa-chevron-left"></i> C内嵌ARM汇编
+              <a href="/2019/05/18/STM32_FreeRTOS_config_1/" rel="next" title="STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1>">
+                <i class="fa fa-chevron-left"></i> STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1>
               </a>
             
           </div>
@@ -619,8 +664,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/10/19/JZ2440_uboot_2009_11_transplant_3_nor_flash/" rel="prev" title="JZ2440的uboot-2009-11移植<3>_支持Nor Flash">
-                JZ2440的uboot-2009-11移植<3>_支持Nor Flash <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/25/2019-05-25-V4L2/" rel="prev" title="Video for Linux two">
+                Video for Linux two <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -784,7 +829,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#移植环境："><span class="nav-number">1.</span> <span class="nav-text">移植环境：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载："><span class="nav-number">2.</span> <span class="nav-text">下载：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#uboot的启动流程"><span class="nav-number">3.</span> <span class="nav-text">uboot的启动流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一阶段"><span class="nav-number">3.1.</span> <span class="nav-text">第一阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二阶段"><span class="nav-number">3.2.</span> <span class="nav-text">第二阶段</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立2440的配置"><span class="nav-number">4.</span> <span class="nav-text">建立2440的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修改根目录的Makefile"><span class="nav-number">4.1.</span> <span class="nav-text">修改根目录的Makefile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加my2440配置文件"><span class="nav-number">4.2.</span> <span class="nav-text">添加my2440配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#新建配置文件"><span class="nav-number">4.2.1.</span> <span class="nav-text">新建配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改"><span class="nav-number">4.2.2.</span> <span class="nav-text">修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#改动前后的内容如下"><span class="nav-number">4.2.3.</span> <span class="nav-text">改动前后的内容如下:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加my2440板级支持文件"><span class="nav-number">4.3.</span> <span class="nav-text">添加my2440板级支持文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#新建板级支持-c文件"><span class="nav-number">4.3.1.</span> <span class="nav-text">新建板级支持.c文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#将板级支持文件和板级配置文件关联"><span class="nav-number">4.3.2.</span> <span class="nav-text">将板级支持文件和板级配置文件关联</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改板级支持文件夹里的Kconfig"><span class="nav-number">4.3.3.</span> <span class="nav-text">修改板级支持文件夹里的Kconfig</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改板级支持文件名字"><span class="nav-number">4.3.4.</span> <span class="nav-text">修改板级支持文件名字</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改板级支持文件夹里的my2440-c"><span class="nav-number">4.3.5.</span> <span class="nav-text">修改板级支持文件夹里的my2440.c</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改板级支持文件夹里的Makefile"><span class="nav-number">4.3.6.</span> <span class="nav-text">修改板级支持文件夹里的Makefile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改my2440-c的头文件"><span class="nav-number">4.3.7.</span> <span class="nav-text">修改my2440.c的头文件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译调试"><span class="nav-number">5.</span> <span class="nav-text">编译调试</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#准备"><span class="nav-number">1.</span> <span class="nav-text">准备</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#工程文档准备"><span class="nav-number">1.1.</span> <span class="nav-text">工程文档准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MQTT的windows环境准备"><span class="nav-number">1.2.</span> <span class="nav-text">MQTT的windows环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#硬件环境准备"><span class="nav-number">1.3.</span> <span class="nav-text">硬件环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#软件环境"><span class="nav-number">1.4.</span> <span class="nav-text">软件环境</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#步骤"><span class="nav-number">2.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建测试环境"><span class="nav-number">2.1.</span> <span class="nav-text">搭建测试环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#局域网点亮LED"><span class="nav-number">2.2.</span> <span class="nav-text">局域网点亮LED</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
@@ -955,9 +1000,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://www.funful.ink/2019/10/19/JZ2440_uboot_2009_11_transplant_1/';
-          this.page.identifier = '2019/10/19/JZ2440_uboot_2009_11_transplant_1/';
-          this.page.title = 'JZ2440的uboot-2009-11 移植<1>';
+          this.page.url = 'http://www.funful.ink/2019/05/20/ESP8266_SDK_MQTT_LED/';
+          this.page.identifier = '2019/05/20/ESP8266_SDK_MQTT_LED/';
+          this.page.title = 'ES8266模块二次开发SDK之MQTT局域网控制LED';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://.disqus.com/embed.js';

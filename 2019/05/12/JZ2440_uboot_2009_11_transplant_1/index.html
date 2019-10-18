@@ -118,7 +118,7 @@
 
 
 
-  <meta name="keywords" content="ESP8266,SDK," />
+  <meta name="keywords" content="移植,arm,linux," />
 
 
 
@@ -129,22 +129,18 @@
 
 
 
-<meta name="description" content="根据安信可官方文档，通过修改安信可提供的SDK，使串口输出Hello，World！">
-<meta name="keywords" content="ESP8266,SDK">
+<meta name="description" content="整理下自己之前的移植uboot时记录的笔记！">
+<meta name="keywords" content="移植,arm,linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ES8266模块二次开发SDK之&lt;输出hello world&gt;">
-<meta property="og:url" content="http://www.funful.ink/2019/10/19/ESP8266_SDK_api_HelloWorld/index.html">
+<meta property="og:title" content="JZ2440的uboot-2009-11 移植&lt;1&gt;">
+<meta property="og:url" content="http://www.funful.ink/2019/05/12/JZ2440_uboot_2009_11_transplant_1/index.html">
 <meta property="og:site_name" content="FunfulBlog">
-<meta property="og:description" content="根据安信可官方文档，通过修改安信可提供的SDK，使串口输出Hello，World！">
+<meta property="og:description" content="整理下自己之前的移植uboot时记录的笔记！">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.11.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.12.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.13.png">
-<meta property="og:updated_time" content="2019-10-18T16:42:55.515Z">
+<meta property="og:updated_time" content="2019-10-18T16:53:00.271Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ES8266模块二次开发SDK之&lt;输出hello world&gt;">
-<meta name="twitter:description" content="根据安信可官方文档，通过修改安信可提供的SDK，使串口输出Hello，World！">
-<meta name="twitter:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.11.png">
+<meta name="twitter:title" content="JZ2440的uboot-2009-11 移植&lt;1&gt;">
+<meta name="twitter:description" content="整理下自己之前的移植uboot时记录的笔记！">
 
 
 
@@ -174,13 +170,13 @@
 
 
 
-  <link rel="canonical" href="http://www.funful.ink/2019/10/19/ESP8266_SDK_api_HelloWorld/"/>
+  <link rel="canonical" href="http://www.funful.ink/2019/05/12/JZ2440_uboot_2009_11_transplant_1/"/>
 
 
 
 
 
-  <title>ES8266模块二次开发SDK之<输出hello world> | FunfulBlog</title>
+  <title>JZ2440的uboot-2009-11 移植<1> | FunfulBlog</title>
   
 
 
@@ -351,7 +347,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/10/19/ESP8266_SDK_api_HelloWorld/">
+    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/05/12/JZ2440_uboot_2009_11_transplant_1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ZhaoH.T">
@@ -368,7 +364,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">ES8266模块二次开发SDK之<输出hello world></h1>
+          <h1 class="post-title" itemprop="name headline">JZ2440的uboot-2009-11 移植<1></h1>
         
 
         <div class="post-meta">
@@ -381,8 +377,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-19T00:42:55+08:00">
-                2019-10-18
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-12T00:00:00Z">
+                2019-05-12
               </time>
             
 
@@ -404,8 +400,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ESP8266/" itemprop="url" rel="index">
-                    <span itemprop="name">ESP8266</span>
+                  <a href="/categories/uboot移植/" itemprop="url" rel="index">
+                    <span itemprop="name">uboot移植</span>
                   </a>
                 </span>
 
@@ -422,9 +418,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/10/19/ESP8266_SDK_api_HelloWorld/#comments" itemprop="discussionUrl">
+                <a href="/2019/05/12/JZ2440_uboot_2009_11_transplant_1/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2019/10/19/ESP8266_SDK_api_HelloWorld/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2019/05/12/JZ2440_uboot_2009_11_transplant_1/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -433,7 +429,7 @@
 
           
           
-             <span id="/2019/10/19/ESP8266_SDK_api_HelloWorld/" class="leancloud_visitors" data-flag-title="ES8266模块二次开发SDK之<输出hello world>">
+             <span id="/2019/05/12/JZ2440_uboot_2009_11_transplant_1/" class="leancloud_visitors" data-flag-title="JZ2440的uboot-2009-11 移植<1>">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -458,7 +454,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  669
+                  1,058
                 </span>
               
 
@@ -483,71 +479,71 @@
       
 
       
-        <p>根据安信可官方文档，通过修改安信可提供的SDK，使串口输出Hello，World！</p>
+        <p>整理下自己之前的移植uboot时记录的笔记！</p>
 <a id="more"></a>
-<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><ul>
-<li>开发环境搭建： <a href="http://wiki.ai-thinker.com/ai_ide_install" target="_blank" rel="noopener">链接</a></li>
-<li>最新烧录工具： <a href="http://wiki.ai-thinker.com/_media/esp8266/flash_download_tools_v3.6.4.rar" target="_blank" rel="noopener">ESP FLASH TOOL </a></li>
-<li>1.54版本的SDK： <a href="http://wiki.ai-thinker.com/_media/esp8266/sdk/esp8266_nonos_sdk_v1.5.4.7z" target="_blank" rel="noopener">ESP8266_NONOS_SDK_v1.54</a></li>
-<li>开发板(以下三种都可以）：<ul>
-<li>ESP8266模块</li>
-<li>NodeMcu</li>
-<li>安信可开发板</li>
-</ul>
+<h2 id="移植环境："><a href="#移植环境：" class="headerlink" title="移植环境："></a>移植环境：</h2><p>arm板子：JZ2440</p>
+<p>uboot版本：2009-11</p>
+<p>交叉编译链：arm-none-linux-gcc-4.4.3</p>
+<h2 id="下载："><a href="#下载：" class="headerlink" title="下载："></a>下载：</h2><p>uboot官方下载地址:<a href="ftp://ftp.denx.de/pub/u-boot" target="_blank" rel="noopener">uboot官方下载</a>,  </p>
+<p>交叉编译链:<a href="">github.com/funful/Tools</a></p>
+<h2 id="uboot的启动流程"><a href="#uboot的启动流程" class="headerlink" title="uboot的启动流程"></a>uboot的启动流程</h2><h3 id="第一阶段"><a href="#第一阶段" class="headerlink" title="第一阶段"></a>第一阶段</h3><ol>
+<li>硬件设备初始化</li>
+<li>加载u-boot第二阶段代码到RAM的空间</li>
+<li>设置好栈</li>
+<li>跳转到第二阶段的代码入口</li>
+</ol>
+<h3 id="第二阶段"><a href="#第二阶段" class="headerlink" title="第二阶段"></a>第二阶段</h3><ol>
+<li>初始化本阶段所使用的硬件设备                                                 </li>
+<li>检测系统内存映射</li>
+<li>将内核从Flash读取到RAM中</li>
+<li>为内核设置启动参数</li>
+<li>调用内核</li>
+</ol>
+<h2 id="建立2440的配置"><a href="#建立2440的配置" class="headerlink" title="建立2440的配置"></a>建立2440的配置</h2><p>uboot-2009-11和之前的版本相比，有一点变化，我们在u-boot-2016.09/configs 可以看到各种板级支持配置，由于2440和2410相差不大，所以我们根据2410，来添加2440的配置</p>
+<h3 id="修改根目录的Makefile"><a href="#修改根目录的Makefile" class="headerlink" title="修改根目录的Makefile"></a>修改根目录的Makefile</h3><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#设置股下面两个变量</span></span><br><span class="line">ARCH = arm</span><br><span class="line">CROSS_COMPILE = arm-none-linux-gnueabi-</span><br></pre></td></tr></table></figure>
+<h3 id="添加my2440配置文件"><a href="#添加my2440配置文件" class="headerlink" title="添加my2440配置文件"></a>添加my2440配置文件</h3><h4 id="新建配置文件"><a href="#新建配置文件" class="headerlink" title="新建配置文件"></a>新建配置文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp u-boot-2016.05/configs/smdk2410_defconfig   u-boot-2016.05/configs/my2440_defconfig</span><br></pre></td></tr></table></figure>
+<p>上面这条命令新建了my2440的板子配置</p>
+<h4 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-2016.05/configs/my2440_defconfig</span><br></pre></td></tr></table></figure>
+<h4 id="改动前后的内容如下"><a href="#改动前后的内容如下" class="headerlink" title="改动前后的内容如下:"></a>改动前后的内容如下:</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">改动前：</span><br><span class="line">	CONFIG_ARM=y</span><br><span class="line">	CONFIG_TARGET_SMDK2410=y</span><br><span class="line">	CONFIG_HUSH_PARSER=y</span><br><span class="line">	CONFIG_SYS_PROMPT="SMDK2410 # "</span><br><span class="line">	CONFIG_CMD_USB=y</span><br><span class="line"><span class="meta">	#</span> CONFIG_CMD_SETEXPR is not set</span><br><span class="line">	CONFIG_CMD_DHCP=y</span><br><span class="line">	CONFIG_CMD_PING=y</span><br><span class="line">	CONFIG_CMD_CACHE=y</span><br><span class="line">	CONFIG_CMD_EXT2=y</span><br><span class="line">	CONFIG_CMD_FAT=y</span><br><span class="line">改动后：</span><br><span class="line">    CONFIG_ARM=y</span><br><span class="line">    CONFIG_TARGET_MY2440=y      </span><br><span class="line">    CONFIG_HUSH_PARSER=y</span><br><span class="line">    CONFIG_SYS_PROMPT="MY2440 # "  #修改成我们自己板子名称</span><br><span class="line">    CONFIG_CMD_USB=y</span><br><span class="line">    # CONFIG_CMD_SETEXPR is not set</span><br><span class="line">    CONFIG_CMD_DHCP=y</span><br><span class="line">    CONFIG_CMD_PING=y</span><br><span class="line">    CONFIG_CMD_CACHE=y</span><br><span class="line">    CONFIG_CMD_EXT2=y</span><br><span class="line">    CONFIG_CMD_FAT=y</span><br></pre></td></tr></table></figure>
+<h3 id="添加my2440板级支持文件"><a href="#添加my2440板级支持文件" class="headerlink" title="添加my2440板级支持文件"></a>添加my2440板级支持文件</h3><p>上一个步骤我们已经添加了配置文件，下面我们来添加支持文件，让编译器通过.UBoot源码中大部分和板子相关的代码在board目录下</p>
+<h4 id="新建板级支持-c文件"><a href="#新建板级支持-c文件" class="headerlink" title="新建板级支持.c文件"></a>新建板级支持.c文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -rf u-boot-2016.05/board/samsung/smdk2410/     u-boot-2016.05/board/samsung/my2440/</span><br></pre></td></tr></table></figure>
+<h4 id="将板级支持文件和板级配置文件关联"><a href="#将板级支持文件和板级配置文件关联" class="headerlink" title="将板级支持文件和板级配置文件关联"></a>将板级支持文件和板级配置文件关联</h4><ol>
+<li><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-2016.05/arch/arm/Kconfig</span><br></pre></td></tr></table></figure>
 </li>
-</ul>
-<p>下面根据我使用的NodeMcu，，前提是开发环境已经搭建完成，手中也有一块板子 ，需要的工具也已经下载了，记录一下，该教程操作步骤！</p>
-<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="SDK编译生成BIN文件"><a href="#SDK编译生成BIN文件" class="headerlink" title="SDK编译生成BIN文件"></a>SDK编译生成BIN文件</h2><ol>
-<li><p>打开AiThinker_IDE</p>
-</li>
-<li><p>File- &gt;Import-&gt;C/C++-&gt;Existing Code as MakeFile Project，点击 Next</p>
-</li>
-<li><p>选择我们刚才下载的最新SDK的路径，取消C++，选中Cygwin  GCC， 点击Finish</p>
-</li>
-<li><p>这样我们的工程就建立好了</p>
-</li>
-<li><p>在工程中，打开app，进入user，打开user_main.c</p>
-</li>
-<li><p>在user_init函数中添加一句 os_printf(“\r\nHello，World!\r\n”);</p>
-</li>
-<li><p>选中该工程右键选择Clean Project，然后再Build Project。</p>
-</li>
-<li><p>然后就可以 看到下面提示</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.11.png" alt=""></p>
-</li>
-<li><p>下面就开始烧录</p>
+<li><p>找到2410的配置，来在下面添加2440配置</p>
+   <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">在：</span><br><span class="line">config TARGET_SMDK2410</span><br><span class="line">	bool <span class="string">"Support smdk2410"</span></span><br><span class="line">	select CPU_ARM920T</span><br><span class="line">添加：  <span class="comment">#注意Kconfig的语法，需要使用[Tab]键，缩进</span></span><br><span class="line">config TARGET_MY2440</span><br><span class="line">	bool <span class="string">"Support my2440"</span></span><br><span class="line">	select CPU_ARM920T</span><br><span class="line">在：</span><br><span class="line">source <span class="string">"board/samsung/smdk2410/Kconfig"</span></span><br><span class="line">添加：</span><br><span class="line">source <span class="string">"board/samsung/myff2440/Kconfig"</span></span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<h2 id="烧录"><a href="#烧录" class="headerlink" title="烧录"></a>烧录</h2><ol>
-<li><p>参考安信可官方的 ESP 系列模组烧录固件的指导： <a href="http://wiki.ai-thinker.com/esp_download" target="_blank" rel="noopener"></a></p>
-</li>
-<li><p>NodeMcu, 不需要我们手动的将GPIO0拉低，</p>
-</li>
-<li><p>根据我们上面的生成的两个bin文件可以知道，我们下载的1.54版本的SDK是支持云端升级的boot的</p>
-</li>
-<li><p>| 文件名称                      | 8Mbit 地址分配 | 16Mbit 地址分配 | 32Mbit 地址分配 | 备注                      |<br>| ————————- | :——–: | ———– | ———– | ———————– |<br>| boot.bin                  |  0x00000   | 0x00000     | 0x00000     | 由乐鑫在 SDK 中提供，建议一直使用最新版本 |<br>| user1.bin                 |  0x01000   | 0x01000     | 0x01000     | 主程序，由代码编译生成             |<br>| user2.bin                 |  0x81000   | 0x81000     | 0x81000     | 主程序，由代码编译生成             |<br>| esp_init_data_default.bin |  0xFC000   | 0x1FC000    | 0x3FC000    | 由乐鑫在 SDK 中提供            |<br>| blank.bin                 |  0xFE000   | 0x1FE000    | 0x3FE000    | 由乐鑫在 SDK 中提供            |</p>
-</li>
-<li><p>参考上图我们自己的烧录设置是（NodeMcu是32Mbit的）</p>
-<p>| boot_v1.5.bin             | 0x00000  |<br>| ————————- | ——– |<br>| user1.1024.new.2.bin      | 0x01000  |<br>| esp_init_data_default.bin | 0x3FC000 |<br>| blank.bin                 | 0x3FE000 |<br>|                           |          |</p>
-</li>
-<li><p>烧录工具的设置 如图：</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.12.png" alt=""></p>
-</li>
-<li><p>选好COM口，BAUD选的越大，下载速度越快，如果下载失败，可以将波特率降低</p>
-</li>
-<li><p>下载好之后，我们重启开发板，连接串口调试助手，波特率76800-1-8-0，如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.13.png" alt=""></p>
-</li>
-<li><p>可以看到输出 Hello,World！</p>
+<h4 id="修改板级支持文件夹里的Kconfig"><a href="#修改板级支持文件夹里的Kconfig" class="headerlink" title="修改板级支持文件夹里的Kconfig"></a>修改板级支持文件夹里的Kconfig</h4><ol>
+<li><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-<span class="number">2016.05</span>/board/samsung/my2440/Kconfig</span><br><span class="line">配置文件打开后，可以看到很多配置还都是smdk2410的配置:</span><br><span class="line"><span class="keyword">if</span> TARGET_SMDK2410</span><br><span class="line">config SYS_BOARD</span><br><span class="line">	default <span class="string">"smdk2410"</span></span><br><span class="line"></span><br><span class="line">config SYS_VENDOR</span><br><span class="line">	default <span class="string">"samsung"</span></span><br><span class="line">config SYS_SOC</span><br><span class="line">	default <span class="string">"s3c24x0"</span></span><br><span class="line">config SYS_CONFIG_NAME</span><br><span class="line">	default <span class="string">"smdk2410"</span></span><br><span class="line"><span class="keyword">endif</span></span><br><span class="line">修改为：</span><br><span class="line"><span class="keyword">if</span> TARGET_MYFF2440</span><br><span class="line"></span><br><span class="line">config SYS_BOARD</span><br><span class="line">	default <span class="string">"myff2440"</span></span><br><span class="line">config SYS_VENDOR</span><br><span class="line"> 	default <span class="string">"samsung"</span></span><br><span class="line">config SYS_SOC</span><br><span class="line">	default <span class="string">"s3c24x0"</span></span><br><span class="line">config SYS_CONFIG_NAME</span><br><span class="line">	default <span class="string">"myff2440"</span></span><br><span class="line"><span class="keyword">endif</span></span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
-<li><p>这个ESP8266的入门教程我们需要注意几点，第一是安信可提供的烧录指南的分两种情况，一种是支持云端升级的(BOOT)，另一种是不支持云端升级（No BOOT）。我们使用的1.5.4的SDK是支持云端升级的，1.2版本的不支持云端升级，两者下载的时候选的BIN文件，不相同。</p>
+<h4 id="修改板级支持文件名字"><a href="#修改板级支持文件名字" class="headerlink" title="修改板级支持文件名字"></a>修改板级支持文件名字</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv u-boot-2016.05/board/samsung/my2440/smdk2410.c   u-boot-2016.05/board/samsung/my2440/my2440.c</span><br></pre></td></tr></table></figure>
+<h4 id="修改板级支持文件夹里的my2440-c"><a href="#修改板级支持文件夹里的my2440-c" class="headerlink" title="修改板级支持文件夹里的my2440.c"></a>修改板级支持文件夹里的my2440.c</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot<span class="number">-2016.05</span>/board/samsung/my2440/my2440.c</span><br><span class="line">打开后搜索: SMDK2410</span><br><span class="line">将</span><br><span class="line"> gd-&gt;bd-&gt;bi_arch_number = MACH_TYPE_SMDK2410;</span><br><span class="line"> 该为：</span><br><span class="line"> gd-&gt;bd-&gt;bi_arch_number = MACH_TYPE_MINI2440;</span><br></pre></td></tr></table></figure>
+<p>  这里板子底层初始化部分先暂时使用MINI2440板子的参数配置，目的先是为了编译能通过。</p>
+<h4 id="修改板级支持文件夹里的Makefile"><a href="#修改板级支持文件夹里的Makefile" class="headerlink" title="修改板级支持文件夹里的Makefile"></a>修改板级支持文件夹里的Makefile</h4><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-<span class="number">2016.05</span>/board/samsung/my2440/Makefile</span><br><span class="line">修改前：</span><br><span class="line">       obj-y := smdk2410.o</span><br><span class="line">       obj-y += lowlevel_init.o</span><br><span class="line">修改后：</span><br><span class="line">       obj-y:= my2440.o</span><br><span class="line">       obj-y += lowlevel_init.o</span><br></pre></td></tr></table></figure>
+<h4 id="修改my2440-c的头文件"><a href="#修改my2440-c的头文件" class="headerlink" title="修改my2440.c的头文件"></a>修改my2440.c的头文件</h4><ol>
+<li><p>添加my2440的头文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp u-boot-2016.05/include/configs/smdk2410.h</span><br><span class="line">u-boot-2016.05/include/configs/my2440.h</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>使用ESP8266模块的下载的时候需要将GPIO0拉低。</p>
+<li><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gedit   u-boot-2016.05/include/configs/my2440.h</span><br><span class="line">修改前：</span><br><span class="line">       #define CONFIG_S3C24X0 /* This is a SAMSUNG S3C24x0-type SoC */</span><br><span class="line">       #define CONFIG_S3C2410 /* specifically a SAMSUNG S3C2410 SoC */</span><br><span class="line">       #define CONFIG_SMDK2410 /* on a SAMSUNG SMDK2410 Board */</span><br><span class="line">修改后：</span><br><span class="line">       #define CONFIG_S3C24X0 /* This is a SAMSUNG S3C24x0-type SoC */</span><br><span class="line">       #define CONFIG_S3C2440/* specifically a SAMSUNG S3C2440 SoC */</span><br><span class="line">       #define CONFIG_MY2440/* on custom my2440 Board */</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="编译调试"><a href="#编译调试" class="headerlink" title="编译调试"></a>编译调试</h2><ol>
+<li><p>进入源码目录,cd u-boot-2016.09-11</p>
+</li>
+<li><p>在编译前先清空一次目录,sudo make distclean</p>
+</li>
+<li><p>修改编译配置,make my2440_config</p>
+</li>
+<li><p>make</p>
+</li>
+<li><p>sudo make</p>
+</li>
+<li><p>不出意外的话，就能顺利通过，如果没有通过的话，我们可以看看根目录下的.config文件的配置是够正确</p>
 <p>​</p>
 </li>
-</ul>
+</ol>
 
       
     </div>
@@ -581,7 +577,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接:</strong>
-    <a href="http://www.funful.ink/2019/10/19/ESP8266_SDK_api_HelloWorld/" title="ES8266模块二次开发SDK之<输出hello world>">http://www.funful.ink/2019/10/19/ESP8266_SDK_api_HelloWorld/</a>
+    <a href="http://www.funful.ink/2019/05/12/JZ2440_uboot_2009_11_transplant_1/" title="JZ2440的uboot-2009-11 移植<1>">http://www.funful.ink/2019/05/12/JZ2440_uboot_2009_11_transplant_1/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明: </strong>
@@ -596,9 +592,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/ESP8266/" rel="tag"><i class="fa fa-tag"></i> ESP8266</a>
+            <a href="/tags/移植/" rel="tag"><i class="fa fa-tag"></i> 移植</a>
           
-            <a href="/tags/SDK/" rel="tag"><i class="fa fa-tag"></i> SDK</a>
+            <a href="/tags/arm/" rel="tag"><i class="fa fa-tag"></i> arm</a>
+          
+            <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
           
         </div>
       
@@ -611,8 +609,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/10/19/Orange's_Implementation_of_an_operating_system_1th_build_environment/" rel="next" title="Orange's:一个操作系统的实现_1th_环境搭建">
-                <i class="fa fa-chevron-left"></i> Orange's:一个操作系统的实现_1th_环境搭建
+              <a href="/2019/03/30/2019-3-30_SSH/" rel="next" title="SSH基本原理及使用<一>">
+                <i class="fa fa-chevron-left"></i> SSH基本原理及使用<一>
               </a>
             
           </div>
@@ -621,8 +619,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/10/19/Technical_articles_1/" rel="prev" title="关于七牛云测试域名回收解决方案">
-                关于七牛云测试域名回收解决方案 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/13/JZ2440_uboot_2009_11_transplant_3_nor_flash/" rel="prev" title="JZ2440的uboot-2009-11移植<3>_支持Nor Flash">
+                JZ2440的uboot-2009-11移植<3>_支持Nor Flash <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -786,7 +784,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#准备"><span class="nav-number">1.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#步骤"><span class="nav-number">2.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SDK编译生成BIN文件"><span class="nav-number">2.1.</span> <span class="nav-text">SDK编译生成BIN文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#烧录"><span class="nav-number">2.2.</span> <span class="nav-text">烧录</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#移植环境："><span class="nav-number">1.</span> <span class="nav-text">移植环境：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载："><span class="nav-number">2.</span> <span class="nav-text">下载：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#uboot的启动流程"><span class="nav-number">3.</span> <span class="nav-text">uboot的启动流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一阶段"><span class="nav-number">3.1.</span> <span class="nav-text">第一阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二阶段"><span class="nav-number">3.2.</span> <span class="nav-text">第二阶段</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立2440的配置"><span class="nav-number">4.</span> <span class="nav-text">建立2440的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修改根目录的Makefile"><span class="nav-number">4.1.</span> <span class="nav-text">修改根目录的Makefile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加my2440配置文件"><span class="nav-number">4.2.</span> <span class="nav-text">添加my2440配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#新建配置文件"><span class="nav-number">4.2.1.</span> <span class="nav-text">新建配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改"><span class="nav-number">4.2.2.</span> <span class="nav-text">修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#改动前后的内容如下"><span class="nav-number">4.2.3.</span> <span class="nav-text">改动前后的内容如下:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加my2440板级支持文件"><span class="nav-number">4.3.</span> <span class="nav-text">添加my2440板级支持文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#新建板级支持-c文件"><span class="nav-number">4.3.1.</span> <span class="nav-text">新建板级支持.c文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#将板级支持文件和板级配置文件关联"><span class="nav-number">4.3.2.</span> <span class="nav-text">将板级支持文件和板级配置文件关联</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改板级支持文件夹里的Kconfig"><span class="nav-number">4.3.3.</span> <span class="nav-text">修改板级支持文件夹里的Kconfig</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改板级支持文件名字"><span class="nav-number">4.3.4.</span> <span class="nav-text">修改板级支持文件名字</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改板级支持文件夹里的my2440-c"><span class="nav-number">4.3.5.</span> <span class="nav-text">修改板级支持文件夹里的my2440.c</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改板级支持文件夹里的Makefile"><span class="nav-number">4.3.6.</span> <span class="nav-text">修改板级支持文件夹里的Makefile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改my2440-c的头文件"><span class="nav-number">4.3.7.</span> <span class="nav-text">修改my2440.c的头文件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译调试"><span class="nav-number">5.</span> <span class="nav-text">编译调试</span></a></li></ol></div>
             
 
           </div>
@@ -957,9 +955,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://www.funful.ink/2019/10/19/ESP8266_SDK_api_HelloWorld/';
-          this.page.identifier = '2019/10/19/ESP8266_SDK_api_HelloWorld/';
-          this.page.title = 'ES8266模块二次开发SDK之<输出hello world>';
+          this.page.url = 'http://www.funful.ink/2019/05/12/JZ2440_uboot_2009_11_transplant_1/';
+          this.page.identifier = '2019/05/12/JZ2440_uboot_2009_11_transplant_1/';
+          this.page.title = 'JZ2440的uboot-2009-11 移植<1>';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://.disqus.com/embed.js';

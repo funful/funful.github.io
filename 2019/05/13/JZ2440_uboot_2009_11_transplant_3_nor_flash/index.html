@@ -118,7 +118,7 @@
 
 
 
-  <meta name="keywords" content="ESP8266,SDK,MQTT,局域网," />
+  <meta name="keywords" content="移植,arm,linux,Nor Flash," />
 
 
 
@@ -129,28 +129,21 @@
 
 
 
-<meta name="description" content="根据乐鑫官网的提供的Pro，已经提供了 支持MQTT协议，，在乐鑫pro 基础上再局域网下面控制led">
-<meta name="keywords" content="ESP8266,SDK,MQTT,局域网">
+<meta name="description" content="这一节是对第二阶段的代码进行移植，来支持Nor Flash">
+<meta name="keywords" content="移植,arm,linux,Nor Flash">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ES8266模块二次开发SDK之MQTT局域网控制LED">
-<meta property="og:url" content="http://www.funful.ink/2019/10/19/ESP8266_SDK_MQTT_LED/index.html">
+<meta property="og:title" content="JZ2440的uboot-2009-11移植&lt;3&gt;_支持Nor Flash">
+<meta property="og:url" content="http://www.funful.ink/2019/05/13/JZ2440_uboot_2009_11_transplant_3_nor_flash/index.html">
 <meta property="og:site_name" content="FunfulBlog">
-<meta property="og:description" content="根据乐鑫官网的提供的Pro，已经提供了 支持MQTT协议，，在乐鑫pro 基础上再局域网下面控制led">
+<meta property="og:description" content="这一节是对第二阶段的代码进行移植，来支持Nor Flash">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-2.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-3.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-4.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-6.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-5.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-7.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-8.png">
-<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-9.png">
-<meta property="og:updated_time" content="2019-10-18T16:44:30.973Z">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/2.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/3.png">
+<meta property="og:updated_time" content="2019-10-18T16:53:17.507Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ES8266模块二次开发SDK之MQTT局域网控制LED">
-<meta name="twitter:description" content="根据乐鑫官网的提供的Pro，已经提供了 支持MQTT协议，，在乐鑫pro 基础上再局域网下面控制led">
-<meta name="twitter:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25.png">
+<meta name="twitter:title" content="JZ2440的uboot-2009-11移植&lt;3&gt;_支持Nor Flash">
+<meta name="twitter:description" content="这一节是对第二阶段的代码进行移植，来支持Nor Flash">
+<meta name="twitter:image" content="http://p9zz81nyl.bkt.clouddn.com/2.png">
 
 
 
@@ -180,13 +173,13 @@
 
 
 
-  <link rel="canonical" href="http://www.funful.ink/2019/10/19/ESP8266_SDK_MQTT_LED/"/>
+  <link rel="canonical" href="http://www.funful.ink/2019/05/13/JZ2440_uboot_2009_11_transplant_3_nor_flash/"/>
 
 
 
 
 
-  <title>ES8266模块二次开发SDK之MQTT局域网控制LED | FunfulBlog</title>
+  <title>JZ2440的uboot-2009-11移植<3>_支持Nor Flash | FunfulBlog</title>
   
 
 
@@ -357,7 +350,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/10/19/ESP8266_SDK_MQTT_LED/">
+    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/05/13/JZ2440_uboot_2009_11_transplant_3_nor_flash/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ZhaoH.T">
@@ -374,7 +367,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">ES8266模块二次开发SDK之MQTT局域网控制LED</h1>
+          <h1 class="post-title" itemprop="name headline">JZ2440的uboot-2009-11移植<3>_支持Nor Flash</h1>
         
 
         <div class="post-meta">
@@ -387,8 +380,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-19T00:44:30+08:00">
-                2019-10-18
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-13T00:00:00Z">
+                2019-05-13
               </time>
             
 
@@ -410,8 +403,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ESP8266/" itemprop="url" rel="index">
-                    <span itemprop="name">ESP8266</span>
+                  <a href="/categories/uboot移植/" itemprop="url" rel="index">
+                    <span itemprop="name">uboot移植</span>
                   </a>
                 </span>
 
@@ -428,9 +421,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/10/19/ESP8266_SDK_MQTT_LED/#comments" itemprop="discussionUrl">
+                <a href="/2019/05/13/JZ2440_uboot_2009_11_transplant_3_nor_flash/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2019/10/19/ESP8266_SDK_MQTT_LED/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2019/05/13/JZ2440_uboot_2009_11_transplant_3_nor_flash/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -439,7 +432,7 @@
 
           
           
-             <span id="/2019/10/19/ESP8266_SDK_MQTT_LED/" class="leancloud_visitors" data-flag-title="ES8266模块二次开发SDK之MQTT局域网控制LED">
+             <span id="/2019/05/13/JZ2440_uboot_2009_11_transplant_3_nor_flash/" class="leancloud_visitors" data-flag-title="JZ2440的uboot-2009-11移植<3>_支持Nor Flash">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -464,7 +457,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,043
+                  901
                 </span>
               
 
@@ -489,104 +482,67 @@
       
 
       
-        <p>根据乐鑫官网的提供的Pro，已经提供了 支持MQTT协议，，在乐鑫pro</p>
-<p>基础上再局域网下面控制led</p>
+        <p>这一节是对第二阶段的代码进行移植，来支持Nor Flash</p>
 <a id="more"></a>
-<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><h2 id="工程文档准备"><a href="#工程文档准备" class="headerlink" title="工程文档准备"></a>工程文档准备</h2><ol>
-<li>下载链接 <a href="https://www.espressif.com/zh-hans/support/download/sdks-demos" target="_blank" rel="noopener">乐鑫</a></li>
-<li>选用的平台NON-OS SDK</li>
-<li>使用安信可一体化编程软件打开，文档的导入具体去安信可官网搜索，这里直接讲解导入后的操作。 删除third_party,将esp_mqtt_proj从example拉出来，将driver_lib的Makefile添加后.bak,目的是为了不讲driver_lib不编译进工程</li>
-<li>如图，<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25.png" alt=""></li>
+<h2 id="硬件环境"><a href="#硬件环境" class="headerlink" title="硬件环境"></a>硬件环境</h2><h3 id="Nor-Flash介绍"><a href="#Nor-Flash介绍" class="headerlink" title="Nor Flash介绍"></a>Nor Flash介绍</h3><p>Nor Flash 是一种存储芯片，支持掉电存储、支持Executensil On Chip（片上程序运行）。所以很适合作为嵌入式中启动程序的存储介质。但是由于低写速度和擦除速度影响着他的性能，在1~16MB的闪存中较为常见。</p>
+<h3 id="MX29LV160D-T-B-芯片"><a href="#MX29LV160D-T-B-芯片" class="headerlink" title="MX29LV160D T/B 芯片"></a>MX29LV160D T/B 芯片</h3><ol>
+<li><p>2MB的Flash（8位/16位） ,JZ2440选用数据宽度的16位</p>
+</li>
+<li><p>扇区分布;</p>
+<p>| 大小   | 8K-Byte | 16K-Byte | 32K-Byte | 64K-Byte |<br>| —- | ——- | ——– | ——– | ——– |<br>| 块数   | 2       | 1        | 1        | 31       |</p>
+</li>
+<li><p>Word/Byte 模式选择，如果选用Word时需要错位连接</p>
+</li>
+<li><p>工作电压2.7V~3.6V</p>
+</li>
+<li><p>引脚封装48pin-TSOP/48ball-XFLGA/WFBGA</p>
+</li>
+<li><p>至少可靠性保存数据20年，擦除、编程次数10万个周期</p>
+</li>
 </ol>
-<h2 id="MQTT的windows环境准备"><a href="#MQTT的windows环境准备" class="headerlink" title="MQTT的windows环境准备"></a>MQTT的windows环境准备</h2><ol>
-<li>下载EMQ压缩包，根据你的windows环境选择，下载地址<a href="http://www.emqtt.com/downloads" target="_blank" rel="noopener">链接</a></li>
-<li>解压到不带中文的目录下，打开windows命令，进入到该解压目录的bin文件夹下面，</li>
-<li>在终端执行”emqttd console”，如果卡顿就重新执行</li>
-<li>在浏览器输入”127.0.0.1:18083”</li>
-<li>此时会进入EMQ的界面SSID为admin，Passwd为public</li>
-<li>此时MQTT服务器已经搭建完成</li>
-</ol>
-<h2 id="硬件环境准备"><a href="#硬件环境准备" class="headerlink" title="硬件环境准备"></a>硬件环境准备</h2><ol>
-<li>一块MODEMCU或者是ESP8266的最小系统</li>
-<li>一个USB转TTL或者是数据线</li>
-</ol>
-<h2 id="软件环境"><a href="#软件环境" class="headerlink" title="软件环境"></a>软件环境</h2><ol>
-<li>烧录工具，可以在安信可官网下载 <a href="http://wiki.ai-thinker.com/esp_download" target="_blank" rel="noopener">链接</a></li>
-<li>串口工具，使用任意一款都可以，</li>
-</ol>
-<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="搭建测试环境"><a href="#搭建测试环境" class="headerlink" title="搭建测试环境"></a>搭建测试环境</h2><ol>
-<li><p>在工程中打开user_main.c和mqtt_config.h，</p>
-</li>
-<li><p>在mqtt_config.h需要修改以下几个宏</p>
-<p>| CFG_HOLDER        | 更新配置到FLASH中，只要数值和本次不一样就行，                |<br>| —————– | —————————————- |<br>| MQTT_HOST         | MQTT服务器的IP                               |<br>| MQTT_PORT         | MQTT服务器的PORT                             |<br>| MQTT_CLIENT_ID    | 客户端ID                                    |<br>| MQTT_USER         | MQTT服务器的登录账号”admin”                      |<br>| MQTT_PASS         | MQTT服务器的登录”admin”                        |<br>| STA_SSID          | ESP8266和电脑端连接的路由账号                       |<br>| STA_PASS          | ESP8266和电脑端连接的路由密码                       |<br>| PROTOCOL_NAMEv311 | 根据MQTT协议的兼容性，在前面加#define，PROTOCOL_NAMEv31注释掉 |<br>|                   |                                          |</p>
-</li>
-<li><p>右击该工程，Clean Project &amp;&amp;Build Project</p>
-</li>
-<li><p>可以看到顺利通过编译，如图<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-2.png" alt=""></p>
-<p>依照安信可官方提供的烧录方法可以知道，<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-3.png" alt=""></p>
-<p>blank.bin、esp_init_data_default_v05.bin是乐鑫SDK提供的，而eagle.flash.bin和eagle.irom0text.bin是编译工程生成的，，下载地址需要我们将工程给的地址和安信可提供地址组合得到，如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-4.png" alt=""></p>
-<p>| SPI SPEED  | 40MHz          |<br>| ———- | ————– |<br>| SPI MODE   | DOUT           |<br>| FLASH SIZE | 32Mbit（根据板子而定） |<br>|            |                |</p>
-</li>
-<li><p>使用烧写工具擦写和下载，</p>
-</li>
-<li><p>将MQTT服务器Runing，(MQTT服务器和ESP8266需要在同一个局域网下面)</p>
-</li>
-<li><p>重启ESP8266模块，打开串口 BAUD 115200</p>
-</li>
-<li><p>在浏览器登录MQTT，可以看到会话界面，有刚才客户端ID,主题界面有工程中注册的主题如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-6.png" alt=""></p>
-<p>​</p>
-</li>
-<li><p>主题，是我们在user_main.c的mqttConnectedCb函数注册的主题 如图 <img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-5.png" alt="">  </p>
-</li>
-<li><p>串口也会打印出来</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-7.png" alt=""></p>
-</li>
-<li><p>到这一步，我们整个MQTT的局域网服务器已经搭建起来，下面测试一下，</p>
+<h3 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h3><p>我们之前顺腾摸瓜，从start.S-&gt;crt0.S，在crt0.S中分别调用了两个函数：board_init_f和board_init_r。</p>
+<h4 id="位置"><a href="#位置" class="headerlink" title="位置"></a>位置</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">board_init_f 位于u-boot<span class="number">-2016.09</span>\common\Board_f.c</span><br><span class="line">board_init_r 位于u-boot<span class="number">-2016.09</span>\common\Board_r.c</span><br></pre></td></tr></table></figure>
+<h4 id="board-init-f功能"><a href="#board-init-f功能" class="headerlink" title="board_init_f功能"></a>board_init_f功能</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">主要是初始化下面这些</span><br><span class="line">timer_init,        <span class="comment">/* initialize timer */</span></span><br><span class="line">get_clocks,</span><br><span class="line">env_init,        </span><br><span class="line">init_baud_rate,        <span class="comment">/* initialze baudrate settings */</span></span><br><span class="line">serial_init,        <span class="comment">/* serial communications setup */</span></span><br><span class="line">console_init_f,        <span class="comment">/* stage 1 init of console */</span></span><br></pre></td></tr></table></figure>
+<h4 id="board-init-r功能"><a href="#board-init-r功能" class="headerlink" title="board_init_r功能"></a>board_init_r功能</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">board_init,</span><br><span class="line">initr_flash</span><br><span class="line">initr_nand,</span><br></pre></td></tr></table></figure>
+<h4 id="代码解读"><a href="#代码解读" class="headerlink" title="代码解读"></a>代码解读</h4><p>所以我们知道nor flash的设置在board_init_r里面，</p>
 <ol>
-<li><p>在EMQ界面切换到websocket测试，首先连接</p>
+<li><p>进入到static int initr_flash(void) ，位于（common\Board_r.c）</p>
 </li>
-<li><p>订阅主题”/mqtt/topic/1”</p>
-</li>
-<li><p>给主题”/mqtt/topic/1” 发送”Hello World!”</p>
-</li>
-<li><p>如图  <img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-8.png" alt=""></p>
-</li>
-<li><p>在串口端会打印出”Hello World!”,如图<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-9.png" alt=""></p>
-<p>​</p>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">flash_info[i].flash_id = FLASH_UNKNOWN;从这一句我们可以看出来flash__info是存储Nor flash信息的结构体</span><br><span class="line"> if (!flash_detect_legacy(cfi_fla sh_bank_addr(i), i))</span><br><span class="line">  flash_detect_legacy(phys_addr_t base, int banknum)</span><br><span class="line">       if (jedec_flash_match(info, info-&gt;start[0]))</span><br><span class="line">          int jedec_flash_match(flash_info_t *info, ulong base)    将读取到的板子ID和已有板子信息做对比</span><br><span class="line">           &#123;                                                                                             int ret = 0;                                                                                  int i;                                                                                      ulong mask = 0xFFFF;                                                                         if (info-&gt;chipwidth == 1)                                                                     mask = 0xFF;                                                                             for (i = 0; i &lt; ARRAY_SIZE(jedec_table); i++) &#123;                                               if ((jedec_table[i].mfr_id &amp; mask) == (info-&gt;manufacturer_id &amp; mask) &amp;&amp;                          (jedec_table[i].dev_id &amp; mask) == (info-&gt;device_id &amp; mask)) &#123;                                  fill_info(info, &amp;jedec_table[i], base);                                                        ret = 1;                                                                                  break;                                                                      &#125;                                                                                           return ret;                                                                             &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 代码修改1</span><br><span class="line"></span><br><span class="line">上面分析完 ，我们就可以知道，我们只要将上面函数的饿 jedec_table结构体增加我们对应的信息就行了</span><br><span class="line"></span><br><span class="line"> ```c</span><br><span class="line">修改添加  static const struct amd_flash_info jedec_table[]   结构体</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>这里整体的测试环境已经搭建完成，我们下面开始进行局域网，点亮LED</p>
+<h5 id="位置-1"><a href="#位置-1" class="headerlink" title="位置"></a>位置</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drivers\mtd\Jedec_flash.c</span><br></pre></td></tr></table></figure>
+<h5 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> 在结构体补充相应的信息</span><br><span class="line">&#123;      /*  sheldon add for JZ2440_V2 Nor_Flash ： MT29LV160DB */                                         .mfr_id     = (u16)MX_MANUFACT,   //厂家 id                                                     .dev_id     = 0x2249,   //设备 id                                                      </span><br><span class="line">        .name       = &quot;MX29LV160D&quot;,                                                   </span><br><span class="line">        .uaddr      = &#123;                                                               </span><br><span class="line">          [1] = MTD_UADDR_0x0555_0x02AA /* 1:x16 ,NOR Flash 的解锁地址 */</span><br><span class="line">               &#125;,                                                                            </span><br><span class="line">          .DevSize    = SIZE_2MiB,              //整个 nor flash 的大小                                      .CmdSet     = P_ID_AMD_STD,                                          </span><br><span class="line">           .NumEraseRegions= 4,       //擦除域，有几种大小的块就有几个擦除域，                                .regions    = &#123;    //查看芯片手册设置擦除块                                                         ERASEINFO(0x10000, 31),             //参照芯片手册里面的块信息                                     ERASEINFO(0x08000, 1),                                                    </span><br><span class="line">	      ERASEINFO(0x02000, 2),                                                    </span><br><span class="line">            ERASEINFO(0x04000, 1),                                                    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="代码修改2"><a href="#代码修改2" class="headerlink" title="代码修改2"></a>代码修改2</h4><p> 我们还要修改myff244.h的一个宏   </p>
+<p> /#define CONFIG_SYS_MAX_FLASH_SECT    (128)                     </p>
+<p> 因为我们的最大快区大于19了</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>重新编译uboot 下载到板子里面，就可以看到成功。</p>
+<p>虽然我们看到串口打印出来的信息显示支持Flash，但是我们要测试下是否真的支持了</p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/2.png" alt=""></p>
+<ol>
+<li><p>进入到uboot的命令行</p>
+</li>
+<li><p>输入：flinfo</p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/3.png" alt="img"></p>
+<p> 可见扇区地址，扇区数、设备ID和厂商ID都是正确的。接下来进一步确认正确与否</p>
+</li>
+<li><p>查看命令 </p>
+<p>md.b  A0000 10   查看0x50000地址开始的10个字节数据（）</p>
+</li>
+<li><p>拷贝命令</p>
+<p>  cp 30008000  A0000 10  将30008000的10个字节拷贝到A0000（A0000的地址不能低于uboot.bin的size，如果低于u-boot.bin的size ，一旦拷贝就会损坏u-boot）</p>
+</li>
+<li><p>擦除命令   </p>
+<p> erase  A0000  Affff   擦除A0000~Affff之间的内容</p>
+<p>以上这几个操作均正常，说明设备已经支持Nor flash </p>
+<p><br> <span> <font color="red" size="7 ">NOR FLASH  移植成功</font></span></p>
 </li>
 </ol>
-<h2 id="局域网点亮LED"><a href="#局域网点亮LED" class="headerlink" title="局域网点亮LED"></a>局域网点亮LED</h2><ol>
-<li><p>回到工程进入user_main.c，</p>
-</li>
-<li><p>在user_init 函数中添加</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO5_U, FUNC_GPIO5); <span class="comment">//选择GPIO5</span></span><br><span class="line">GPIO_OUTPUT_SET(GPIO_ID_PIN(<span class="number">5</span>), <span class="number">1</span>); <span class="comment">//默认GPIO5为高</span></span><br></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-<li><p>在mqttConnectedCb函数中注册一个主题</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MQTT_Subscribe(client, <span class="string">"/hangtong/led/control"</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>在mqttDataCb对收到的值解析</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (data[<span class="number">0</span>] == <span class="string">'0'</span>) &#123;</span><br><span class="line">        GPIO_OUTPUT_SET(GPIO_ID_PIN(<span class="number">5</span>), <span class="number">0</span>);</span><br><span class="line">        MQTT_Publish(client, <span class="string">"/xuhong/LED/out"</span>, <span class="string">"LED status is open ..."</span>,</span><br><span class="line">                <span class="built_in">strlen</span>(<span class="string">"LED status is open ..."</span>), <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//接收到指令是0，GPIO15为高,也就是LED关灯，同时发布消息，主题是/xuhong/LED/out，信息是LED status is off ...</span></span><br><span class="line">    <span class="keyword">if</span> (data[<span class="number">0</span>] == <span class="string">'1'</span>) &#123;</span><br><span class="line">        GPIO_OUTPUT_SET(GPIO_ID_PIN(<span class="number">5</span>), <span class="number">1</span>);</span><br><span class="line">        MQTT_Publish(client, <span class="string">"/xuhong/LED/out"</span>, <span class="string">"LED status is off ..."</span>,</span><br><span class="line">                <span class="built_in">strlen</span>(<span class="string">"LED status is off ..."</span>), <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-<li><p>Clean Project &amp;&amp;build Project</p>
-</li>
-<li><p>重复上面步骤，</p>
-</li>
-<li><p>在EMQ服务器上面我们，会发现出现了”/hangtong/led/control” 主题 ，在websocket向”/hangtong/led/control”主题发送0则GPIO5为低电平。发送1则GPIO5为高电平</p>
-</li>
-<li><p>成功，</p>
-</li>
-</ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
-<li>MQTT服务器的IP需要我们在电脑端查询得到，</li>
-<li>局域网的控制，所以电脑端和ESP8266需要连接同一个路由</li>
-</ul>
+<p>   ​</p>
+<p>   ​</p>
+<p>   ​</p>
+<p>   ​</p>
 
       
     </div>
@@ -620,7 +576,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接:</strong>
-    <a href="http://www.funful.ink/2019/10/19/ESP8266_SDK_MQTT_LED/" title="ES8266模块二次开发SDK之MQTT局域网控制LED">http://www.funful.ink/2019/10/19/ESP8266_SDK_MQTT_LED/</a>
+    <a href="http://www.funful.ink/2019/05/13/JZ2440_uboot_2009_11_transplant_3_nor_flash/" title="JZ2440的uboot-2009-11移植<3>_支持Nor Flash">http://www.funful.ink/2019/05/13/JZ2440_uboot_2009_11_transplant_3_nor_flash/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明: </strong>
@@ -635,13 +591,13 @@
       
         <div class="post-tags">
           
-            <a href="/tags/ESP8266/" rel="tag"><i class="fa fa-tag"></i> ESP8266</a>
+            <a href="/tags/移植/" rel="tag"><i class="fa fa-tag"></i> 移植</a>
           
-            <a href="/tags/SDK/" rel="tag"><i class="fa fa-tag"></i> SDK</a>
+            <a href="/tags/arm/" rel="tag"><i class="fa fa-tag"></i> arm</a>
           
-            <a href="/tags/MQTT/" rel="tag"><i class="fa fa-tag"></i> MQTT</a>
+            <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
           
-            <a href="/tags/局域网/" rel="tag"><i class="fa fa-tag"></i> 局域网</a>
+            <a href="/tags/Nor-Flash/" rel="tag"><i class="fa fa-tag"></i> Nor Flash</a>
           
         </div>
       
@@ -654,8 +610,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/10/19/Technical_articles_1/" rel="next" title="关于七牛云测试域名回收解决方案">
-                <i class="fa fa-chevron-left"></i> 关于七牛云测试域名回收解决方案
+              <a href="/2019/05/12/JZ2440_uboot_2009_11_transplant_1/" rel="next" title="JZ2440的uboot-2009-11 移植<1>">
+                <i class="fa fa-chevron-left"></i> JZ2440的uboot-2009-11 移植<1>
               </a>
             
           </div>
@@ -664,8 +620,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/10/19/2019-10-19-全志A64编译固件报Fault/" rel="prev" title="全志A64编译固件报Fault">
-                全志A64编译固件报Fault <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/" rel="prev" title="JZ2440的uboot-2009-11移植<2>_串口输出">
+                JZ2440的uboot-2009-11移植<2>_串口输出 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -829,7 +785,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#准备"><span class="nav-number">1.</span> <span class="nav-text">准备</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#工程文档准备"><span class="nav-number">1.1.</span> <span class="nav-text">工程文档准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MQTT的windows环境准备"><span class="nav-number">1.2.</span> <span class="nav-text">MQTT的windows环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#硬件环境准备"><span class="nav-number">1.3.</span> <span class="nav-text">硬件环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#软件环境"><span class="nav-number">1.4.</span> <span class="nav-text">软件环境</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#步骤"><span class="nav-number">2.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建测试环境"><span class="nav-number">2.1.</span> <span class="nav-text">搭建测试环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#局域网点亮LED"><span class="nav-number">2.2.</span> <span class="nav-text">局域网点亮LED</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#硬件环境"><span class="nav-number">1.</span> <span class="nav-text">硬件环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Nor-Flash介绍"><span class="nav-number">1.1.</span> <span class="nav-text">Nor Flash介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MX29LV160D-T-B-芯片"><span class="nav-number">1.2.</span> <span class="nav-text">MX29LV160D T/B 芯片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码分析"><span class="nav-number">1.3.</span> <span class="nav-text">代码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#位置"><span class="nav-number">1.3.1.</span> <span class="nav-text">位置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#board-init-f功能"><span class="nav-number">1.3.2.</span> <span class="nav-text">board_init_f功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#board-init-r功能"><span class="nav-number">1.3.3.</span> <span class="nav-text">board_init_r功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码解读"><span class="nav-number">1.3.4.</span> <span class="nav-text">代码解读</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#位置-1"><span class="nav-number">1.3.4.1.</span> <span class="nav-text">位置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#添加"><span class="nav-number">1.3.4.2.</span> <span class="nav-text">添加</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码修改2"><span class="nav-number">1.3.5.</span> <span class="nav-text">代码修改2</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">2.</span> <span class="nav-text">测试</span></a></li></ol></div>
             
 
           </div>
@@ -1000,9 +956,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://www.funful.ink/2019/10/19/ESP8266_SDK_MQTT_LED/';
-          this.page.identifier = '2019/10/19/ESP8266_SDK_MQTT_LED/';
-          this.page.title = 'ES8266模块二次开发SDK之MQTT局域网控制LED';
+          this.page.url = 'http://www.funful.ink/2019/05/13/JZ2440_uboot_2009_11_transplant_3_nor_flash/';
+          this.page.identifier = '2019/05/13/JZ2440_uboot_2009_11_transplant_3_nor_flash/';
+          this.page.title = 'JZ2440的uboot-2009-11移植<3>_支持Nor Flash';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://.disqus.com/embed.js';

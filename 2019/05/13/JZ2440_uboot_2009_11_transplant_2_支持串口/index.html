@@ -118,7 +118,7 @@
 
 
 
-  <meta name="keywords" content="Stm32F407,FreeRTOS,MDK5," />
+  <meta name="keywords" content="移植,arm,linux," />
 
 
 
@@ -129,18 +129,20 @@
 
 
 
-<meta name="description" content="FreeRTOS是一个RTOS类的嵌入式实时操作系统，并且是开源免费的，与其他实时操作系统相比，是一个很好的选择。在移植好FreeRTOS到STM32上面之后，需要根据板子外设配置相应的功能，FreeRTOSConfig.h里面的宏完成对系统的裁剪和配置。">
-<meta name="keywords" content="Stm32F407,FreeRTOS,MDK5">
+<meta name="description" content="整理下自己之前的移植uboot时记录的笔记！这个章节是对uboot的第一阶段的代码进行优化和代码的修改，使其可以正确的启动串口。">
+<meta name="keywords" content="移植,arm,linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="STM2F407与FreeRTOS的FreeRTOSConfig.h详解&lt;1&gt;">
-<meta property="og:url" content="http://www.funful.ink/2019/10/19/STM32_FreeRTOS_config_1/index.html">
+<meta property="og:title" content="JZ2440的uboot-2009-11移植&lt;2&gt;_串口输出">
+<meta property="og:url" content="http://www.funful.ink/2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/index.html">
 <meta property="og:site_name" content="FunfulBlog">
-<meta property="og:description" content="FreeRTOS是一个RTOS类的嵌入式实时操作系统，并且是开源免费的，与其他实时操作系统相比，是一个很好的选择。在移植好FreeRTOS到STM32上面之后，需要根据板子外设配置相应的功能，FreeRTOSConfig.h里面的宏完成对系统的裁剪和配置。">
+<meta property="og:description" content="整理下自己之前的移植uboot时记录的笔记！这个章节是对uboot的第一阶段的代码进行优化和代码的修改，使其可以正确的启动串口。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-18T16:41:34.109Z">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/1.jpg">
+<meta property="og:updated_time" content="2019-10-18T16:52:00.919Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="STM2F407与FreeRTOS的FreeRTOSConfig.h详解&lt;1&gt;">
-<meta name="twitter:description" content="FreeRTOS是一个RTOS类的嵌入式实时操作系统，并且是开源免费的，与其他实时操作系统相比，是一个很好的选择。在移植好FreeRTOS到STM32上面之后，需要根据板子外设配置相应的功能，FreeRTOSConfig.h里面的宏完成对系统的裁剪和配置。">
+<meta name="twitter:title" content="JZ2440的uboot-2009-11移植&lt;2&gt;_串口输出">
+<meta name="twitter:description" content="整理下自己之前的移植uboot时记录的笔记！这个章节是对uboot的第一阶段的代码进行优化和代码的修改，使其可以正确的启动串口。">
+<meta name="twitter:image" content="http://p9zz81nyl.bkt.clouddn.com/1.jpg">
 
 
 
@@ -170,13 +172,13 @@
 
 
 
-  <link rel="canonical" href="http://www.funful.ink/2019/10/19/STM32_FreeRTOS_config_1/"/>
+  <link rel="canonical" href="http://www.funful.ink/2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/"/>
 
 
 
 
 
-  <title>STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1> | FunfulBlog</title>
+  <title>JZ2440的uboot-2009-11移植<2>_串口输出 | FunfulBlog</title>
   
 
 
@@ -347,7 +349,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/10/19/STM32_FreeRTOS_config_1/">
+    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ZhaoH.T">
@@ -364,7 +366,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1></h1>
+          <h1 class="post-title" itemprop="name headline">JZ2440的uboot-2009-11移植<2>_串口输出</h1>
         
 
         <div class="post-meta">
@@ -377,8 +379,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-10-19T00:41:34+08:00">
-                2019-10-18
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-13T00:00:00Z">
+                2019-05-13
               </time>
             
 
@@ -400,8 +402,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/STM32/" itemprop="url" rel="index">
-                    <span itemprop="name">STM32</span>
+                  <a href="/categories/uboot移植/" itemprop="url" rel="index">
+                    <span itemprop="name">uboot移植</span>
                   </a>
                 </span>
 
@@ -418,9 +420,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/10/19/STM32_FreeRTOS_config_1/#comments" itemprop="discussionUrl">
+                <a href="/2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2019/10/19/STM32_FreeRTOS_config_1/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -429,7 +431,7 @@
 
           
           
-             <span id="/2019/10/19/STM32_FreeRTOS_config_1/" class="leancloud_visitors" data-flag-title="STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1>">
+             <span id="/2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/" class="leancloud_visitors" data-flag-title="JZ2440的uboot-2009-11移植<2>_串口输出">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -454,7 +456,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,447
+                  1,257
                 </span>
               
 
@@ -479,51 +481,60 @@
       
 
       
-        <p>FreeRTOS是一个RTOS类的嵌入式实时操作系统，并且是开源免费的，与其他实时操作系统相比，是一个很好的选择。在移植好FreeRTOS到STM32上面之后，需要根据板子外设配置相应的功能，FreeRTOSConfig.h里面的宏完成对系统的裁剪和配置。</p>
+        <p>整理下自己之前的移植uboot时记录的笔记！这个章节是对uboot的第一阶段的代码进行优化和代码的修改，使其可以正确的启动串口。</p>
 <a id="more"></a>
-<h1 id="系统配置文件FreeRTOSConfig-h"><a href="#系统配置文件FreeRTOSConfig-h" class="headerlink" title="系统配置文件FreeRTOSConfig.h"></a>系统配置文件FreeRTOSConfig.h</h1><p>在编译移植好的FreeROTS工程之后，需要都这个系统配置文件进行宏配置，这个配置文件与我们在编译kernel时的menuconfig类似，里面定义的宏，是对板子外设的和功能的裁剪配置。这个里面主要分为两个类的宏，一个是“INCLUDE_”开始的宏，一个是“config”开始的宏。FreeRTOSConfig.h是我们自己填充的.h文件，RTOS工程自带一个FreeRTOS.h文件，我们在FreeRTOSConfig.h定义的宏会对FreeRTOS.h进行条件编译。</p>
-<h1 id="INCLUDE"><a href="#INCLUDE" class="headerlink" title="INCLUDE_*"></a>INCLUDE_*</h1><p>这个宏的主要功能就是使能或者是失能，FreeRTOS中的API函数的，如果我们需要使用某个api函数就需要把这个宏置1，否则就是置0。在FreeRTOSConfig.h，在上面部分是宏的声明，在对应的.c文件里面会有条件编译，这个就可以达到减少系统占有的ROM和RAM。</p>
-<h3 id="INCLUDE-xTaskGetSchedulerState"><a href="#INCLUDE-xTaskGetSchedulerState" class="headerlink" title="INCLUDE_xTaskGetSchedulerState"></a>INCLUDE_xTaskGetSchedulerState</h3><p>这个宏是对xTaskGetSchedulerState函数的条件判断，是获取任务调度表状态的函数。</p>
-<h3 id="INCLUDE-vTaskPrioritySet"><a href="#INCLUDE-vTaskPrioritySet" class="headerlink" title="INCLUDE_vTaskPrioritySet"></a>INCLUDE_vTaskPrioritySet</h3><p>这个宏是对vTaskPrioritySet函数的条件判断，是任务优先级设置的函数。</p>
-<h4 id="INCLUDE-uxTaskPriorityGet"><a href="#INCLUDE-uxTaskPriorityGet" class="headerlink" title="INCLUDE_uxTaskPriorityGet"></a>INCLUDE_uxTaskPriorityGet</h4><p>这个宏是对uxTaskPriorityGet函数的条件判断，是获得任务优先级的函数。</p>
-<h3 id="INCLUDE-vTaskDelete"><a href="#INCLUDE-vTaskDelete" class="headerlink" title="INCLUDE_vTaskDelete"></a>INCLUDE_vTaskDelete</h3><p>这个宏是对vTaskDelete函数的条件判断，是获得任务优先级的函数。</p>
-<h3 id="INCLUDE-vTaskCleanUpResources"><a href="#INCLUDE-vTaskCleanUpResources" class="headerlink" title="INCLUDE_vTaskCleanUpResources"></a>INCLUDE_vTaskCleanUpResources</h3><p>这个宏是对vTaskCleanUpResources函数的条件判断，是对删除的任务进行资源回收的函数。</p>
-<h3 id="INCLUDE-vTaskSuspend"><a href="#INCLUDE-vTaskSuspend" class="headerlink" title="INCLUDE_vTaskSuspend"></a>INCLUDE_vTaskSuspend</h3><p>这个宏是对vTaskSuspend函数的条件判断，是对任务进行挂起的函数。</p>
-<h3 id="INCLUDE-vTaskDelayUntil"><a href="#INCLUDE-vTaskDelayUntil" class="headerlink" title="INCLUDE_vTaskDelayUntil"></a>INCLUDE_vTaskDelayUntil</h3><p>这个宏是对vTaskDelayUntil函数的条件判断，是设置任务延迟绝对时间的函数。</p>
-<h3 id="INCLUDE-vTaskDelay"><a href="#INCLUDE-vTaskDelay" class="headerlink" title="INCLUDE_vTaskDelay"></a>INCLUDE_vTaskDelay</h3><p>这个宏是对vTaskDelay函数的条件判断，是设置任务延迟相对时间的函数。</p>
-<h3 id="INCLUDE-eTaskGetState"><a href="#INCLUDE-eTaskGetState" class="headerlink" title="INCLUDE_eTaskGetState"></a>INCLUDE_eTaskGetState</h3><p>这个宏是对eTaskGetState函数的条件判断，是获得某个任务的状态的函数。</p>
-<h3 id="INCLUDE-xTimerPendFunctionCall"><a href="#INCLUDE-xTimerPendFunctionCall" class="headerlink" title="INCLUDE_xTimerPendFunctionCall"></a>INCLUDE_xTimerPendFunctionCall</h3><p>这个宏是对xTimerPendFunctionCall函数的条件判断，是获得某个任务的状态的函数</p>
-<h1 id="config"><a href="#config" class="headerlink" title="config_*"></a>config_*</h1><h2 id="FreeRTOS基础配置选项"><a href="#FreeRTOS基础配置选项" class="headerlink" title="FreeRTOS基础配置选项"></a>FreeRTOS基础配置选项</h2><h3 id="1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换"><a href="#1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换" class="headerlink" title="1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换:"></a>1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换:</h3><ol>
-<li>一个任务调用函数taskYIELD();</li>
-<li>一个任务调用可以使任务进入阻塞状态的API函数；</li>
-<li>应用程序明确定义了在中断中执行上下文切换；</li>
-</ol>
-<h3 id="configUSE-TIME-SLICING"><a href="#configUSE-TIME-SLICING" class="headerlink" title="configUSE_TIME_SLICING"></a>configUSE_TIME_SLICING</h3><p>为1的话，在相同优先级下的任务使用合作式调度器，也就是时间片轮流执行。为0的话则不会。</p>
-<h3 id="configUSE-PORT-OPTIMISED-TASK-SELECTION"><a href="#configUSE-PORT-OPTIMISED-TASK-SELECTION" class="headerlink" title="configUSE_PORT_OPTIMISED_TASK_SELECTION"></a>configUSE_PORT_OPTIMISED_TASK_SELECTION</h3><p>选择下一个要执行的任务，为0是通用的方法，为1是特殊方法，使用硬件指令计算。</p>
-<h3 id="configUSE-TICKLESS-IDLE"><a href="#configUSE-TICKLESS-IDLE" class="headerlink" title="configUSE_TICKLESS_IDLE"></a>configUSE_TICKLESS_IDLE</h3><p>FreerRTOS支持低功耗tickless模式，为1使能，tickless低功耗模式是RTOS通过的低功耗方法，</p>
-<h3 id="configUSE-QUEUE-SETS"><a href="#configUSE-QUEUE-SETS" class="headerlink" title="configUSE_QUEUE_SETS"></a>configUSE_QUEUE_SETS</h3><p>设置成1使能队列集功能（可以阻塞、挂起到多个队列和信号量），设置成0取消队列集功能。</p>
-<h3 id="configCPU-CLOCK-HZ"><a href="#configCPU-CLOCK-HZ" class="headerlink" title="configCPU_CLOCK_HZ"></a>configCPU_CLOCK_HZ</h3><p>设置CPU工作的频率。</p>
-<h3 id="configTICK-RATE-HZ"><a href="#configTICK-RATE-HZ" class="headerlink" title="configTICK_RATE_HZ"></a>configTICK_RATE_HZ</h3><p>设置滴答定时器的中断频率，这里设置为1000，周期就是1ms。</p>
-<h3 id="configMAX-PRIORITIES"><a href="#configMAX-PRIORITIES" class="headerlink" title="configMAX_PRIORITIES"></a>configMAX_PRIORITIES</h3><p>设置优先级的数量，范围为0~（configMAX_PRIORITIES-1），0为最低优先级，值越大优先级越高，而且我们的任务不可使用0优先级，</p>
-<h3 id="configMINIMAL-STACK-SIZE"><a href="#configMINIMAL-STACK-SIZE" class="headerlink" title="configMINIMAL_STACK_SIZE"></a>configMINIMAL_STACK_SIZE</h3><p>设置最小任务堆栈大小，也就是空闲任务大小，单位是字，</p>
-<h3 id="configMAX-TASK-NAME-LEN"><a href="#configMAX-TASK-NAME-LEN" class="headerlink" title="configMAX_TASK_NAME_LEN"></a>configMAX_TASK_NAME_LEN</h3><p>设置任务名最大长度，字节为单位</p>
-<h3 id="configUSE-16-BIT-TICKS"><a href="#configUSE-16-BIT-TICKS" class="headerlink" title="configUSE_16_BIT_TICKS"></a>configUSE_16_BIT_TICKS</h3><p>设置系统节拍计数器变量数据类型。设为 1后portTickType 将被定义为无符号的16位整形类型，configUSE_16_BIT_TICKS 设为0 后portTickType 则被定义为无符号的32位整型。</p>
-<h3 id="configIDLE-SHOULD-YIELD"><a href="#configIDLE-SHOULD-YIELD" class="headerlink" title="configIDLE_SHOULD_YIELD"></a>configIDLE_SHOULD_YIELD</h3><p>这宏的作用是定义了与空闲任务（idle task）和其他任务处于同等优先级时，为1时，时间片轮到空闲任务的时候，空闲任务会将cpu的使用权交给其他任务    。</p>
-<h3 id="configUSE-TASK-NOTIFICATIONS"><a href="#configUSE-TASK-NOTIFICATIONS" class="headerlink" title="configUSE_TASK_NOTIFICATIONS"></a>configUSE_TASK_NOTIFICATIONS</h3><p>为1 则开启任务通知功能。</p>
-<h3 id="configUSE-MUTEXES"><a href="#configUSE-MUTEXES" class="headerlink" title="configUSE_MUTEXES"></a>configUSE_MUTEXES</h3><p>为1使用互斥信号量。</p>
-<h3 id="configQUEUE-REGISTRY-SIZE"><a href="#configQUEUE-REGISTRY-SIZE" class="headerlink" title="configQUEUE_REGISTRY_SIZE"></a>configQUEUE_REGISTRY_SIZE</h3><p>设置可以注册队列和信号量的最大数量，在内核调试器查询队列和信号量的时候需要设置这个宏，</p>
-<h3 id="configCHECK-FOR-STACK-OVERFLOW"><a href="#configCHECK-FOR-STACK-OVERFLOW" class="headerlink" title="configCHECK_FOR_STACK_OVERFLOW"></a>configCHECK_FOR_STACK_OVERFLOW</h3><p>设置堆栈溢出检测，每个任务的堆栈是从FreeRTOS的ucHeap中分配的，如果任务的堆栈溢出的话，会造成程序不稳定，为1的话则设置为堆栈溢出检测功能，需要和钩子函数结合使用，也就是一个回调函数，当溢出是会调用这个回调函数。</p>
-<h3 id="configUSE-RECURSIVE-MUTEXES"><a href="#configUSE-RECURSIVE-MUTEXES" class="headerlink" title="configUSE_RECURSIVE_MUTEXES"></a>configUSE_RECURSIVE_MUTEXES</h3><p>为1的话是使能递归互斥信号量。</p>
-<h3 id="configUSE-MALLOC-FAILED-HOOK"><a href="#configUSE-MALLOC-FAILED-HOOK" class="headerlink" title="configUSE_MALLOC_FAILED_HOOK"></a>configUSE_MALLOC_FAILED_HOOK</h3><p>为1使用内存分配失败的钩子函数，</p>
-<h3 id="configUSE-APPLICATION-TASK-TAG"><a href="#configUSE-APPLICATION-TASK-TAG" class="headerlink" title="configUSE_APPLICATION_TASK_TAG"></a>configUSE_APPLICATION_TASK_TAG</h3><p>这个宏为1是使能两个函数进行编译：</p>
-<ol>
-<li>configUSE_APPLICATION_TASK_TAGF（）这个函数</li>
-<li>vTaskSetApplicationTaskTag（）,这个函数是为任务分配一个标签值。</li>
-</ol>
-<h3 id="configUSE-COUNTING-SEMAPHORES"><a href="#configUSE-COUNTING-SEMAPHORES" class="headerlink" title="configUSE_COUNTING_SEMAPHORES"></a>configUSE_COUNTING_SEMAPHORES</h3><p>设置1会启动计数型信号量，</p>
-<h2 id="FreeRTOS与内存申请有关配置选项"><a href="#FreeRTOS与内存申请有关配置选项" class="headerlink" title="FreeRTOS与内存申请有关配置选项"></a>FreeRTOS与内存申请有关配置选项</h2><h3 id="configSUPPORT-DYNAMIC-ALLOCATION"><a href="#configSUPPORT-DYNAMIC-ALLOCATION" class="headerlink" title="configSUPPORT_DYNAMIC_ALLOCATION"></a>configSUPPORT_DYNAMIC_ALLOCATION</h3><p>定义为1的话FreeRTOS内核对象所需要的RAM会从FREERTOS的堆中动态的获取内存，为0则需要内核对象自己提供。</p>
-<h3 id="configTOTAL-HEAP-SIZE"><a href="#configTOTAL-HEAP-SIZE" class="headerlink" title="configTOTAL_HEAP_SIZE"></a>configTOTAL_HEAP_SIZE</h3><p>设置堆空间（Heap）的大小。只有当程序中采用FreeRTOS 提供的内存分配算法时才会用到。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>总是我们没有用到的宏有些不会在FreeRTOSConfig.h定义，需要在FreeRTOS.h中查找，并且上面和针对config的宏还有部分配置解释。</p>
+<h2 id="修改启动代码"><a href="#修改启动代码" class="headerlink" title="修改启动代码"></a>修改启动代码</h2><ul>
+<li><p>在上个章节，当我们编译完成之后会发现在根目录下面会有一个u-boot.lds的文件，这是链接文件，这个文件就在 u-boot-2016.09/arch/arm/cpu/u-boot.lds </p>
+</li>
+<li><p>进去之后发现，板子启动执行的第一个文件是start.S,代码流程      </p>
+<h3 id="第一阶段启动代码修改"><a href="#第一阶段启动代码修改" class="headerlink" title="第一阶段启动代码修改"></a>第一阶段启动代码修改</h3><ul>
+<li><p>设置cpu为SVC32 模式</p>
+</li>
+<li><p>关闭看门狗</p>
+</li>
+<li><p>屏蔽中断，这个地方我们需要添加对2440的支持，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> 在</span><br><span class="line"> #if defined(CONFIG_S3C2410)</span><br><span class="line">	ldr	r1, =0x3ff</span><br><span class="line">	ldr	r0, =INTSUBMSK</span><br><span class="line">	str	r1, [r0]</span><br><span class="line">添加：</span><br><span class="line">#elif  defined(CONFIG_S3C2440)</span><br><span class="line">	ldr	r1, =0x7fff</span><br><span class="line">	ldr	r0, =INTSUBMSK</span><br><span class="line">	str	r1, [r0]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置系统时钟，查看S3C2440的数据手册可以，FCLK:HCLK:PCLK=1:4:8,FCLK=405Mhz</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">修改如下：</span><br><span class="line">	ldr	r0, =CLKDIVN</span><br><span class="line">	mov	r1, #5</span><br><span class="line">	str	r1, [r0]</span><br><span class="line">/**配置为异步模式**/</span><br><span class="line">	mrc p15, 0, r1, c1, c0, 0		</span><br><span class="line">	orr r1, r1, #0xc0000000 		</span><br><span class="line">	mcr p15, 0, r1, c1, c0, 0		</span><br><span class="line">#define S3C2440_MPLL_400MHZ 	((0x7f&lt;&lt;12)|(0x02&lt;&lt;4)|(0x01))/* </span><br><span class="line">	ldr r0, =0x4c000004</span><br><span class="line">	ldr r1, =S3C2440_MPLL_400MHZ</span><br><span class="line">	str r1, [r0]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>跳转到cpu_init_crit，关闭MMU，关闭I/D caches ,再进入lowlevel_init</p>
+</li>
+<li><p>lowlevel_init，这个是配置Memory控制器。 在u-boot-2016.09/board/samsung/myff2440/lowlevel_init.S</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">上面我们修改了系统时钟的分频系数，所以此时的存储器控制器的SDRAM的刷新周期也需要更改，查数据手册，可知</span><br><span class="line">将</span><br><span class="line">#define REFCNT			1113	/* period=15.6us, HCLK=60Mhz, (2048+1-15.6*6.) */</span><br><span class="line">修改为：</span><br><span class="line">#define REFCNT			1269	/* period=7.8us, HCLK=100Mhz, (2048+1-7.8*100) */</span><br></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>然后进入 _main分支，也就是对第二阶段板子外设的设置， 位于uboot2016.9\ubootproject\u-boot-2016.09\arch\arm\lib\crt0.S</p>
+</li>
+</ul>
+<h3 id="系统时钟移植"><a href="#系统时钟移植" class="headerlink" title="系统时钟移植"></a>系统时钟移植</h3><h4 id="添加s3c2440配置的宏"><a href="#添加s3c2440配置的宏" class="headerlink" title="添加s3c2440配置的宏"></a>添加s3c2440配置的宏</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">进入include/configs/myff2440.h</span><br><span class="line">将：</span><br><span class="line">	<span class="meta">#<span class="meta-keyword">define</span> CONFIG_S3C2440		<span class="comment">/* specifically a SAMSUNG S3C2410 SoC */</span></span></span><br><span class="line">	<span class="meta">#<span class="meta-keyword">define</span> CONFIG_MYFF2440		<span class="comment">/* on a SAMSUNG SMDK2410 Board */</span></span></span><br><span class="line">修改为：</span><br><span class="line">	<span class="meta">#<span class="meta-keyword">define</span> CONFIG_S3C2440		<span class="comment">/* specifically a SAMSUNG S3C2410 SoC */</span></span></span><br><span class="line">	<span class="meta">#<span class="meta-keyword">define</span> CONFIG_MYFF2440		<span class="comment">/* on a SAMSUNG SMDK2410 Board */</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="修改分频系数"><a href="#修改分频系数" class="headerlink" title="修改分频系数"></a>修改分频系数</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">进入uboot2016<span class="number">.9</span>\ubootproject\u-boot<span class="number">-2016.09</span>\board\samsung\myff2440\Myff2440.c</span><br><span class="line">将：</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FCLK_SPEED 1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> (FCLK_SPEED == 0)		<span class="comment">/* Fout = 203MHz, Fin = 12MHz for Audio */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_MDIV	0xC3</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_PDIV	0x4</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_SDIV	0x1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">elif</span> (FCLK_SPEED == 1)		<span class="comment">/* Fout = 202.8MHz */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_MDIV	0xA1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_PDIV	0x3</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_SDIV	0x1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">修改为：</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FCLK_SPEED 1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> (FCLK_SPEED == 0)		<span class="comment">/* Fout = 203MHz, Fin = 12MHz for Audio */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_MDIV	0xC3</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_PDIV	0x4</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_SDIV	0x1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">elif</span> (FCLK_SPEED == 1)		<span class="comment">/* Fout = 405.8MHz */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_MDIV	0x7f        <span class="comment">/*查数据手册可知，为了是FCLK=405MHZ，这三个分频值依次是0x7f、0x2、0x1*/</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_PDIV	0x2</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_SDIV	0x1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<p>​</p>
+<h4 id="修改获取时钟函数"><a href="#修改获取时钟函数" class="headerlink" title="修改获取时钟函数"></a>修改获取时钟函数</h4><p>在：u-boot-2016.09\arch\arm\cpu\arm920t\s3c24x0\Speed.c</p>
+<ul>
+<li><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">将：</span><br><span class="line"><span class="function"><span class="keyword">static</span> ulong <span class="title">get_PLLCLK</span><span class="params">(<span class="keyword">int</span> pllreg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> *<span class="title">clk_power</span> = <span class="title">s3c24x0_get_base_clock_power</span>();</span></span><br><span class="line">        ulong r, m, p, s;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (pllreg == MPLL)</span><br><span class="line">                r = readl(&amp;clk_power-&gt;mpllcon);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (pllreg == UPLL)</span><br><span class="line">                r = readl(&amp;clk_power-&gt;upllcon);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">                hang();</span><br><span class="line">        m = ((r &amp; <span class="number">0xFF000</span>) &gt;&gt; <span class="number">12</span>) + <span class="number">8</span>;</span><br><span class="line">        p = ((r &amp; <span class="number">0x003F0</span>) &gt;&gt; <span class="number">4</span>) + <span class="number">2</span>;</span><br><span class="line">        s = r &amp; <span class="number">0x3</span>;</span><br><span class="line">        <span class="keyword">return</span> (CONFIG_SYS_CLK_FREQ * m) / (p &lt;&lt; s);</span><br><span class="line">&#125;</span><br><span class="line">修改为：</span><br><span class="line"><span class="function"><span class="keyword">static</span> ulong <span class="title">get_PLLCLK</span><span class="params">(<span class="keyword">int</span> pllreg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> *<span class="title">clk_power</span> = <span class="title">s3c24x0_get_base_clock_power</span>();</span></span><br><span class="line">        ulong r, m, p, s;</span><br><span class="line">        <span class="keyword">if</span> (pllreg == MPLL)</span><br><span class="line">                r = readl(&amp;clk_power-&gt;mpllcon);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (pllreg == UPLL)</span><br><span class="line">                r = readl(&amp;clk_power-&gt;upllcon);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">                hang();</span><br><span class="line">        m = ((r &amp; <span class="number">0xFF000</span>) &gt;&gt; <span class="number">12</span>) + <span class="number">8</span>;</span><br><span class="line">        p = ((r &amp; <span class="number">0x003F0</span>) &gt;&gt; <span class="number">4</span>) + <span class="number">2</span>;</span><br><span class="line">        s = r &amp; <span class="number">0x3</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(CONFIG_S3C2440)</span></span><br><span class="line">        <span class="keyword">if</span> (pllreg == MPLL)</span><br><span class="line">                <span class="keyword">return</span> <span class="number">2</span> * m * (CONFIG_SYS_CLK_FREQ / (p &lt;&lt; s));</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">        <span class="keyword">return</span> (CONFIG_SYS_CLK_FREQ * m) / (p &lt;&lt; s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">将：</span><br><span class="line"><span class="function">ulong <span class="title">get_HCLK</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> *<span class="title">clk_power</span> = <span class="title">s3c24x0_get_base_clock_power</span>();</span></span><br><span class="line">        <span class="keyword">return</span> (readl(&amp;clk_power-&gt;clkdivn) &amp; <span class="number">2</span>) ? get_FCLK() / <span class="number">2</span> : get_FCLK();</span><br><span class="line">&#125;</span><br><span class="line">修改为：</span><br><span class="line"><span class="function">ulong <span class="title">get_HCLK</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> *<span class="title">clk_power</span> = <span class="title">s3c24x0_get_base_clock_power</span>();</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_S3C2440</span></span><br><span class="line">        <span class="keyword">switch</span> (readl(&amp;clk_power-&gt;clkdivn) &amp; <span class="number">0x6</span>) &#123;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> get_FCLK();</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                <span class="keyword">return</span> get_FCLK() / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">                <span class="keyword">return</span> (readl(&amp;clk_power-&gt;camdivn) &amp; (<span class="number">1</span> &lt;&lt; <span class="number">9</span>)) ?</span><br><span class="line">                        get_FCLK() / <span class="number">8</span> : get_FCLK() / <span class="number">4</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">6</span>:</span><br><span class="line">                <span class="keyword">return</span> (readl(&amp;clk_power-&gt;camdivn) &amp; (<span class="number">1</span> &lt;&lt; <span class="number">8</span>)) ?</span><br><span class="line">                        get_FCLK() / <span class="number">6</span> : get_FCLK() / <span class="number">3</span>;</span><br><span class="line">        &#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">        <span class="keyword">return</span> (readl(&amp;clk_power-&gt;clkdivn) &amp; <span class="number">2</span>) ? get_FCLK() / <span class="number">2</span> : get_FCLK();</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="添加摄像头分频寄存器CAMDIVN"><a href="#添加摄像头分频寄存器CAMDIVN" class="headerlink" title="添加摄像头分频寄存器CAMDIVN"></a>添加摄像头分频寄存器CAMDIVN</h4><p>因为我们在修改get_HCLK函数时，用到了camera寄存器所以我们需要添加相关的宏。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">在：u-boot<span class="number">-2016.09</span>\arch\arm\include\<span class="keyword">asm</span>\arch-s3c24x0\S3c24x0.h</span><br><span class="line">将：</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> &#123;</span></span><br><span class="line">	u32	locktime;</span><br><span class="line">	u32	mpllcon;</span><br><span class="line">	u32	upllcon;</span><br><span class="line">	u32	clkcon;</span><br><span class="line">	u32	clkslow;</span><br><span class="line">	u32	clkdivn;</span><br><span class="line">&#125;;</span><br><span class="line">修改为：</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> &#123;</span></span><br><span class="line">	u32	locktime;</span><br><span class="line">	u32	mpllcon;</span><br><span class="line">	u32	upllcon;</span><br><span class="line">	u32	clkcon;</span><br><span class="line">	u32	clkslow;</span><br><span class="line">	u32	clkdivn;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(CONFIG_S3C2440)</span></span><br><span class="line">	u32	camdivn;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="支持CONFIG-S3C2440-CONFIG-MYFF2440的宏配置"><a href="#支持CONFIG-S3C2440-CONFIG-MYFF2440的宏配置" class="headerlink" title="支持CONFIG_S3C2440/CONFIG_MYFF2440的宏配置"></a>支持CONFIG_S3C2440/CONFIG_MYFF2440的宏配置</h3><p>在前面我们修改板级支持的头文件中，我们修改了两个宏下面我们需要将系统中的CONFIG_S3C2410替换成CONFIG_S3C2440，将CONFIG_SMDK2410替换成CONFIG_MYFF2440</p>
+<p>在ubuntu的根目录下，执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find .|xargs grep -ri "CONFIG_S3C2410" -l</span><br></pre></td></tr></table></figure>
+<p> 会列出包含CONFIG_S3C2410的文件，将其替换，</p>
+<p>同理执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find .|xargs grep -ri &quot;CONFIG_SMDK2410&quot; -l</span><br></pre></td></tr></table></figure>
+<p>也将其替换</p>
+<h2 id="编译调试"><a href="#编译调试" class="headerlink" title="编译调试"></a>编译调试</h2><p>经过上面这几个步骤我们执行如下命令：</p>
+<p> 在u-boot-2009.11的顶层目录，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make MyFF2440_config&amp;&amp;make</span><br></pre></td></tr></table></figure>
+<p>不出意外的话，就可以顺利生成u-boot.bin文件，烧进板子里面nor 启动，串口就能正常输出    </p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/1.jpg"></p>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>我们在注释的时候尽量使用“/**/”符号，不要用“//”,因为有些交叉编译器不识别单行注释</p>
+<p>​</p>
+</li>
+</ul>
 
       
     </div>
@@ -557,7 +568,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接:</strong>
-    <a href="http://www.funful.ink/2019/10/19/STM32_FreeRTOS_config_1/" title="STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1>">http://www.funful.ink/2019/10/19/STM32_FreeRTOS_config_1/</a>
+    <a href="http://www.funful.ink/2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/" title="JZ2440的uboot-2009-11移植<2>_串口输出">http://www.funful.ink/2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明: </strong>
@@ -572,11 +583,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Stm32F407/" rel="tag"><i class="fa fa-tag"></i> Stm32F407</a>
+            <a href="/tags/移植/" rel="tag"><i class="fa fa-tag"></i> 移植</a>
           
-            <a href="/tags/FreeRTOS/" rel="tag"><i class="fa fa-tag"></i> FreeRTOS</a>
+            <a href="/tags/arm/" rel="tag"><i class="fa fa-tag"></i> arm</a>
           
-            <a href="/tags/MDK5/" rel="tag"><i class="fa fa-tag"></i> MDK5</a>
+            <a href="/tags/linux/" rel="tag"><i class="fa fa-tag"></i> linux</a>
           
         </div>
       
@@ -589,8 +600,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/10/19/STM32_FreeRTOS_config_2/" rel="next" title="STM2F407与FreeRTOS的FreeRTOSConfig.h详解<2>">
-                <i class="fa fa-chevron-left"></i> STM2F407与FreeRTOS的FreeRTOSConfig.h详解<2>
+              <a href="/2019/05/13/JZ2440_uboot_2009_11_transplant_3_nor_flash/" rel="next" title="JZ2440的uboot-2009-11移植<3>_支持Nor Flash">
+                <i class="fa fa-chevron-left"></i> JZ2440的uboot-2009-11移植<3>_支持Nor Flash
               </a>
             
           </div>
@@ -599,8 +610,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/10/19/Orange's_Implementation_of_an_operating_system_1th_build_environment/" rel="prev" title="Orange's:一个操作系统的实现_1th_环境搭建">
-                Orange's:一个操作系统的实现_1th_环境搭建 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/14/ESP8266_Connect_TO_PhoneAndPC_WithTCP/" rel="prev" title="ES8266模块AT操作<多连接TCP通信>">
+                ES8266模块AT操作<多连接TCP通信> <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -764,7 +775,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#系统配置文件FreeRTOSConfig-h"><span class="nav-number">1.</span> <span class="nav-text">系统配置文件FreeRTOSConfig.h</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#INCLUDE"><span class="nav-number">2.</span> <span class="nav-text">INCLUDE_*</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-xTaskGetSchedulerState"><span class="nav-number">2.0.1.</span> <span class="nav-text">INCLUDE_xTaskGetSchedulerState</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskPrioritySet"><span class="nav-number">2.0.2.</span> <span class="nav-text">INCLUDE_vTaskPrioritySet</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#INCLUDE-uxTaskPriorityGet"><span class="nav-number">2.0.2.1.</span> <span class="nav-text">INCLUDE_uxTaskPriorityGet</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskDelete"><span class="nav-number">2.0.3.</span> <span class="nav-text">INCLUDE_vTaskDelete</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskCleanUpResources"><span class="nav-number">2.0.4.</span> <span class="nav-text">INCLUDE_vTaskCleanUpResources</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskSuspend"><span class="nav-number">2.0.5.</span> <span class="nav-text">INCLUDE_vTaskSuspend</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskDelayUntil"><span class="nav-number">2.0.6.</span> <span class="nav-text">INCLUDE_vTaskDelayUntil</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-vTaskDelay"><span class="nav-number">2.0.7.</span> <span class="nav-text">INCLUDE_vTaskDelay</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-eTaskGetState"><span class="nav-number">2.0.8.</span> <span class="nav-text">INCLUDE_eTaskGetState</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCLUDE-xTimerPendFunctionCall"><span class="nav-number">2.0.9.</span> <span class="nav-text">INCLUDE_xTimerPendFunctionCall</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#config"><span class="nav-number">3.</span> <span class="nav-text">config_*</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#FreeRTOS基础配置选项"><span class="nav-number">3.1.</span> <span class="nav-text">FreeRTOS基础配置选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换"><span class="nav-number">3.1.1.</span> <span class="nav-text">1为抢占式调度，0为协程，抢占式调度器会在内核的中断中进行任务的切换，协程的话，会在三种情况下，进行任务的切换:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-TIME-SLICING"><span class="nav-number">3.1.2.</span> <span class="nav-text">configUSE_TIME_SLICING</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-PORT-OPTIMISED-TASK-SELECTION"><span class="nav-number">3.1.3.</span> <span class="nav-text">configUSE_PORT_OPTIMISED_TASK_SELECTION</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-TICKLESS-IDLE"><span class="nav-number">3.1.4.</span> <span class="nav-text">configUSE_TICKLESS_IDLE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-QUEUE-SETS"><span class="nav-number">3.1.5.</span> <span class="nav-text">configUSE_QUEUE_SETS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configCPU-CLOCK-HZ"><span class="nav-number">3.1.6.</span> <span class="nav-text">configCPU_CLOCK_HZ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configTICK-RATE-HZ"><span class="nav-number">3.1.7.</span> <span class="nav-text">configTICK_RATE_HZ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configMAX-PRIORITIES"><span class="nav-number">3.1.8.</span> <span class="nav-text">configMAX_PRIORITIES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configMINIMAL-STACK-SIZE"><span class="nav-number">3.1.9.</span> <span class="nav-text">configMINIMAL_STACK_SIZE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configMAX-TASK-NAME-LEN"><span class="nav-number">3.1.10.</span> <span class="nav-text">configMAX_TASK_NAME_LEN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-16-BIT-TICKS"><span class="nav-number">3.1.11.</span> <span class="nav-text">configUSE_16_BIT_TICKS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configIDLE-SHOULD-YIELD"><span class="nav-number">3.1.12.</span> <span class="nav-text">configIDLE_SHOULD_YIELD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-TASK-NOTIFICATIONS"><span class="nav-number">3.1.13.</span> <span class="nav-text">configUSE_TASK_NOTIFICATIONS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-MUTEXES"><span class="nav-number">3.1.14.</span> <span class="nav-text">configUSE_MUTEXES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configQUEUE-REGISTRY-SIZE"><span class="nav-number">3.1.15.</span> <span class="nav-text">configQUEUE_REGISTRY_SIZE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configCHECK-FOR-STACK-OVERFLOW"><span class="nav-number">3.1.16.</span> <span class="nav-text">configCHECK_FOR_STACK_OVERFLOW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-RECURSIVE-MUTEXES"><span class="nav-number">3.1.17.</span> <span class="nav-text">configUSE_RECURSIVE_MUTEXES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-MALLOC-FAILED-HOOK"><span class="nav-number">3.1.18.</span> <span class="nav-text">configUSE_MALLOC_FAILED_HOOK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-APPLICATION-TASK-TAG"><span class="nav-number">3.1.19.</span> <span class="nav-text">configUSE_APPLICATION_TASK_TAG</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-COUNTING-SEMAPHORES"><span class="nav-number">3.1.20.</span> <span class="nav-text">configUSE_COUNTING_SEMAPHORES</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FreeRTOS与内存申请有关配置选项"><span class="nav-number">3.2.</span> <span class="nav-text">FreeRTOS与内存申请有关配置选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#configSUPPORT-DYNAMIC-ALLOCATION"><span class="nav-number">3.2.1.</span> <span class="nav-text">configSUPPORT_DYNAMIC_ALLOCATION</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configTOTAL-HEAP-SIZE"><span class="nav-number">3.2.2.</span> <span class="nav-text">configTOTAL_HEAP_SIZE</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#修改启动代码"><span class="nav-number">1.</span> <span class="nav-text">修改启动代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一阶段启动代码修改"><span class="nav-number">1.1.</span> <span class="nav-text">第一阶段启动代码修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#系统时钟移植"><span class="nav-number">1.2.</span> <span class="nav-text">系统时钟移植</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#添加s3c2440配置的宏"><span class="nav-number">1.2.1.</span> <span class="nav-text">添加s3c2440配置的宏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改分频系数"><span class="nav-number">1.2.2.</span> <span class="nav-text">修改分频系数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改获取时钟函数"><span class="nav-number">1.2.3.</span> <span class="nav-text">修改获取时钟函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加摄像头分频寄存器CAMDIVN"><span class="nav-number">1.2.4.</span> <span class="nav-text">添加摄像头分频寄存器CAMDIVN</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#支持CONFIG-S3C2440-CONFIG-MYFF2440的宏配置"><span class="nav-number">1.3.</span> <span class="nav-text">支持CONFIG_S3C2440/CONFIG_MYFF2440的宏配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译调试"><span class="nav-number">2.</span> <span class="nav-text">编译调试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意"><span class="nav-number">3.</span> <span class="nav-text">注意</span></a></li></ol></div>
             
 
           </div>
@@ -935,9 +946,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://www.funful.ink/2019/10/19/STM32_FreeRTOS_config_1/';
-          this.page.identifier = '2019/10/19/STM32_FreeRTOS_config_1/';
-          this.page.title = 'STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1>';
+          this.page.url = 'http://www.funful.ink/2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/';
+          this.page.identifier = '2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/';
+          this.page.title = 'JZ2440的uboot-2009-11移植<2>_串口输出';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://.disqus.com/embed.js';
