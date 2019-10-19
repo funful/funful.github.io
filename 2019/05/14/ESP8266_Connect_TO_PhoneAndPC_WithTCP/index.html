@@ -25,7 +25,7 @@
     scheme: 'Mist',
     version: '7.4.1',
     exturl: false,
-    sidebar: {"position":"left","display":"always","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
     bookmark: {"enable":false,"color":"#222","save":"auto"},
@@ -249,6 +249,27 @@
             </span>
 
           
+            <span id="/2019/05/14/ESP8266_Connect_TO_PhoneAndPC_WithTCP/" class="post-meta-item leancloud_visitors" data-flag-title="ES8266模块AT操作<多连接TCP通信>" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/05/14/ESP8266_Connect_TO_PhoneAndPC_WithTCP/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/05/14/ESP8266_Connect_TO_PhoneAndPC_WithTCP/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
 
         </div>
       </header>
@@ -358,6 +379,7 @@
 
           </div>
           
+    <div class="comments" id="comments"></div>
 
         </div>
           
@@ -505,6 +527,33 @@
   
 
   
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: true,
+    appId: 'JaUiU8OP9MCeeHHLD5oaGUs7-gzGzoHsz',
+    appKey: 'LGnGVXtECCbFtsqezlPc9wcI',
+    placeholder: "快来评论一个吧(请填写邮箱以便收到回复提醒)",
+    avatar: 'monsterid',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true,
+    lang: 'zh-cn' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
 
 </body>
 </html>
