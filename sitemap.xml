@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.funful.ink/2019/10/19/2019-10-19-%E5%85%A8%E5%BF%97A64%E7%BC%96%E8%AF%91%E5%9B%BA%E4%BB%B6%E6%8A%A5Fault/</loc>
+    
+    <lastmod>2019-10-19T16:19:36.513Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.funful.ink/2019/05/19/STM32_FreeRTOS_config_2/</loc>
     
     <lastmod>2019-10-18T16:54:10.921Z</lastmod>
@@ -68,13 +75,6 @@
     <loc>http://www.funful.ink/2019/05/20/ESP8266_SDK_MQTT_LED/</loc>
     
     <lastmod>2019-10-18T16:48:19.352Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.funful.ink/2019/10/19/2019-10-19-%E5%85%A8%E5%BF%97A64%E7%BC%96%E8%AF%91%E5%9B%BA%E4%BB%B6%E6%8A%A5Fault/</loc>
-    
-    <lastmod>2019-10-18T16:36:28.314Z</lastmod>
     
   </url>
   
