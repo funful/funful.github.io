@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-mac-0sx.min.css?v=1.0.2">
   <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
 
 
@@ -69,7 +69,7 @@
 <meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-7.png">
 <meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-8.png">
 <meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-9.png">
-<meta property="og:updated_time" content="2019-10-18T16:48:19.352Z">
+<meta property="og:updated_time" content="2019-10-18T16:48:19.353Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ES8266模块二次开发SDK之MQTT局域网控制LED">
 <meta name="twitter:description" content="根据乐鑫官网的提供的Pro，已经提供了 支持MQTT协议，，在乐鑫pro 基础上再局域网下面控制led">
@@ -283,14 +283,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span></span>
+              <span>2.2k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>NaN:aN</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -305,11 +305,12 @@
         <p>根据乐鑫官网的提供的Pro，已经提供了 支持MQTT协议，，在乐鑫pro</p>
 <p>基础上再局域网下面控制led</p>
 <a id="more"></a>
+
 <h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><h2 id="工程文档准备"><a href="#工程文档准备" class="headerlink" title="工程文档准备"></a>工程文档准备</h2><ol>
 <li>下载链接 <a href="https://www.espressif.com/zh-hans/support/download/sdks-demos" target="_blank" rel="noopener">乐鑫</a></li>
 <li>选用的平台NON-OS SDK</li>
 <li>使用安信可一体化编程软件打开，文档的导入具体去安信可官网搜索，这里直接讲解导入后的操作。 删除third_party,将esp_mqtt_proj从example拉出来，将driver_lib的Makefile添加后.bak,目的是为了不讲driver_lib不编译进工程</li>
-<li>如图，<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25.png" alt=""></li>
+<li>如图，<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25.png" alt></li>
 </ol>
 <h2 id="MQTT的windows环境准备"><a href="#MQTT的windows环境准备" class="headerlink" title="MQTT的windows环境准备"></a>MQTT的windows环境准备</h2><ol>
 <li>下载EMQ压缩包，根据你的windows环境选择，下载地址<a href="http://www.emqtt.com/downloads" target="_blank" rel="noopener">链接</a></li>
@@ -331,15 +332,77 @@
 <li><p>在工程中打开user_main.c和mqtt_config.h，</p>
 </li>
 <li><p>在mqtt_config.h需要修改以下几个宏</p>
-<p>| CFG_HOLDER        | 更新配置到FLASH中，只要数值和本次不一样就行，                |<br>| —————– | —————————————- |<br>| MQTT_HOST         | MQTT服务器的IP                               |<br>| MQTT_PORT         | MQTT服务器的PORT                             |<br>| MQTT_CLIENT_ID    | 客户端ID                                    |<br>| MQTT_USER         | MQTT服务器的登录账号”admin”                      |<br>| MQTT_PASS         | MQTT服务器的登录”admin”                        |<br>| STA_SSID          | ESP8266和电脑端连接的路由账号                       |<br>| STA_PASS          | ESP8266和电脑端连接的路由密码                       |<br>| PROTOCOL_NAMEv311 | 根据MQTT协议的兼容性，在前面加#define，PROTOCOL_NAMEv31注释掉 |<br>|                   |                                          |</p>
+<table>
+<thead>
+<tr>
+<th>CFG_HOLDER</th>
+<th>更新配置到FLASH中，只要数值和本次不一样就行，</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MQTT_HOST</td>
+<td>MQTT服务器的IP</td>
+</tr>
+<tr>
+<td>MQTT_PORT</td>
+<td>MQTT服务器的PORT</td>
+</tr>
+<tr>
+<td>MQTT_CLIENT_ID</td>
+<td>客户端ID</td>
+</tr>
+<tr>
+<td>MQTT_USER</td>
+<td>MQTT服务器的登录账号”admin”</td>
+</tr>
+<tr>
+<td>MQTT_PASS</td>
+<td>MQTT服务器的登录”admin”</td>
+</tr>
+<tr>
+<td>STA_SSID</td>
+<td>ESP8266和电脑端连接的路由账号</td>
+</tr>
+<tr>
+<td>STA_PASS</td>
+<td>ESP8266和电脑端连接的路由密码</td>
+</tr>
+<tr>
+<td>PROTOCOL_NAMEv311</td>
+<td>根据MQTT协议的兼容性，在前面加#define，PROTOCOL_NAMEv31注释掉</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
 </li>
 <li><p>右击该工程，Clean Project &amp;&amp;Build Project</p>
 </li>
-<li><p>可以看到顺利通过编译，如图<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-2.png" alt=""></p>
-<p>依照安信可官方提供的烧录方法可以知道，<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-3.png" alt=""></p>
+<li><p>可以看到顺利通过编译，如图<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-2.png" alt></p>
+<p>依照安信可官方提供的烧录方法可以知道，<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-3.png" alt></p>
 <p>blank.bin、esp_init_data_default_v05.bin是乐鑫SDK提供的，而eagle.flash.bin和eagle.irom0text.bin是编译工程生成的，，下载地址需要我们将工程给的地址和安信可提供地址组合得到，如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-4.png" alt=""></p>
-<p>| SPI SPEED  | 40MHz          |<br>| ———- | ————– |<br>| SPI MODE   | DOUT           |<br>| FLASH SIZE | 32Mbit（根据板子而定） |<br>|            |                |</p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-4.png" alt></p>
+<table>
+<thead>
+<tr>
+<th>SPI SPEED</th>
+<th>40MHz</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SPI MODE</td>
+<td>DOUT</td>
+</tr>
+<tr>
+<td>FLASH SIZE</td>
+<td>32Mbit（根据板子而定）</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
 </li>
 <li><p>使用烧写工具擦写和下载，</p>
 </li>
@@ -348,13 +411,13 @@
 <li><p>重启ESP8266模块，打开串口 BAUD 115200</p>
 </li>
 <li><p>在浏览器登录MQTT，可以看到会话界面，有刚才客户端ID,主题界面有工程中注册的主题如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-6.png" alt=""></p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-6.png" alt></p>
 <p>​</p>
 </li>
-<li><p>主题，是我们在user_main.c的mqttConnectedCb函数注册的主题 如图 <img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-5.png" alt="">  </p>
+<li><p>主题，是我们在user_main.c的mqttConnectedCb函数注册的主题 如图 <img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-5.png" alt>  </p>
 </li>
 <li><p>串口也会打印出来</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-7.png" alt=""></p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-7.png" alt></p>
 </li>
 <li><p>到这一步，我们整个MQTT的局域网服务器已经搭建起来，下面测试一下，</p>
 <ol>
@@ -364,9 +427,9 @@
 </li>
 <li><p>给主题”/mqtt/topic/1” 发送”Hello World!”</p>
 </li>
-<li><p>如图  <img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-8.png" alt=""></p>
+<li><p>如图  <img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-8.png" alt></p>
 </li>
-<li><p>在串口端会打印出”Hello World!”,如图<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-9.png" alt=""></p>
+<li><p>在串口端会打印出”Hello World!”,如图<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-9.png" alt></p>
 <p>​</p>
 </li>
 </ol>
@@ -378,6 +441,7 @@
 </li>
 <li><p>在user_init 函数中添加</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO5_U, FUNC_GPIO5); <span class="comment">//选择GPIO5</span></span><br><span class="line">GPIO_OUTPUT_SET(GPIO_ID_PIN(<span class="number">5</span>), <span class="number">1</span>); <span class="comment">//默认GPIO5为高</span></span><br></pre></td></tr></table></figure>
+
 <p>​</p>
 </li>
 <li><p>在mqttConnectedCb函数中注册一个主题</p>
@@ -385,6 +449,7 @@
 </li>
 <li><p>在mqttDataCb对收到的值解析</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (data[<span class="number">0</span>] == <span class="string">'0'</span>) &#123;</span><br><span class="line">        GPIO_OUTPUT_SET(GPIO_ID_PIN(<span class="number">5</span>), <span class="number">0</span>);</span><br><span class="line">        MQTT_Publish(client, <span class="string">"/xuhong/LED/out"</span>, <span class="string">"LED status is open ..."</span>,</span><br><span class="line">                <span class="built_in">strlen</span>(<span class="string">"LED status is open ..."</span>), <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//接收到指令是0，GPIO15为高,也就是LED关灯，同时发布消息，主题是/xuhong/LED/out，信息是LED status is off ...</span></span><br><span class="line">    <span class="keyword">if</span> (data[<span class="number">0</span>] == <span class="string">'1'</span>) &#123;</span><br><span class="line">        GPIO_OUTPUT_SET(GPIO_ID_PIN(<span class="number">5</span>), <span class="number">1</span>);</span><br><span class="line">        MQTT_Publish(client, <span class="string">"/xuhong/LED/out"</span>, <span class="string">"LED status is off ..."</span>,</span><br><span class="line">                <span class="built_in">strlen</span>(<span class="string">"LED status is off ..."</span>), <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
 <p>​</p>
 </li>
 <li><p>Clean Project &amp;&amp;build Project</p>
@@ -538,13 +603,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">NaNm</span>
+    <span title="站点总字数">74k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">NaN:aN</span>
+    <span title="站点阅读时长">1:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
   </div>

@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-mac-0sx.min.css?v=1.0.2">
   <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
 
 
@@ -60,7 +60,7 @@
 <meta property="og:site_name" content="FunfulBlog">
 <meta property="og:description" content="汇编语言经常会用在启动引导文件中，设置好相应的堆栈和必要的功能外设，才会跳转到C入口，但是我们只是知道汇编指令的功能，看不到每一步的具体实现。下面通过C语言内嵌汇编，做一些简单的例子。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-25T03:23:47.070Z">
+<meta property="og:updated_time" content="2019-08-25T03:23:47.071Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C内嵌ARM汇编">
 <meta name="twitter:description" content="汇编语言经常会用在启动引导文件中，设置好相应的堆栈和必要的功能外设，才会跳转到C入口，但是我们只是知道汇编指令的功能，看不到每一步的具体实现。下面通过C语言内嵌汇编，做一些简单的例子。">
@@ -273,14 +273,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span></span>
+              <span>2.3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>NaN:aN</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -294,13 +294,18 @@
       
         <p>汇编语言经常会用在启动引导文件中，设置好相应的堆栈和必要的功能外设，才会跳转到C入口，但是我们只是知道汇编指令的功能，看不到每一步的具体实现。下面通过C语言内嵌汇编，做一些简单的例子。</p>
 <a id="more"></a>
+
 <h1 id="C语言内嵌汇编基本格式"><a href="#C语言内嵌汇编基本格式" class="headerlink" title="C语言内嵌汇编基本格式"></a>C语言内嵌汇编基本格式</h1><p>C语言内嵌汇编有两种基本格式，volatile表明编译其不要优化代码，</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">__asm__ __volatile__(</span><br><span class="line">	<span class="string">"xxxxxxxxxxxx\n"</span>   ；指令<span class="number">1</span> 用“\n”换行</span><br><span class="line">	<span class="string">"xxxxxxxxxxxx\n"</span>   ；指令<span class="number">2</span> 用“\n”换行</span><br><span class="line">	<span class="string">"xxxxxxxxxxxx\n"</span>   ；指令<span class="number">3</span> 用“\n”换行</span><br><span class="line">	：声明输出或输入变量；“=&amp;r” 输出变量；“+r”输入输出变量</span><br><span class="line">	：声明输入变量 ； “r” 输入变量</span><br><span class="line">	：声明保护寄存器；“r0”  。。。。</span><br><span class="line">);</span><br><span class="line"><span class="function"><span class="keyword">asm</span> <span class="title">volatile</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">	<span class="string">"xxxxxxxxxxxx\n"</span>   ；指令<span class="number">1</span> 用“\n”换行</span></span></span><br><span class="line"><span class="function"><span class="params">	<span class="string">"xxxxxxxxxxxx\n"</span>   ；指令<span class="number">2</span> 用“\n”换行</span></span></span><br><span class="line"><span class="function"><span class="params">	<span class="string">"xxxxxxxxxxxx\n"</span>   ；指令<span class="number">3</span> 用“\n”换行</span></span></span><br><span class="line"><span class="function"><span class="params">	：声明输出或输入变量；“=&amp;r” 输出变量；“+r”输入输出变量</span></span></span><br><span class="line"><span class="function"><span class="params">	：声明输入变量 ； “r” 输入变量</span></span></span><br><span class="line"><span class="function"><span class="params">	：声明保护寄存器；“r0”  。。。。</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+
 <h1 id="例1"><a href="#例1" class="headerlink" title="例1"></a>例1</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line"></span><br><span class="line"> int main()&#123;</span><br><span class="line">   unsigned int register a asm(&quot;r5&quot;);</span><br><span class="line"> </span><br><span class="line">   printf(&quot;a = %d\r\n&quot;,a);</span><br><span class="line">   __asm__ __volatile__(</span><br><span class="line">        &quot;mov r5,#100\n&quot;</span><br><span class="line">         :</span><br><span class="line">         :</span><br><span class="line">         :&quot;r5&quot;</span><br><span class="line">                   );</span><br><span class="line"> </span><br><span class="line">  printf(&quot;a = %d\r\n&quot;,a);</span><br><span class="line"> return 0;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
 <p>上面简单例子是将a变量和r5通用寄存器进行绑定，在内嵌汇编里面对r5寄存器操作a的值也会相应改变</p>
 <h1 id="例2"><a href="#例2" class="headerlink" title="例2"></a>例2</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"> #include &lt;stdlib.h&gt;</span><br><span class="line"> </span><br><span class="line">int main()&#123;</span><br><span class="line"></span><br><span class="line">   unsigned int a=1, b=2,c=3;</span><br><span class="line">   int d,e,f;</span><br><span class="line">    __asm__ __volatile__(</span><br><span class="line">            &quot;mov r0, %[a]\n&quot;</span><br><span class="line">            &quot;mov r1, %[b]\n&quot;</span><br><span class="line">            &quot;mov r2, %[c]\n&quot;</span><br><span class="line"></span><br><span class="line">           &quot;mov %[d], r0\n&quot;</span><br><span class="line">           &quot;mov %[e], r1\n&quot;</span><br><span class="line">            &quot;mov %[f], r2\n&quot;</span><br><span class="line">            :[d]&quot;=&amp;r&quot;(d),[e]&quot;=&amp;r&quot;(e),[f]&quot;=&amp;r&quot;(f)</span><br><span class="line">            :[a]&quot;r&quot;(a),[b]&quot;r&quot;(b),[c]&quot;r&quot;(c)</span><br><span class="line">            :&quot;r0&quot;,&quot;r1&quot;,&quot;r2&quot;</span><br><span class="line">                    );</span><br><span class="line">    printf(&quot;d = %d\r\n&quot;,d);</span><br><span class="line">    printf(&quot;e = %d\r\n&quot;,e);</span><br><span class="line">    printf(&quot;f = %d\r\n&quot;,f);</span><br><span class="line">    return 0;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
 <p>上面内嵌汇编的功能就是将变量a,b,c的值赋值给变量d，e，f。第一个冒号后面将C函数的变量声明为输出变量名且别名位%[d] %[e]%[f]。也可以使用默认的%0 %1 依次对C函数的变量进行操作</p>
 <h1 id="例3"><a href="#例3" class="headerlink" title="例3"></a>例3</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"> <span class="function"><span class="keyword">int</span>   <span class="title">mysum</span><span class="params">(<span class="keyword">int</span> num1,<span class="keyword">int</span> num2)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span>  sum1,sum2;</span><br><span class="line">         __asm__ __volatile__(</span><br><span class="line">              <span class="string">"ldr r0 ,=0xfffffff8\n"</span></span><br><span class="line">              <span class="string">"ldr r1 ,=0xa\n"</span></span><br><span class="line">               <span class="string">"adds %[sum1] ,r0,r1\n"</span></span><br><span class="line">               <span class="string">"ldr r0, =1\n"</span></span><br><span class="line">               <span class="string">"ldr r1, =1\n"</span></span><br><span class="line">               <span class="string">"adc %[sum2],r0,r1\n"</span></span><br><span class="line">                :[sum1]<span class="string">"=&amp;r"</span>(sum1),[sum2]<span class="string">"=&amp;r"</span>(sum2)</span><br><span class="line">                :[num1]<span class="string">"r"</span>(num1),[num2]<span class="string">"r"</span>(num2)</span><br><span class="line">                :<span class="string">"r0"</span>,<span class="string">"r1"</span></span><br><span class="line">                  );</span><br><span class="line"></span><br><span class="line">         <span class="built_in">printf</span>(<span class="string">"sum1 = %ld\n"</span>,sum1);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"sum2 = %ld\n"</span>,sum2);</span><br><span class="line">       <span class="keyword">return</span> sum2;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">int</span> a=<span class="number">0xfffffff4</span> ,b =<span class="number">0x11</span>;</span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">"sum =a+b= %ld\r\n"</span>,mysum(a,b));</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>上面例子是add指令的使用，add是基础的加指令，CSPR_C不会产生进位结合借位。adds会产生CSPR_C不会产生进位结合借位。adc在相加的时候会将CSPR_C的位相加。</p>
 <p>这里ldr是一个伪指令：ldr可以将任意值赋值给寄存器。在这里mov指令需要满足三个条件中的一个才能使用：</p>
 <ol>
@@ -446,13 +451,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">NaNm</span>
+    <span title="站点总字数">74k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">NaN:aN</span>
+    <span title="站点阅读时长">1:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
   </div>

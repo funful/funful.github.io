@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-mac-0sx.min.css?v=1.0.2">
   <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
 
 
@@ -277,14 +277,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span></span>
+              <span>1.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>NaN:aN</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -298,6 +298,7 @@
       
         <p>这章节主要是搭建操作系统环境和编写一个简单程序</p>
 <a id="more"></a>
+
 <h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><ul>
 <li>Deepin操作系统</li>
 <li>Nasm</li>
@@ -307,18 +308,23 @@
 <li>我们自己写一个操作系统的话就需要有个虚拟机和软盘来运行这个操作系统，但是我们又不至于真的买个软盘，所以我们可以使用bximage生成一个虚拟软盘，把我们写的系统生成相应的文件烧录到虚拟软盘里面，使用dd命令就可以，在bochs启动的时候选择使用我们的虚拟软盘启动就可以。</li>
 </ul>
 <h1 id="软件安装及简单命令"><a href="#软件安装及简单命令" class="headerlink" title="软件安装及简单命令"></a>软件安装及简单命令</h1><h2 id="Nasm"><a href="#Nasm" class="headerlink" title="Nasm"></a>Nasm</h2><ol>
-<li>Nasm源码下载地址：<a href="https://www.nasm.us/pub/nasm/releasebuilds/2.14rc16/" target="_blank" rel="noopener">Nasm</a>  </li>
-<li>解压并进入解压目录</li>
+<li><p>Nasm源码下载地址：<a href="https://www.nasm.us/pub/nasm/releasebuilds/2.14rc16/" target="_blank" rel="noopener">Nasm</a>  </p>
+</li>
+<li><p>解压并进入解压目录</p>
+</li>
 <li><p>执行命令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>简单指令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">汇编指令：</span><br><span class="line">nasm boot.asm -o boot.bin</span><br></pre></td></tr></table></figure>
+
 </li>
 </ol>
 <h2 id="Bochs"><a href="#Bochs" class="headerlink" title="Bochs"></a>Bochs</h2><ol>
-<li>Bochs下载地址：<a href="http://bochs.sourceforge.net/" target="_blank" rel="noopener">Bochs官网</a></li>
-<li>解压并进入解压目录</li>
+<li><p>Bochs下载地址：<a href="http://bochs.sourceforge.net/" target="_blank" rel="noopener">Bochs官网</a></p>
+</li>
+<li><p>解压并进入解压目录</p>
+</li>
 <li><p>Bochs依赖软件安装</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential</span><br><span class="line">sudo apt-get install  xorg-dev</span><br><span class="line">如果执行4命令报出别错误的话可能是别的依赖软件没有安装 ，请自行百度</span><br></pre></td></tr></table></figure>
 </li>
@@ -327,6 +333,7 @@
 </li>
 <li><p>Bochs简单命令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">我们在使用bochs启动的时候可以选择硬盘启动或者是软盘启动，所以这个时候，我们需要配置相应的配置文件，我们可能会在bochs源码里面发现有“.bochsrc”或者是“bochsrc” ，我们也可以自己写一个配置文件使用“bochs -f yourname” 这命令来启动我们自己写的配置文件“yourname&quot;。（linux下的.文件被隐藏使用 “ls -al”查看）</span><br><span class="line">启动配置文件:  bochs -f yourname（直接bochs也可以启动默认配置文件）</span><br><span class="line">继续执行直到遇见断点：c</span><br><span class="line">单步执行 : n</span><br><span class="line">看寄存器信息：dump_cpu</span><br></pre></td></tr></table></figure>
+
 </li>
 </ol>
 <h1 id="打印一个”Hello-World”"><a href="#打印一个”Hello-World”" class="headerlink" title="打印一个”Hello World”"></a>打印一个”Hello World”</h1><p>在我们接触C语言的时候最基础的工程就是使用printf打印出”Hello World!”.这里我们也使用汇编打印一个hello</p>
@@ -339,7 +346,7 @@
 </li>
 <li><p>bximage生成512字节的虚拟软盘</p>
 <ol>
-<li>在终端下执行bximage <img src="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-1.png" alt=""></li>
+<li>在终端下执行bximage <img src="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-1.png" alt></li>
 <li>选择1，再输入”fd”（选择虚拟软盘），再确认，再确认，最终生成1.44M的a.img文件</li>
 <li>也可以使用dd命令代替bximage，<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd if=/dev/zero of=a.img bs=1440k count=1</span><br></pre></td></tr></table></figure>
 </li>
@@ -354,15 +361,19 @@
 <li>在bochs的源码目录里面，执行“ls -al”,可以看到一个.bochsrc</li>
 <li>vim .bochsrc<ol>
 <li>设置floppya</li>
-<li>将boot设置为：floppy<br><img src="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-2.png" alt=""></li>
+<li>将boot设置为：floppy<br><img src="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-2.png" alt></li>
 </ol>
 </li>
 </ol>
 </li>
-<li>终端执行”bochs -f .bochsrc”</li>
-<li>Please choose one: [6] 6</li>
-<li>如果bochs带调试功能：需要输入c继续执行，才能执行。</li>
-<li>现象：<img src="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-3.png" alt=""></li>
+<li><p>终端执行”bochs -f .bochsrc”</p>
+</li>
+<li><p>Please choose one: [6] 6</p>
+</li>
+<li><p>如果bochs带调试功能：需要输入c继续执行，才能执行。</p>
+</li>
+<li><p>现象：<img src="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-3.png" alt></p>
+</li>
 </ol>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这个章节主要是搭建操作系统运行的环境和编写一个简单的裸机文件，这个汇编程序比较简单，但是这个org命令让我想到了之前在学习内核的时候的相对地址和绝对地址，疑问编译器编译的指令是相对地址是从000h编译的，但是我们自己创建的引导扇区是从07C00h开始执行的，所以需要用到org命令。</p>
 
@@ -503,13 +514,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">NaNm</span>
+    <span title="站点总字数">74k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">NaN:aN</span>
+    <span title="站点阅读时长">1:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
   </div>

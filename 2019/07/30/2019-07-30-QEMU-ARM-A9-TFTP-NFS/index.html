@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-mac-0sx.min.css?v=1.0.2">
   <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
 
 
@@ -280,14 +280,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span></span>
+              <span>5.1k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>NaN:aN</span>
+              <span>5 分钟</span>
             </span>
 
         </div>
@@ -301,6 +301,7 @@
       
         <p>初次接触linux系统是使用的2440的板子，跟着韦东山老师学习了uboot kernel 和文件系统，也算是入门了，后面又使用4412板子做了一些应用层的项目。但是底层的uboot和内核和文件系统都是在厂商的支持下，做的较为简单二次开发。已经毕业一个月了，业余时间太多，想好好学学驱动层的东西，但是苦于刚毕业，所以准备采用qemu模拟出arm的开发环境，这样我们只用关注软件层面。</p>
 <a id="more"></a>
+
 <h1 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h1><ul>
 <li>Ubuntu：Ubuntu 19.04</li>
 <li>qemu： QEMU emulator version 3.1.0 </li>
@@ -309,27 +310,35 @@
 <h1 id="QEMU简介"><a href="#QEMU简介" class="headerlink" title="QEMU简介"></a>QEMU简介</h1><h1 id="Ubuntu安装qemu-system-arm"><a href="#Ubuntu安装qemu-system-arm" class="headerlink" title="Ubuntu安装qemu-system-arm"></a>Ubuntu安装qemu-system-arm</h1><p>这里有两种方法：</p>
 <h2 id="系统提供的源安装："><a href="#系统提供的源安装：" class="headerlink" title="系统提供的源安装："></a>系统提供的源安装：</h2><p>在ubuntu的Terminal下输入以下命令：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install qemu</span><br><span class="line">sudo apt-get install qemu-system-arm</span><br><span class="line">安装完之后：qemu-system-arm  -version 查看qemu版本</span><br></pre></td></tr></table></figure>
+
 <p>  使用ubuntn16版本的时候，使用第一个命令安装就可以，但是使用Ubuntu19.04时，使用第一个命令安装完，搜索不到qemu-system-arm这个命令，还需要使用第二个命令安装。使用系统的源安装可以解决库依赖的问题。</p>
 <h2 id="源文件编译安装："><a href="#源文件编译安装：" class="headerlink" title="源文件编译安装："></a>源文件编译安装：</h2><p>使用源文件安装我们需要使用git 将工程clone到本地（如果没有git的话，需要先去官网注册，然后在Ubuntu安装，配置等），安装之前还需要解决QEMU编译依赖的包，也可以在安装的过程中根据缺少的库依次安装。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">下载源码：sudo git clone git://git.qemu.org/qemu.git</span><br><span class="line">可以使用git命令切换到稳定版本：git checkout  xxxx</span><br><span class="line">编译配置 ./configure (可以使用 ./configure -help 查看支持的参数)</span><br><span class="line">安装:  make &amp;&amp; make install (不出意外的话可以成功安装)</span><br></pre></td></tr></table></figure>
+
 <p>比较这个两种方法可以知道，第二种虽然比较复杂，但是灵活度更高，可以配置参数。第一种安装简单。</p>
 <p>在启动uboot之前，我们还需要安装arm的交叉编译器，这里推荐不要用太老，也不要用太新的编译器（个人建议，以为有时候uboot kernel和文件系统会因为交叉编译器太老启动失败），可以直接去CodeSourcery  Linaro   或者别的官网下载源码。</p>
 <h1 id="qemu-system-arm启动uboot"><a href="#qemu-system-arm启动uboot" class="headerlink" title="qemu-system-arm启动uboot"></a>qemu-system-arm启动uboot</h1><p>下载uboot源码：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.在浏览器下载：https://ftp.denx.de/pub/u-boot/</span><br><span class="line">2.wget命令下载：wget  https://ftp.denx.de/pub/u-boot/u-boot-xxxxx.tar.bz2（版本自己选择）</span><br></pre></td></tr></table></figure>
+
 <p>检测arm交叉编译器是否安装成功：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arm-none-linux-gnueabi-gcc  -v</span><br></pre></td></tr></table></figure>
+
 <p>这里我自己编译一个简单的脚本 配置生成uboot</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/bash </span><br><span class="line">export ARCH=arm        #指定编译生成架构 ，也可以在uboot根目录的Makefile修改</span><br><span class="line">export CROSS_COMPILE=arm-none-linux-gnueabi- #指定编译生成的交叉编译链，也可以在uboot根目录的Makefile修改</span><br><span class="line">make vexpress_ca9x4_defconfig   #编译我们要生成平台u-boot.bin的配置文件，在uboot根目录下会生成.config文件（主要有点，ls -al 才能看到）。另外make menuconfig图形化配置也会最终修改.config文件里面的内容。也可以直接修改.config</span><br><span class="line">source /etc/profile   #我将交叉编译链的环境变量添加到profile文件里面。以防万一，让其生效</span><br><span class="line">make          #生成</span><br></pre></td></tr></table></figure>
+
 <p>执行成功之后会看到生成u-boot u-boot.bin等文件，使用以下命令可以核对生成文件的架f构：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file u-boot</span><br></pre></td></tr></table></figure>
-<p><img src="http://cdn.funful.ink/2019-7-30-1.png" alt=""></p>
+
+<p><img src="http://cdn.funful.ink/2019-7-30-1.png" alt></p>
 <p>qemu启动uboot脚本（注意给脚本权限）</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"> #</span>!/bin/sh</span><br><span class="line">qemu-system-arm  \</span><br><span class="line">         -M  vexpress-a9 \  #指定开发板</span><br><span class="line">         -m 512M \          #内存</span><br><span class="line">         -nographic  \      #不使用LCD屏，即使用当前Terminal</span><br><span class="line">         -kernel  /home/linux/armuboot/u-boot-2017.05/u-boot \</span><br></pre></td></tr></table></figure>
+
 <p>uboot有一个循环的命令解释器，在启动3秒内（时间可设置），按任意键即可进入。</p>
-<p><img src="http://cdn.funful.ink/2019-7-30-2.png" alt=""></p>
+<p><img src="http://cdn.funful.ink/2019-7-30-2.png" alt></p>
 <p>可以在3秒内进入uboot的终端解释器，使用print打印当前的环境变量</p>
-<p><img src="http://cdn.funful.ink/2019-7-30-3.png" alt=""></p>
+<p><img src="http://cdn.funful.ink/2019-7-30-3.png" alt></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print     #打印当前变量</span><br><span class="line">serenv    #设置环境变量</span><br><span class="line">saveenv   #保存环境变量到flash</span><br></pre></td></tr></table></figure>
+
 <p>这里uboot已经启动成功，下面我们使用uboot加载kernel，如果有板子的话一般都是通过下载到板子里面然后再启动，但是这样子比较浪费时间，这里我们采用tftp网口下载直接运行的方式运行kernel。</p>
 <h1 id="uboot引导kernel-rootfs"><a href="#uboot引导kernel-rootfs" class="headerlink" title="uboot引导kernel+rootfs"></a>uboot引导kernel+rootfs</h1><p>在uboot初始化完成之后会将需要传给内核的参数放到一段内存空间，然后运行内核 文件系统，内核会从这段空间取相应的信息MachineID bootargs console等等信息(个人理解，如果不正确Email联系)</p>
 <h2 id="tftp加载kernel"><a href="#tftp加载kernel" class="headerlink" title="tftp加载kernel"></a>tftp加载kernel</h2><p>uboot通过以太网从ftp服务器获得kernel的uImage，所以我们在使用虚拟机Ubuntu系统要和qemu位于同一个网段，这里将Ubuntu设置位NAT模式。创建一个网桥，将ubuntu和qemu的网卡都连接到网桥。uImage和zImage的区别是uImage压缩过，解压之后uImage和zImage几乎相同。之前分析uboot的uboot代码的时候只支持uImage启动，但是可以通过修改uboot代码支持启动zImage，也不难。tftp加载kernel的原理就是在Ubuntu安装tftp服务器，uboot会从tftp下载内核。下面分步进行操作：</p>
@@ -345,6 +354,9 @@
 </li>
 <li><p>qemu的启动脚本</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> qemu-system-arm \</span><br><span class="line">-M vexpress-a9 \</span><br><span class="line">-kernel /home/linux/armuboot/u-boot-2017.05/u-boot \</span><br><span class="line">-nographic \</span><br><span class="line">-m 512M \</span><br><span class="line">-net nic \</span><br><span class="line">-net tap,ifname=tap0</span><br></pre></td></tr></table></figure>
+
+
+
 </li>
 </ol>
 <ol start="5">
@@ -355,19 +367,22 @@
 </li>
 <li><p>自动加载</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">进入uboot根目录 打开vim include/configs/vexpress_common.h</span><br><span class="line">修改如下：</span><br><span class="line"><span class="meta">#</span>define CONFIG_BOOTCOMMAND "tftp 0x60003000 uImage;tftp 0x60500000 vexpress-v2p-ca9.dtb; setenv bootargs 'root=/dev/mmcblk0  console=ttyAMA0';bootm 0x60003000 - 0x60500000;"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>define CONFIG_IPADDR 192.168.5.126 </span><br><span class="line"><span class="meta">#</span>define CONFIG_NETMASK 255.255.255.0</span><br><span class="line"><span class="meta">#</span>define CONFIG_SERVERIP 192.168.5.139</span><br><span class="line">执行4步骤的脚本，会相继看到下面两个过程</span><br></pre></td></tr></table></figure>
-<p><img src="http://cdn.funful.ink/2019-7-30-4.png" alt=""></p>
-<p><img src="http://cdn.funful.ink/2019-7-30-5.png" alt=""></p>
+
+<p><img src="http://cdn.funful.ink/2019-7-30-4.png" alt></p>
+<p><img src="http://cdn.funful.ink/2019-7-30-5.png" alt></p>
 </li>
 </ol>
 </li>
 </ol>
 <h2 id="nfs加载rootfs"><a href="#nfs加载rootfs" class="headerlink" title="nfs加载rootfs"></a>nfs加载rootfs</h2><p>上面已经成功启动内核，但是还需要文件系统的支持才能进入命令行终端，可以使用busybox工具创建，可以参考网上教程。这里可以使用两种方式挂载rootfs，但是为了使用方便，我们通过nfs挂载，便于后续的开发调试。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">安装：</span><br><span class="line">sudo apt-get install nfs-kernel-server</span><br><span class="line">配置：</span><br><span class="line">在/etc/exports文件中添加：</span><br><span class="line">/home/linux/armsystem/rootfs *(rw,sync,no_root_squash,no_subtree_check)</span><br><span class="line">保存</span><br><span class="line">重启服务：</span><br><span class="line">service rpcbind restart</span><br><span class="line">service nfs-kernel-server restart</span><br><span class="line">进入uboot的根目录修改文件：</span><br><span class="line">vim  include/configs/vexpress_common.h</span><br><span class="line"><span class="meta"> #</span>define CONFIG_BOOTCOMMAND "tftp 0x60003000 uImage;tftp 0x60500000 vexpress    -v2p-ca9.dtb; setenv bootargs 'root=/dev/nfs rw nfsroot=192.168.5.140:/home/    linux/armsystem/rootfs ip=192.168.5.126:192.168.5.140:255.255.255.0:eh0:off     init=/linuxrc  console=ttyAMA0';bootm 0x60003000 - 0x60500000;"</span><br><span class="line"><span class="meta"> #</span>define CONFIG_IPADDR 192.168.5.126 </span><br><span class="line"><span class="meta"> #</span>define CONFIG_NETMASK 255.255.255.0</span><br><span class="line"><span class="meta"> #</span>define CONFIG_SERVERIP 192.168.5.140</span><br><span class="line">重新编译uboot</span><br><span class="line">执行上一节4步骤脚本</span><br></pre></td></tr></table></figure>
-<p><img src="http://cdn.funful.ink/2019-7-31-1.png" alt=""></p>
+
+<p><img src="http://cdn.funful.ink/2019-7-31-1.png" alt></p>
 <p>到此整个环境就搭建完成了。期间会遇见很多不可知的错误，慢慢研究就肯定能搞明白。</p>
 <p>#nfs挂载一直失败</p>
 <p>使用nfs挂在文件系统的时候，前面搭建一切顺利，但就是挂载不上去的原因就是较新版本的Ubuntu系统，只支持nfs协议3和协议4，但是uboot只支持nfs协议2，所以需要修改Ubuntu的配置文件如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim  /etc/default/nfs-kernel-server</span><br><span class="line">尾行添加：RPCNFSDOPTS=&quot;--nfs-version 2,3,4 --debug --syslog&quot; </span><br><span class="line">保存，重启nfs即可</span><br></pre></td></tr></table></figure>
+
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>使用qemu模拟arm有利也有弊，我们不能真正的点亮LED灯，但是对于学习内核驱动，不用关注硬件，将会有更多的时间学习驱动。</p>
 
     </div>
@@ -505,13 +520,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">NaNm</span>
+    <span title="站点总字数">74k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">NaN:aN</span>
+    <span title="站点阅读时长">1:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
   </div>

@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-mac-0sx.min.css?v=1.0.2">
   <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
 
 
@@ -62,7 +62,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://cdn.funful.ink/2018-11-19.png">
 <meta property="og:image" content="http://cdn.funful.ink/2018-11-20-6.png">
-<meta property="og:updated_time" content="2019-03-09T08:52:35.152Z">
+<meta property="og:updated_time" content="2019-03-09T08:52:35.153Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux的环境编程之静态库和动态库">
 <meta name="twitter:description" content="静态库和动态库的链接各有优缺点,静态库会在文件编译二进制文件的时候,会直接链接到二进制文件里面,这样子文件体积比较大,而且如果我们更改分享库的时候需要重新编译.动态库只是保存分享库和二进制文件的依赖关系.在运行阶段才会加载动态库">
@@ -276,14 +276,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span></span>
+              <span>2.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>NaN:aN</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -297,6 +297,7 @@
       
         <p>静态库和动态库的链接各有优缺点,静态库会在文件编译二进制文件的时候,会直接链接到二进制文件里面,这样子文件体积比较大,而且如果我们更改分享库的时候需要重新编译.动态库只是保存分享库和二进制文件的依赖关系.在运行阶段才会加载动态库</p>
 <a id="more"></a>
+
 <p>参考书籍:&lt;Linux的环境编程,从应用到内核&gt;</p>
 <p>操作系统:deepin</p>
 <p>编译器:gcc</p>
@@ -305,12 +306,14 @@
 <ol>
 <li><p>创建静态库</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gcc  -c test1.c test2.c test3.c   ;-c命令是只编译不链接,会自动生成test1.o test2.o test3.o</span><br><span class="line">ar  -crv libtest.a  test1.o test2.o test3.o  ;使用ar工匠打包成静态库</span><br><span class="line">上面我们需要注意一下静态库和动态库的命名上市 lib****.so  lib****.a  ;我们在链接库的时候有时候会指定特定的库时,-l*** 就行,然后系统就自动会解析出来 -l lib***.so ,这个也是为什么这样命名</span><br></pre></td></tr></table></figure>
+
 </li>
 </ol>
 <h2 id="动态库"><a href="#动态库" class="headerlink" title="动态库"></a>动态库</h2><p>动态库是在可执行文件编译的时候将库函数链接加载进去,在可执行文件 运行时依靠这依赖关系加载.这样可以使代码轻便,而且更新库文件的话,可执行文件不要重新编译.</p>
 <ol>
 <li><p>制作动态库</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -Wall -shared test1.c  -o libtest.so</span><br></pre></td></tr></table></figure>
+
 </li>
 </ol>
 <h2 id="简单小例子"><a href="#简单小例子" class="headerlink" title="简单小例子"></a>简单小例子</h2><ol>
@@ -323,14 +326,15 @@
 <li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc test1.c -o test1  ;这是默认动态链接</span><br></pre></td></tr></table></figure>
 </li>
 <li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc test1.c -o test1_1 -static ;这是静态链接</span><br></pre></td></tr></table></figure>
-<p><img src="http://cdn.funful.ink/2018-11-19.png" alt=""></p>
+
+<p><img src="http://cdn.funful.ink/2018-11-19.png" alt></p>
 </li>
 </ol>
 <ol start="6">
 <li><p>对比上图可以发现静态链接的可执行文件比动态链接的大特别多.</p>
 </li>
 <li><p>使用ldd(查询动态依赖关系)命令查看</p>
-<p><img src="http://cdn.funful.ink/2018-11-20-6.png" alt=""></p>
+<p><img src="http://cdn.funful.ink/2018-11-20-6.png" alt></p>
 <p>可以看出来使用动态库链接的时候 使用ldd命令看到依赖的库,但是静态链接的会提示不是一个动态可执行文件,因为他是动态依赖的,运行过程不要动态依赖,</p>
 </li>
 </ol>
@@ -338,6 +342,7 @@
 <li><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdio.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdlib.h"</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Funful_call</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"> <span class="built_in">printf</span>(<span class="string">"Welcome \r\n"</span>);   </span><br><span class="line"> <span class="built_in">printf</span>(<span class="string">"调用动态库\r\n"</span>);   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 <li><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -Wall -shared lib_funful.c -o  libfunful.so</span><br></pre></td></tr></table></figure>
+
 </li>
 </ol>
 <h2 id="使用动态库"><a href="#使用动态库" class="headerlink" title="使用动态库"></a>使用动态库</h2><ol>
@@ -394,13 +399,15 @@
 </li>
 <li><p>参数:</p>
 <ol>
-<li>void *<strong>restrict </strong>handle; 这个是链接库句柄</li>
-<li>const char *<strong>restrict </strong>name ;符号的字符串指针</li>
+<li>void *__restrict __handle; 这个是链接库句柄</li>
+<li>const char *__restrict __name ;符号的字符串指针</li>
 </ol>
 </li>
 </ol>
 <h2 id="手动加载动态库实例"><a href="#手动加载动态库实例" class="headerlink" title="手动加载动态库实例"></a>手动加载动态库实例</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdio.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdlib.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"dlfcn.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> *dlib=dlopen(<span class="string">"./libfunful.so"</span>,RTLD_NOW);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(dlib == <span class="literal">NULL</span> ) &#123;</span><br><span class="line">       <span class="built_in">printf</span>(<span class="string">"open libfunful.so failed\r\n"</span>);</span><br><span class="line">      <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;   </span><br><span class="line">    <span class="keyword">void</span> (*dfunc)(<span class="keyword">void</span>) =dlsym(dlib,<span class="string">"Funful_call"</span>);</span><br><span class="line">    <span class="keyword">if</span>(dfunc==<span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"dlsym failed \r\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">   dfunc();</span><br><span class="line">   dlclose(dlib);</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h3 id="编译-1"><a href="#编译-1" class="headerlink" title="编译"></a>编译</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc test3.c -ldl -o test3   ;这里需要我们指定一下依赖的dl库,否则会提示undefined dl的函数</span><br></pre></td></tr></table></figure>
+
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>上面讲解的动态库加载分为两中方法,一种是更新环境变量的方法,一种是手动加载各有利弊,</p>
 
     </div>
@@ -427,8 +434,8 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2018/11/30/2018-11-30-keyword-return/" rel="prev" title="return不同类型变量的区别">
-                  return不同类型变量的区别 <i class="fa fa-chevron-right"></i>
+                <a href="/2018/11/30/2018-11-29-this-pointer/" rel="prev" title="this指针小结">
+                  this指针小结 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -538,13 +545,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">NaNm</span>
+    <span title="站点总字数">74k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">NaN:aN</span>
+    <span title="站点阅读时长">1:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
   </div>

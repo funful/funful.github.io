@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-mac-0sx.min.css?v=1.0.2">
   <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
 
 
@@ -273,14 +273,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span></span>
+              <span>3.1k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>NaN:aN</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -294,11 +294,12 @@
       
         <p>整理下自己之前的移植uboot时记录的笔记！</p>
 <a id="more"></a>
+
 <h2 id="移植环境："><a href="#移植环境：" class="headerlink" title="移植环境："></a>移植环境：</h2><p>arm板子：JZ2440</p>
 <p>uboot版本：2009-11</p>
 <p>交叉编译链：arm-none-linux-gcc-4.4.3</p>
 <h2 id="下载："><a href="#下载：" class="headerlink" title="下载："></a>下载：</h2><p>uboot官方下载地址:<a href="ftp://ftp.denx.de/pub/u-boot" target="_blank" rel="noopener">uboot官方下载</a>,  </p>
-<p>交叉编译链:<a href="">github.com/funful/Tools</a></p>
+<p>交叉编译链:<a href>github.com/funful/Tools</a></p>
 <h2 id="uboot的启动流程"><a href="#uboot的启动流程" class="headerlink" title="uboot的启动流程"></a>uboot的启动流程</h2><h3 id="第一阶段"><a href="#第一阶段" class="headerlink" title="第一阶段"></a>第一阶段</h3><ol>
 <li>硬件设备初始化</li>
 <li>加载u-boot第二阶段代码到RAM的空间</li>
@@ -314,32 +315,43 @@
 </ol>
 <h2 id="建立2440的配置"><a href="#建立2440的配置" class="headerlink" title="建立2440的配置"></a>建立2440的配置</h2><p>uboot-2009-11和之前的版本相比，有一点变化，我们在u-boot-2016.09/configs 可以看到各种板级支持配置，由于2440和2410相差不大，所以我们根据2410，来添加2440的配置</p>
 <h3 id="修改根目录的Makefile"><a href="#修改根目录的Makefile" class="headerlink" title="修改根目录的Makefile"></a>修改根目录的Makefile</h3><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#设置股下面两个变量</span></span><br><span class="line">ARCH = arm</span><br><span class="line">CROSS_COMPILE = arm-none-linux-gnueabi-</span><br></pre></td></tr></table></figure>
+
 <h3 id="添加my2440配置文件"><a href="#添加my2440配置文件" class="headerlink" title="添加my2440配置文件"></a>添加my2440配置文件</h3><h4 id="新建配置文件"><a href="#新建配置文件" class="headerlink" title="新建配置文件"></a>新建配置文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp u-boot-2016.05/configs/smdk2410_defconfig   u-boot-2016.05/configs/my2440_defconfig</span><br></pre></td></tr></table></figure>
+
 <p>上面这条命令新建了my2440的板子配置</p>
 <h4 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-2016.05/configs/my2440_defconfig</span><br></pre></td></tr></table></figure>
+
 <h4 id="改动前后的内容如下"><a href="#改动前后的内容如下" class="headerlink" title="改动前后的内容如下:"></a>改动前后的内容如下:</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">改动前：</span><br><span class="line">	CONFIG_ARM=y</span><br><span class="line">	CONFIG_TARGET_SMDK2410=y</span><br><span class="line">	CONFIG_HUSH_PARSER=y</span><br><span class="line">	CONFIG_SYS_PROMPT="SMDK2410 # "</span><br><span class="line">	CONFIG_CMD_USB=y</span><br><span class="line"><span class="meta">	#</span> CONFIG_CMD_SETEXPR is not set</span><br><span class="line">	CONFIG_CMD_DHCP=y</span><br><span class="line">	CONFIG_CMD_PING=y</span><br><span class="line">	CONFIG_CMD_CACHE=y</span><br><span class="line">	CONFIG_CMD_EXT2=y</span><br><span class="line">	CONFIG_CMD_FAT=y</span><br><span class="line">改动后：</span><br><span class="line">    CONFIG_ARM=y</span><br><span class="line">    CONFIG_TARGET_MY2440=y      </span><br><span class="line">    CONFIG_HUSH_PARSER=y</span><br><span class="line">    CONFIG_SYS_PROMPT="MY2440 # "  #修改成我们自己板子名称</span><br><span class="line">    CONFIG_CMD_USB=y</span><br><span class="line">    # CONFIG_CMD_SETEXPR is not set</span><br><span class="line">    CONFIG_CMD_DHCP=y</span><br><span class="line">    CONFIG_CMD_PING=y</span><br><span class="line">    CONFIG_CMD_CACHE=y</span><br><span class="line">    CONFIG_CMD_EXT2=y</span><br><span class="line">    CONFIG_CMD_FAT=y</span><br></pre></td></tr></table></figure>
+
 <h3 id="添加my2440板级支持文件"><a href="#添加my2440板级支持文件" class="headerlink" title="添加my2440板级支持文件"></a>添加my2440板级支持文件</h3><p>上一个步骤我们已经添加了配置文件，下面我们来添加支持文件，让编译器通过.UBoot源码中大部分和板子相关的代码在board目录下</p>
 <h4 id="新建板级支持-c文件"><a href="#新建板级支持-c文件" class="headerlink" title="新建板级支持.c文件"></a>新建板级支持.c文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -rf u-boot-2016.05/board/samsung/smdk2410/     u-boot-2016.05/board/samsung/my2440/</span><br></pre></td></tr></table></figure>
+
 <h4 id="将板级支持文件和板级配置文件关联"><a href="#将板级支持文件和板级配置文件关联" class="headerlink" title="将板级支持文件和板级配置文件关联"></a>将板级支持文件和板级配置文件关联</h4><ol>
 <li><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-2016.05/arch/arm/Kconfig</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>找到2410的配置，来在下面添加2440配置</p>
    <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">在：</span><br><span class="line">config TARGET_SMDK2410</span><br><span class="line">	bool <span class="string">"Support smdk2410"</span></span><br><span class="line">	select CPU_ARM920T</span><br><span class="line">添加：  <span class="comment">#注意Kconfig的语法，需要使用[Tab]键，缩进</span></span><br><span class="line">config TARGET_MY2440</span><br><span class="line">	bool <span class="string">"Support my2440"</span></span><br><span class="line">	select CPU_ARM920T</span><br><span class="line">在：</span><br><span class="line">source <span class="string">"board/samsung/smdk2410/Kconfig"</span></span><br><span class="line">添加：</span><br><span class="line">source <span class="string">"board/samsung/myff2440/Kconfig"</span></span><br></pre></td></tr></table></figure>
+
 </li>
 </ol>
 <h4 id="修改板级支持文件夹里的Kconfig"><a href="#修改板级支持文件夹里的Kconfig" class="headerlink" title="修改板级支持文件夹里的Kconfig"></a>修改板级支持文件夹里的Kconfig</h4><ol>
 <li><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-<span class="number">2016.05</span>/board/samsung/my2440/Kconfig</span><br><span class="line">配置文件打开后，可以看到很多配置还都是smdk2410的配置:</span><br><span class="line"><span class="keyword">if</span> TARGET_SMDK2410</span><br><span class="line">config SYS_BOARD</span><br><span class="line">	default <span class="string">"smdk2410"</span></span><br><span class="line"></span><br><span class="line">config SYS_VENDOR</span><br><span class="line">	default <span class="string">"samsung"</span></span><br><span class="line">config SYS_SOC</span><br><span class="line">	default <span class="string">"s3c24x0"</span></span><br><span class="line">config SYS_CONFIG_NAME</span><br><span class="line">	default <span class="string">"smdk2410"</span></span><br><span class="line"><span class="keyword">endif</span></span><br><span class="line">修改为：</span><br><span class="line"><span class="keyword">if</span> TARGET_MYFF2440</span><br><span class="line"></span><br><span class="line">config SYS_BOARD</span><br><span class="line">	default <span class="string">"myff2440"</span></span><br><span class="line">config SYS_VENDOR</span><br><span class="line"> 	default <span class="string">"samsung"</span></span><br><span class="line">config SYS_SOC</span><br><span class="line">	default <span class="string">"s3c24x0"</span></span><br><span class="line">config SYS_CONFIG_NAME</span><br><span class="line">	default <span class="string">"myff2440"</span></span><br><span class="line"><span class="keyword">endif</span></span><br></pre></td></tr></table></figure>
+
 </li>
 </ol>
 <h4 id="修改板级支持文件名字"><a href="#修改板级支持文件名字" class="headerlink" title="修改板级支持文件名字"></a>修改板级支持文件名字</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv u-boot-2016.05/board/samsung/my2440/smdk2410.c   u-boot-2016.05/board/samsung/my2440/my2440.c</span><br></pre></td></tr></table></figure>
+
 <h4 id="修改板级支持文件夹里的my2440-c"><a href="#修改板级支持文件夹里的my2440-c" class="headerlink" title="修改板级支持文件夹里的my2440.c"></a>修改板级支持文件夹里的my2440.c</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot<span class="number">-2016.05</span>/board/samsung/my2440/my2440.c</span><br><span class="line">打开后搜索: SMDK2410</span><br><span class="line">将</span><br><span class="line"> gd-&gt;bd-&gt;bi_arch_number = MACH_TYPE_SMDK2410;</span><br><span class="line"> 该为：</span><br><span class="line"> gd-&gt;bd-&gt;bi_arch_number = MACH_TYPE_MINI2440;</span><br></pre></td></tr></table></figure>
+
 <p>  这里板子底层初始化部分先暂时使用MINI2440板子的参数配置，目的先是为了编译能通过。</p>
 <h4 id="修改板级支持文件夹里的Makefile"><a href="#修改板级支持文件夹里的Makefile" class="headerlink" title="修改板级支持文件夹里的Makefile"></a>修改板级支持文件夹里的Makefile</h4><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-<span class="number">2016.05</span>/board/samsung/my2440/Makefile</span><br><span class="line">修改前：</span><br><span class="line">       obj-y := smdk2410.o</span><br><span class="line">       obj-y += lowlevel_init.o</span><br><span class="line">修改后：</span><br><span class="line">       obj-y:= my2440.o</span><br><span class="line">       obj-y += lowlevel_init.o</span><br></pre></td></tr></table></figure>
+
 <h4 id="修改my2440-c的头文件"><a href="#修改my2440-c的头文件" class="headerlink" title="修改my2440.c的头文件"></a>修改my2440.c的头文件</h4><ol>
 <li><p>添加my2440的头文件</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp u-boot-2016.05/include/configs/smdk2410.h</span><br><span class="line">u-boot-2016.05/include/configs/my2440.h</span><br></pre></td></tr></table></figure>
 </li>
 <li><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gedit   u-boot-2016.05/include/configs/my2440.h</span><br><span class="line">修改前：</span><br><span class="line">       #define CONFIG_S3C24X0 /* This is a SAMSUNG S3C24x0-type SoC */</span><br><span class="line">       #define CONFIG_S3C2410 /* specifically a SAMSUNG S3C2410 SoC */</span><br><span class="line">       #define CONFIG_SMDK2410 /* on a SAMSUNG SMDK2410 Board */</span><br><span class="line">修改后：</span><br><span class="line">       #define CONFIG_S3C24X0 /* This is a SAMSUNG S3C24x0-type SoC */</span><br><span class="line">       #define CONFIG_S3C2440/* specifically a SAMSUNG S3C2440 SoC */</span><br><span class="line">       #define CONFIG_MY2440/* on custom my2440 Board */</span><br></pre></td></tr></table></figure>
+
 </li>
 </ol>
 <h2 id="编译调试"><a href="#编译调试" class="headerlink" title="编译调试"></a>编译调试</h2><ol>
@@ -494,13 +506,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">NaNm</span>
+    <span title="站点总字数">74k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">NaN:aN</span>
+    <span title="站点阅读时长">1:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
   </div>

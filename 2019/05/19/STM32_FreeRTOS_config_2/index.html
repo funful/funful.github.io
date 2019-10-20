@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-mac-0sx.min.css?v=1.0.2">
   <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
 
 
@@ -273,14 +273,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span></span>
+              <span>1.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>NaN:aN</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -294,18 +294,23 @@
       
         <p>上一篇，对config宏的基础配置和部分相关的配置，有些宏我们暂时没有用上，所以对这些宏定义的概念不太清楚，这章节是对余下部分解析。</p>
 <a id="more"></a>
+
 <h1 id="config"><a href="#config" class="headerlink" title="config_*"></a>config_*</h1><h2 id="FreeRTOS与钩子函数有关的配置选项"><a href="#FreeRTOS与钩子函数有关的配置选项" class="headerlink" title="FreeRTOS与钩子函数有关的配置选项"></a>FreeRTOS与钩子函数有关的配置选项</h2><h3 id="configUSE-IDLE-HOOK"><a href="#configUSE-IDLE-HOOK" class="headerlink" title="configUSE_IDLE_HOOK"></a>configUSE_IDLE_HOOK</h3><p>为1的话，就是使能空闲任务回调函数，也就是如果系统调用空闲函数的话，就会回调钩子函数，我们自己去实现这个函数，函数声明如下：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vApplicationIdleHook</span><span class="params">( <span class="keyword">void</span> )</span></span>;</span><br></pre></td></tr></table></figure>
+
 <h3 id="configUSE-TICK-HOOK"><a href="#configUSE-TICK-HOOK" class="headerlink" title="configUSE_TICK_HOOK"></a>configUSE_TICK_HOOK</h3><p>为1的话使能时间片钩子函数，但是需要我们自己去实现这个函数，函数声明如下：    </p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vApplicationTickHook</span><span class="params">( <span class="keyword">void</span> )</span></span>;</span><br></pre></td></tr></table></figure>
+
 <h2 id="FreeRTOS与运行时间和任务状态收集有关的配置选项"><a href="#FreeRTOS与运行时间和任务状态收集有关的配置选项" class="headerlink" title="FreeRTOS与运行时间和任务状态收集有关的配置选项"></a>FreeRTOS与运行时间和任务状态收集有关的配置选项</h2><h3 id="configGENERATE-RUN-TIME-STATS"><a href="#configGENERATE-RUN-TIME-STATS" class="headerlink" title="configGENERATE_RUN_TIME_STATS"></a>configGENERATE_RUN_TIME_STATS</h3><p>为1 的话开启时间统计功能，如果定义这个宏的话，就必须还有定义另外两个宏，这个在后面的任务查询的时候我们有可能会配置，这两个宏分别是：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">portCONFIGURE_TIMER_FOR_RUN_TIME_STATS</span><br><span class="line">portALT_GET_RUN_TIME_COUNTER_VALUE</span><br></pre></td></tr></table></figure>
+
 <h3 id="configUSE-TRACE-FACILITY"><a href="#configUSE-TRACE-FACILITY" class="headerlink" title="configUSE_TRACE_FACILITY"></a>configUSE_TRACE_FACILITY</h3><p>为1的话启动可视化跟踪调试，会增加一些结构体成员和API函数。</p>
 <h3 id="configUSE-STATS-FORMATTING-FUNCTIONS"><a href="#configUSE-STATS-FORMATTING-FUNCTIONS" class="headerlink" title="configUSE_STATS_FORMATTING_FUNCTIONS"></a>configUSE_STATS_FORMATTING_FUNCTIONS</h3><p>Set configUSE_TRACE_FACILITY and configUSE_STATS_FORMATTING_FUNCTIONS to 1<br>to include the vTaskList() and vTaskGetRunTimeStats() </p>
 <h2 id="FreeRTOS与协程有关的配置选项（现在的MCU很强大，不需要节约资源，所以基本不配置协程）"><a href="#FreeRTOS与协程有关的配置选项（现在的MCU很强大，不需要节约资源，所以基本不配置协程）" class="headerlink" title="FreeRTOS与协程有关的配置选项（现在的MCU很强大，不需要节约资源，所以基本不配置协程）"></a>FreeRTOS与协程有关的配置选项（现在的MCU很强大，不需要节约资源，所以基本不配置协程）</h2><h3 id="configUSE-CO-ROUTINES"><a href="#configUSE-CO-ROUTINES" class="headerlink" title="configUSE_CO_ROUTINES"></a>configUSE_CO_ROUTINES</h3><p>为1的话，工程需要编译协程，需要把协程文件包含进来，相应的API函数才会被编译。</p>
 <h3 id="configMAX-CO-ROUTINE-PRIORITIES"><a href="#configMAX-CO-ROUTINE-PRIORITIES" class="headerlink" title="configMAX_CO_ROUTINE_PRIORITIES"></a>configMAX_CO_ROUTINE_PRIORITIES</h3><p>设置协程的最大优先级，设置完之后，协程使用的优先级范围0~configMAX_CO_ROUTINE_PRIORITIES-1</p>
 <h3 id="FreeRTOS与软件定时器有关的配置选项"><a href="#FreeRTOS与软件定时器有关的配置选项" class="headerlink" title="FreeRTOS与软件定时器有关的配置选项"></a>FreeRTOS与软件定时器有关的配置选项</h3><h3 id="configUSE-TIMERS"><a href="#configUSE-TIMERS" class="headerlink" title="configUSE_TIMERS"></a>configUSE_TIMERS</h3><p>为1则启动软件定时器，还有三个宏也需要定义，</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">configTIMER_TASK_PRIORITY</span><br><span class="line">configTIMER_QUEUE_LENGTH </span><br><span class="line">configTIMER_TASK_STACK_DEPTHxxxxxxxxxx</span><br></pre></td></tr></table></figure>
+
 <h3 id="configTIMER-TASK-PRIORITY"><a href="#configTIMER-TASK-PRIORITY" class="headerlink" title="configTIMER_TASK_PRIORITY"></a>configTIMER_TASK_PRIORITY</h3><p>设置定时器任务的优先级，0~configMAX_PRIORITIES-1，如果定时器任务的优先级高的话，定时器的队列和回调函数会及时处理。</p>
 <h3 id="configTIMER-QUEUE-LENGTH"><a href="#configTIMER-QUEUE-LENGTH" class="headerlink" title="configTIMER_QUEUE_LENGTH"></a>configTIMER_QUEUE_LENGTH</h3><p>设置定时器队列的队列长度。</p>
 <h3 id="configTIMER-TASK-STACK-DEPTH"><a href="#configTIMER-TASK-STACK-DEPTH" class="headerlink" title="configTIMER_TASK_STACK_DEPTH"></a>configTIMER_TASK_STACK_DEPTH</h3><p>定时器任务的堆栈，可以根据定时器回调函数的大小，定义定时器任务堆栈大小。</p>
@@ -452,13 +457,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">NaNm</span>
+    <span title="站点总字数">74k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">NaN:aN</span>
+    <span title="站点阅读时长">1:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
   </div>

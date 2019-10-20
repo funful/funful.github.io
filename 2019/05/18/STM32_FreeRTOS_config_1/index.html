@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-mac-0sx.min.css?v=1.0.2">
   <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
 
 
@@ -273,14 +273,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span></span>
+              <span>2.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>NaN:aN</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -294,6 +294,7 @@
       
         <p>FreeRTOS是一个RTOS类的嵌入式实时操作系统，并且是开源免费的，与其他实时操作系统相比，是一个很好的选择。在移植好FreeRTOS到STM32上面之后，需要根据板子外设配置相应的功能，FreeRTOSConfig.h里面的宏完成对系统的裁剪和配置。</p>
 <a id="more"></a>
+
 <h1 id="系统配置文件FreeRTOSConfig-h"><a href="#系统配置文件FreeRTOSConfig-h" class="headerlink" title="系统配置文件FreeRTOSConfig.h"></a>系统配置文件FreeRTOSConfig.h</h1><p>在编译移植好的FreeROTS工程之后，需要都这个系统配置文件进行宏配置，这个配置文件与我们在编译kernel时的menuconfig类似，里面定义的宏，是对板子外设的和功能的裁剪配置。这个里面主要分为两个类的宏，一个是“INCLUDE_”开始的宏，一个是“config”开始的宏。FreeRTOSConfig.h是我们自己填充的.h文件，RTOS工程自带一个FreeRTOS.h文件，我们在FreeRTOSConfig.h定义的宏会对FreeRTOS.h进行条件编译。</p>
 <h1 id="INCLUDE"><a href="#INCLUDE" class="headerlink" title="INCLUDE_*"></a>INCLUDE_*</h1><p>这个宏的主要功能就是使能或者是失能，FreeRTOS中的API函数的，如果我们需要使用某个api函数就需要把这个宏置1，否则就是置0。在FreeRTOSConfig.h，在上面部分是宏的声明，在对应的.c文件里面会有条件编译，这个就可以达到减少系统占有的ROM和RAM。</p>
 <h3 id="INCLUDE-xTaskGetSchedulerState"><a href="#INCLUDE-xTaskGetSchedulerState" class="headerlink" title="INCLUDE_xTaskGetSchedulerState"></a>INCLUDE_xTaskGetSchedulerState</h3><p>这个宏是对xTaskGetSchedulerState函数的条件判断，是获取任务调度表状态的函数。</p>
@@ -474,13 +475,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">NaNm</span>
+    <span title="站点总字数">74k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">NaN:aN</span>
+    <span title="站点阅读时长">1:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
   </div>

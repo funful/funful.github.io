@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-mac-0sx.min.css?v=1.0.2">
   <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
 
 
@@ -52,18 +52,18 @@
   };
 </script>
 
-  <meta name="description" content="环境 Ubuntu： Ubuntu 19.04 固件： 全志CQA64-LinuxQT arm交叉编译器：crosstool-NG linaro-1.13.1-4.9-2014.09 - Linaro GCC 4.9-2014.09 时间：19-10-2019  错误描述 123freadahead.c: In function &apos;freadahead&apos;:freadahead.c:92:3: e">
+  <meta name="description" content="环境 Ubuntu： Ubuntu 19.04 固件： 全志CQA64-LinuxQT arm交叉编译器：crosstool-NG linaro-1.13.1-4.9-2014.09 - Linaro GCC 4.9-2014.09 时间：19-10-2019  错误描述 123freadahead.c: In function &apos;freadahead&apos;:freadahead.c:92:3:">
 <meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="全志A64编译固件报Fault">
 <meta property="og:url" content="http://www.funful.ink/2019/10/19/2019-10-19-全志A64编译固件报Fault/index.html">
 <meta property="og:site_name" content="FunfulBlog">
-<meta property="og:description" content="环境 Ubuntu： Ubuntu 19.04 固件： 全志CQA64-LinuxQT arm交叉编译器：crosstool-NG linaro-1.13.1-4.9-2014.09 - Linaro GCC 4.9-2014.09 时间：19-10-2019  错误描述 123freadahead.c: In function &apos;freadahead&apos;:freadahead.c:92:3: e">
+<meta property="og:description" content="环境 Ubuntu： Ubuntu 19.04 固件： 全志CQA64-LinuxQT arm交叉编译器：crosstool-NG linaro-1.13.1-4.9-2014.09 - Linaro GCC 4.9-2014.09 时间：19-10-2019  错误描述 123freadahead.c: In function &apos;freadahead&apos;:freadahead.c:92:3:">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2019-10-19T16:19:36.513Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="全志A64编译固件报Fault">
-<meta name="twitter:description" content="环境 Ubuntu： Ubuntu 19.04 固件： 全志CQA64-LinuxQT arm交叉编译器：crosstool-NG linaro-1.13.1-4.9-2014.09 - Linaro GCC 4.9-2014.09 时间：19-10-2019  错误描述 123freadahead.c: In function &apos;freadahead&apos;:freadahead.c:92:3: e">
+<meta name="twitter:description" content="环境 Ubuntu： Ubuntu 19.04 固件： 全志CQA64-LinuxQT arm交叉编译器：crosstool-NG linaro-1.13.1-4.9-2014.09 - Linaro GCC 4.9-2014.09 时间：19-10-2019  错误描述 123freadahead.c: In function &apos;freadahead&apos;:freadahead.c:92:3:">
   <link rel="canonical" href="http://www.funful.ink/2019/10/19/2019-10-19-全志A64编译固件报Fault/">
 
 
@@ -267,14 +267,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span></span>
+              <span>839</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>NaN:aN</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -287,6 +287,7 @@
 
       
         <a id="more"></a>
+
 <h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
 <li>Ubuntu： Ubuntu 19.04</li>
 <li>固件： 全志CQA64-LinuxQT</li>
@@ -295,6 +296,7 @@
 </ul>
 <h2 id="错误描述"><a href="#错误描述" class="headerlink" title="错误描述"></a>错误描述</h2><ul>
 <li><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">freadahead.c: In function 'freadahead':</span><br><span class="line">freadahead.c:<span class="number">92</span>:<span class="number">3</span>: error: <span class="meta">#<span class="meta-keyword">error</span> <span class="meta-string">"Please port gnulib freadahead.c to your platform! Look at the definition of fflush, fread, ungetc on your system, then report this to bug-gnulib."</span></span></span><br><span class="line">  <span class="meta">#<span class="meta-keyword">error</span> <span class="meta-string">"Please port gnulib freadahead.c to your platform! Look at the definition of fflush, fread, ungetc on your system, then report this to bug-gnulib."</span></span></span><br></pre></td></tr></table></figure>
+
 </li>
 </ul>
 <h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><ul>
@@ -302,6 +304,7 @@
 </li>
 <li><p>进入host-m4-1.4.18/lib中，对stdio-impl.h中添加</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+<span class="comment">/* Glibc 2.28 made _IO_IN_BACKUP private.  For now, work around this</span></span><br><span class="line"><span class="comment">+   problem by defining it ourselves.  <span class="doctag">FIXME:</span> Do not rely on glibc</span></span><br><span class="line"><span class="comment">+   internals.  */</span></span><br><span class="line">+<span class="meta">#<span class="meta-keyword">if</span> !defined _IO_IN_BACKUP &amp;&amp; defined _IO_EOF_SEEN</span></span><br><span class="line">+<span class="meta"># <span class="meta-keyword">define</span> _IO_IN_BACKUP 0x100</span></span><br><span class="line">+<span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
 <p>参考Patch：<a href="http://git.openembedded.org/openembedded-core/tree/meta/recipes-devtools/m4/m4/m4-1.4.18-glibc-change-work-around.patch" target="_blank" rel="noopener">m4.patch</a></p>
 </li>
 </ul>
@@ -437,13 +440,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">NaNm</span>
+    <span title="站点总字数">74k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">NaN:aN</span>
+    <span title="站点阅读时长">1:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
   </div>

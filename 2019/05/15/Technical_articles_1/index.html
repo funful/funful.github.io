@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-mac-0sx.min.css?v=1.0.2">
   <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
 
 
@@ -66,7 +66,7 @@
 <meta property="og:image" content="http://cdn.funful.ink/2018-11-20-3.png">
 <meta property="og:image" content="http://cdn.funful.ink/2018-11-20-4.png">
 <meta property="og:image" content="http://cdn.funful.ink/2018-11-20-5.png">
-<meta property="og:updated_time" content="2019-10-18T16:49:02.609Z">
+<meta property="og:updated_time" content="2019-10-18T16:49:02.610Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于七牛云测试域名回收解决方案">
 <meta name="twitter:description" content="之前写更新的几篇文章,没有注意到七牛云测试域名要回收的信息,今天突然发现测试域名复制外链的时候,竟然无法复制,而且提示错误:5402Bucket域名失败,所以就决定自定义一个个人域名解决.">
@@ -280,14 +280,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span></span>
+              <span>706</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>NaN:aN</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -301,18 +301,22 @@
       
         <p>之前写更新的几篇文章,没有注意到七牛云测试域名要回收的信息,今天突然发现测试域名复制外链的时候,竟然无法复制,而且提示错误:5402Bucket域名失败,所以就决定自定义一个个人域名解决.</p>
 <a id="more"></a>
-<h1 id="融合-CDN-测试域名公告"><a href="#融合-CDN-测试域名公告" class="headerlink" title="融合 CDN 测试域名公告"></a>融合 CDN 测试域名公告</h1><p><img src="http://cdn.funful.ink/2018-11-20.png" alt=""></p>
+
+
+
+<h1 id="融合-CDN-测试域名公告"><a href="#融合-CDN-测试域名公告" class="headerlink" title="融合 CDN 测试域名公告"></a>融合 CDN 测试域名公告</h1><p><img src="http://cdn.funful.ink/2018-11-20.png" alt></p>
 <p>但是发现之前文章的测试域名还能在blog中正常显示，所以先不管这个呢．先创建自定义域名．</p>
 <h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><h2 id="自定义域名"><a href="#自定义域名" class="headerlink" title="自定义域名"></a>自定义域名</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">本站域名:funful.ink</span><br><span class="line"></span><br><span class="line">七牛绑定域名:cdn.funful.ink</span><br></pre></td></tr></table></figure>
+
 <ol>
 <li><p>登录七牛云,进入对象存储,再进入到相应的存储空间,在空间概览,点击自定义域名.如图:</p>
-<p><img src="http://cdn.funful.ink/2018-11-20-1.png" alt=""></p>
+<p><img src="http://cdn.funful.ink/2018-11-20-1.png" alt></p>
 </li>
 <li><p>如图:点击自定义域名之后,会进入域名管理-&gt;创建域名里面,我们只需要填写一个加速域名,也就是二级域名,这里我的funful.ink已经备案了,所以我就在我的主域名前加一个字符串,然后点击创建就可以了.如图:</p>
-<p><img src="http://cdn.funful.ink/2018-11-20-2.png" alt=""></p>
+<p><img src="http://cdn.funful.ink/2018-11-20-2.png" alt></p>
 </li>
 <li><p>这是后再次去存储空间-&gt;空间概览会发现域名状态是: 处理中</p>
-<p><img src="http://cdn.funful.ink/2018-11-20-3.png" alt=""></p>
+<p><img src="http://cdn.funful.ink/2018-11-20-3.png" alt></p>
 </li>
 </ol>
 <h2 id="配置CNAME"><a href="#配置CNAME" class="headerlink" title="配置CNAME"></a>配置CNAME</h2><ol>
@@ -322,7 +326,7 @@
 <li><p>打开阿里云官网-&gt;控制台-&gt;域名,在主域名下点击解析-&gt;添加记录</p>
 </li>
 <li><p>会出现如图设置:</p>
-<p><img src="http://cdn.funful.ink/2018-11-20-4.png" alt=""></p>
+<p><img src="http://cdn.funful.ink/2018-11-20-4.png" alt></p>
 </li>
 </ol>
 <p>上图的记录类型:选择CNAME;主机记录:就是我们七牛云自定义域名前缀;记录值:就是CNAME值;其他值默认就可以. 点击确认就配置好了CNAME</p>
@@ -330,7 +334,7 @@
 <li>返回到七牛云我们的存储空间-&gt;空间概览会发现,融合CDN加速域名里面的域名状态已经成功了,如果是等待CNAME的话可能是需要等待几分钟.</li>
 </ol>
 <h1 id="使用存储空间"><a href="#使用存储空间" class="headerlink" title="使用存储空间"></a>使用存储空间</h1><p>上面已经配置好 进入储存空间-&gt;内容管理.选择外链默认域名之后就可以正常使用了,(外链域名不能使用七牛云的测试域名,因为这个测试域名只能使用一个月)</p>
-<p><img src="http://cdn.funful.ink/2018-11-20-5.png" alt=""></p>
+<p><img src="http://cdn.funful.ink/2018-11-20-5.png" alt></p>
 
     </div>
 
@@ -463,13 +467,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">NaNm</span>
+    <span title="站点总字数">74k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">NaN:aN</span>
+    <span title="站点阅读时长">1:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
   </div>

@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-mac-0sx.min.css?v=1.0.2">
   <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
 
 
@@ -68,7 +68,7 @@
 <meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_4.png">
 <meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_8.jpg">
 <meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/blog_7.png">
-<meta property="og:updated_time" content="2019-10-18T16:51:13.737Z">
+<meta property="og:updated_time" content="2019-10-18T16:51:13.738Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ES8266模块AT操作&lt;多连接TCP通信&gt;">
 <meta name="twitter:description" content="这个教程是基于ESP8266和手机与电脑的TCP通信。">
@@ -282,14 +282,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span></span>
+              <span>926</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>NaN:aN</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -303,13 +303,14 @@
       
         <p>这个教程是基于ESP8266和手机与电脑的TCP通信。</p>
 <a id="more"></a>
-<h1 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h1><ul>
+
+<h1 id="文档"><a href="#文档" class="headerlink" title="文档#"></a>文档#</h1><ul>
 <li><a href="http://wiki.ai-thinker.com/_media/esp8266/docs/4a-esp8266_at_instruction_set_cn.pdf" target="_blank" rel="noopener">AT的指令集</a></li>
 <li><a href="http://wiki.ai-thinker.com/_media/esp8266/docs/4b-esp8266_at_command_examples_cn.pdf" target="_blank" rel="noopener">AT的示例教程</a></li>
 <li>Android版的TCP调试助手可以去软件库里面下载</li>
 <li>PC版的调试助手可以去CSDN下载，链接 <a href="https://download.csdn.net/download/ajian0051/9478097" target="_blank" rel="noopener">Download</a></li>
 </ul>
-<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="ESP8266的AT操作"><a href="#ESP8266的AT操作" class="headerlink" title="ESP8266的AT操作"></a>ESP8266的AT操作</h2><ol>
+<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤#"></a>步骤#</h1><h2 id="ESP8266的AT操作"><a href="#ESP8266的AT操作" class="headerlink" title="ESP8266的AT操作##"></a>ESP8266的AT操作##</h2><ol>
 <li>AT+RST（重启）</li>
 <li>AT+RESTORE（恢复出厂设置，第一次操作建议不要，如果不能正常工作的话，可以执行该命令）</li>
 <li>AT+CWMODE_DEF=3（WIFI模式（STA/AP/STA+AP））</li>
@@ -318,45 +319,47 @@
 <li>AT+CIPSERVER=1,8080（设置TCP server 的端口号8080）</li>
 <li>这样我们就设置好了，手机和电脑都可以正常连接到“OneNET”，我们还要注意下ESP8266的IP和端口，上面已经知道端口号是8080，服务器IP是192.168.4.1，可以使用”AT+CIFSR”得知。</li>
 </ol>
-<h2 id="手机端-amp-PC连接"><a href="#手机端-amp-PC连接" class="headerlink" title="手机端&amp;PC连接"></a>手机端&amp;PC连接</h2><ol>
+<h2 id="手机端-amp-PC连接"><a href="#手机端-amp-PC连接" class="headerlink" title="手机端&amp;PC连接##"></a>手机端&amp;PC连接##</h2><ol>
 <li><p>手机开启wifi连接OneNET</p>
 </li>
 <li><p>手机端打开TCP调试助手，设置如图，点击connect</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_picture.jpg" alt=""></p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_picture.jpg" alt></p>
 </li>
 <li><p>电脑连接ESP8266的串口显示</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_1.png" alt=""></p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_1.png" alt></p>
 </li>
 <li><p>这就显示连接成功了，下来电脑端也连接”OneNET”，打开网络调试助手，设置如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2.png" alt=""></p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2.png" alt></p>
 </li>
 <li><p>上面四步我们就将手机和电脑作为TCP client 连接到电脑了，下面测试通信。</p>
 </li>
 </ol>
-<h2 id="通信"><a href="#通信" class="headerlink" title="通信"></a>通信</h2><h3 id="ESP8266接收"><a href="#ESP8266接收" class="headerlink" title="ESP8266接收"></a>ESP8266接收</h3><ol>
+<h2 id="通信"><a href="#通信" class="headerlink" title="通信##"></a>通信##</h2><h3 id="ESP8266接收"><a href="#ESP8266接收" class="headerlink" title="ESP8266接收###"></a>ESP8266接收###</h3><ol>
 <li><p>手机端发送如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_5.jpg" alt=""></p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_5.jpg" alt></p>
 </li>
 <li><p>电脑端发送如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_3.png" alt=""></p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_3.png" alt></p>
 </li>
 <li><p>ESP8266串口显示</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_4.png" alt=""></p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_4.png" alt></p>
 </li>
 </ol>
-<h3 id="ESP8266发送"><a href="#ESP8266发送" class="headerlink" title="ESP8266发送"></a>ESP8266发送</h3><ol>
+<h3 id="ESP8266发送"><a href="#ESP8266发送" class="headerlink" title="ESP8266发送###"></a>ESP8266发送###</h3><ol>
 <li><p>ESP82266多链接最多可以连接5个设备，上面我们知道手机分配的ID为0，电脑ID为1</p>
 </li>
 <li><p>先给手机端发送，执行命令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AT+CIPSEND=&lt;link ID&gt;,&lt;length&gt;</span><br><span class="line">AT+CIPSEND=0,11（给ID0发送11个字节数据）</span><br><span class="line">OK</span><br><span class="line">&gt;</span><br><span class="line">Hello,PHONE</span><br></pre></td></tr></table></figure>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_8.jpg" alt=""></p>
+
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_8.jpg" alt></p>
 </li>
 <li><p>给电脑端发送，执行命令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">AT+CIPSEND=1,11（给ID1发送11个字节数据）</span><br><span class="line">OK</span><br><span class="line">&gt;</span><br><span class="line">Hello,PC</span><br></pre></td></tr></table></figure>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_7.png" alt=""></p>
+
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_7.png" alt></p>
 </li>
 </ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>使用AT指令开发ESP8266，比较简单，但是ESP8266内置MCU，这使得浪费了硬件资源。这篇文章是基于TCP多连接的通信，至于单连接，就更简单了。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结#"></a>总结#</h1><p>使用AT指令开发ESP8266，比较简单，但是ESP8266内置MCU，这使得浪费了硬件资源。这篇文章是基于TCP多连接的通信，至于单连接，就更简单了。</p>
 
     </div>
 
@@ -425,7 +428,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#文档"><span class="nav-number">1.</span> <span class="nav-text">文档</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#步骤"><span class="nav-number">2.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ESP8266的AT操作"><span class="nav-number">2.1.</span> <span class="nav-text">ESP8266的AT操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#手机端-amp-PC连接"><span class="nav-number">2.2.</span> <span class="nav-text">手机端&amp;PC连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通信"><span class="nav-number">2.3.</span> <span class="nav-text">通信</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ESP8266接收"><span class="nav-number">2.3.1.</span> <span class="nav-text">ESP8266接收</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ESP8266发送"><span class="nav-number">2.3.2.</span> <span class="nav-text">ESP8266发送</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#文档"><span class="nav-number">1.</span> <span class="nav-text">文档#</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#步骤"><span class="nav-number">2.</span> <span class="nav-text">步骤#</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ESP8266的AT操作"><span class="nav-number">2.1.</span> <span class="nav-text">ESP8266的AT操作##</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#手机端-amp-PC连接"><span class="nav-number">2.2.</span> <span class="nav-text">手机端&amp;PC连接##</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通信"><span class="nav-number">2.3.</span> <span class="nav-text">通信##</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ESP8266接收"><span class="nav-number">2.3.1.</span> <span class="nav-text">ESP8266接收###</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ESP8266发送"><span class="nav-number">2.3.2.</span> <span class="nav-text">ESP8266发送###</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结#</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -494,13 +497,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">NaNm</span>
+    <span title="站点总字数">74k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">NaN:aN</span>
+    <span title="站点阅读时长">1:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
   </div>

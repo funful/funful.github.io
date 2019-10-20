@@ -14,7 +14,7 @@
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-mac-0sx.min.css?v=1.0.2">
   <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
 
 
@@ -62,7 +62,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/2.png">
 <meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/3.png">
-<meta property="og:updated_time" content="2019-10-18T16:53:17.507Z">
+<meta property="og:updated_time" content="2019-10-18T16:53:17.508Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JZ2440的uboot-2009-11移植&lt;3&gt;_支持Nor Flash">
 <meta name="twitter:description" content="这一节是对第二阶段的代码进行移植，来支持Nor Flash">
@@ -276,14 +276,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span></span>
+              <span>2.5k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>NaN:aN</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -297,12 +297,30 @@
       
         <p>这一节是对第二阶段的代码进行移植，来支持Nor Flash</p>
 <a id="more"></a>
+
 <h2 id="硬件环境"><a href="#硬件环境" class="headerlink" title="硬件环境"></a>硬件环境</h2><h3 id="Nor-Flash介绍"><a href="#Nor-Flash介绍" class="headerlink" title="Nor Flash介绍"></a>Nor Flash介绍</h3><p>Nor Flash 是一种存储芯片，支持掉电存储、支持Executensil On Chip（片上程序运行）。所以很适合作为嵌入式中启动程序的存储介质。但是由于低写速度和擦除速度影响着他的性能，在1~16MB的闪存中较为常见。</p>
 <h3 id="MX29LV160D-T-B-芯片"><a href="#MX29LV160D-T-B-芯片" class="headerlink" title="MX29LV160D T/B 芯片"></a>MX29LV160D T/B 芯片</h3><ol>
 <li><p>2MB的Flash（8位/16位） ,JZ2440选用数据宽度的16位</p>
 </li>
 <li><p>扇区分布;</p>
-<p>| 大小   | 8K-Byte | 16K-Byte | 32K-Byte | 64K-Byte |<br>| —- | ——- | ——– | ——– | ——– |<br>| 块数   | 2       | 1        | 1        | 31       |</p>
+<table>
+<thead>
+<tr>
+<th>大小</th>
+<th>8K-Byte</th>
+<th>16K-Byte</th>
+<th>32K-Byte</th>
+<th>64K-Byte</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>块数</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>31</td>
+</tr>
+</tbody></table>
 </li>
 <li><p>Word/Byte 模式选择，如果选用Word时需要错位连接</p>
 </li>
@@ -315,24 +333,31 @@
 </ol>
 <h3 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h3><p>我们之前顺腾摸瓜，从start.S-&gt;crt0.S，在crt0.S中分别调用了两个函数：board_init_f和board_init_r。</p>
 <h4 id="位置"><a href="#位置" class="headerlink" title="位置"></a>位置</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">board_init_f 位于u-boot<span class="number">-2016.09</span>\common\Board_f.c</span><br><span class="line">board_init_r 位于u-boot<span class="number">-2016.09</span>\common\Board_r.c</span><br></pre></td></tr></table></figure>
+
 <h4 id="board-init-f功能"><a href="#board-init-f功能" class="headerlink" title="board_init_f功能"></a>board_init_f功能</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">主要是初始化下面这些</span><br><span class="line">timer_init,        <span class="comment">/* initialize timer */</span></span><br><span class="line">get_clocks,</span><br><span class="line">env_init,        </span><br><span class="line">init_baud_rate,        <span class="comment">/* initialze baudrate settings */</span></span><br><span class="line">serial_init,        <span class="comment">/* serial communications setup */</span></span><br><span class="line">console_init_f,        <span class="comment">/* stage 1 init of console */</span></span><br></pre></td></tr></table></figure>
+
 <h4 id="board-init-r功能"><a href="#board-init-r功能" class="headerlink" title="board_init_r功能"></a>board_init_r功能</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">board_init,</span><br><span class="line">initr_flash</span><br><span class="line">initr_nand,</span><br></pre></td></tr></table></figure>
+
 <h4 id="代码解读"><a href="#代码解读" class="headerlink" title="代码解读"></a>代码解读</h4><p>所以我们知道nor flash的设置在board_init_r里面，</p>
 <ol>
 <li><p>进入到static int initr_flash(void) ，位于（common\Board_r.c）</p>
 </li>
 <li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">flash_info[i].flash_id = FLASH_UNKNOWN;从这一句我们可以看出来flash__info是存储Nor flash信息的结构体</span><br><span class="line"> if (!flash_detect_legacy(cfi_fla sh_bank_addr(i), i))</span><br><span class="line">  flash_detect_legacy(phys_addr_t base, int banknum)</span><br><span class="line">       if (jedec_flash_match(info, info-&gt;start[0]))</span><br><span class="line">          int jedec_flash_match(flash_info_t *info, ulong base)    将读取到的板子ID和已有板子信息做对比</span><br><span class="line">           &#123;                                                                                             int ret = 0;                                                                                  int i;                                                                                      ulong mask = 0xFFFF;                                                                         if (info-&gt;chipwidth == 1)                                                                     mask = 0xFF;                                                                             for (i = 0; i &lt; ARRAY_SIZE(jedec_table); i++) &#123;                                               if ((jedec_table[i].mfr_id &amp; mask) == (info-&gt;manufacturer_id &amp; mask) &amp;&amp;                          (jedec_table[i].dev_id &amp; mask) == (info-&gt;device_id &amp; mask)) &#123;                                  fill_info(info, &amp;jedec_table[i], base);                                                        ret = 1;                                                                                  break;                                                                      &#125;                                                                                           return ret;                                                                             &#125;</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 代码修改1</span><br><span class="line"></span><br><span class="line">上面分析完 ，我们就可以知道，我们只要将上面函数的饿 jedec_table结构体增加我们对应的信息就行了</span><br><span class="line"></span><br><span class="line"> ```c</span><br><span class="line">修改添加  static const struct amd_flash_info jedec_table[]   结构体</span><br></pre></td></tr></table></figure>
+
 </li>
 </ol>
 <h5 id="位置-1"><a href="#位置-1" class="headerlink" title="位置"></a>位置</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drivers\mtd\Jedec_flash.c</span><br></pre></td></tr></table></figure>
+
 <h5 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> 在结构体补充相应的信息</span><br><span class="line">&#123;      /*  sheldon add for JZ2440_V2 Nor_Flash ： MT29LV160DB */                                         .mfr_id     = (u16)MX_MANUFACT,   //厂家 id                                                     .dev_id     = 0x2249,   //设备 id                                                      </span><br><span class="line">        .name       = &quot;MX29LV160D&quot;,                                                   </span><br><span class="line">        .uaddr      = &#123;                                                               </span><br><span class="line">          [1] = MTD_UADDR_0x0555_0x02AA /* 1:x16 ,NOR Flash 的解锁地址 */</span><br><span class="line">               &#125;,                                                                            </span><br><span class="line">          .DevSize    = SIZE_2MiB,              //整个 nor flash 的大小                                      .CmdSet     = P_ID_AMD_STD,                                          </span><br><span class="line">           .NumEraseRegions= 4,       //擦除域，有几种大小的块就有几个擦除域，                                .regions    = &#123;    //查看芯片手册设置擦除块                                                         ERASEINFO(0x10000, 31),             //参照芯片手册里面的块信息                                     ERASEINFO(0x08000, 1),                                                    </span><br><span class="line">	      ERASEINFO(0x02000, 2),                                                    </span><br><span class="line">            ERASEINFO(0x04000, 1),                                                    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h4 id="代码修改2"><a href="#代码修改2" class="headerlink" title="代码修改2"></a>代码修改2</h4><p> 我们还要修改myff244.h的一个宏   </p>
 <p> /#define CONFIG_SYS_MAX_FLASH_SECT    (128)                     </p>
 <p> 因为我们的最大快区大于19了</p>
 <h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>重新编译uboot 下载到板子里面，就可以看到成功。</p>
 <p>虽然我们看到串口打印出来的信息显示支持Flash，但是我们要测试下是否真的支持了</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/2.png" alt=""></p>
+<p><img src="http://p9zz81nyl.bkt.clouddn.com/2.png" alt></p>
 <ol>
 <li><p>进入到uboot的命令行</p>
 </li>
@@ -494,13 +519,13 @@
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">NaNm</span>
+    <span title="站点总字数">74k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">NaN:aN</span>
+    <span title="站点阅读时长">1:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0
   </div>
