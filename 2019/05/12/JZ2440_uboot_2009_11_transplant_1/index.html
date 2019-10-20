@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=7.4.2">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.2">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-fill-left.min.css?v=1.0.2">
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"right","display":"always","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"manual","top_n_per_article":5,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="整理下自己之前的移植uboot时记录的笔记！">
+<meta name="keywords" content="移植,arm,linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JZ2440的uboot-2009-11 移植&lt;1&gt;">
+<meta property="og:url" content="http://www.funful.ink/2019/05/12/JZ2440_uboot_2009_11_transplant_1/index.html">
+<meta property="og:site_name" content="FunfulBlog">
+<meta property="og:description" content="整理下自己之前的移植uboot时记录的笔记！">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-18T16:53:00.271Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JZ2440的uboot-2009-11 移植&lt;1&gt;">
+<meta name="twitter:description" content="整理下自己之前的移植uboot时记录的笔记！">
+
+<link rel="canonical" href="http://www.funful.ink/2019/05/12/JZ2440_uboot_2009_11_transplant_1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>JZ2440的uboot-2009-11 移植<1> | FunfulBlog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">FunfulBlog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Funful的个人博客</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-首页">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-文章分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>文章分类</a>
+
+  </li>
+        <li class="menu-item menu-item-标签">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-归档">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/05/12/JZ2440_uboot_2009_11_transplant_1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="ZhaoH.T">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FunfulBlog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JZ2440的uboot-2009-11 移植<1>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-05-12 00:00:00" itemprop="dateCreated datePublished" datetime="2019-05-12T00:00:00Z">2019-05-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-18 16:53:00" itemprop="dateModified" datetime="2019-10-18T16:53:00Z">2019-10-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/uboot移植/" itemprop="url" rel="index">
+                    <span itemprop="name">uboot移植</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/05/12/JZ2440_uboot_2009_11_transplant_1/" class="post-meta-item leancloud_visitors" data-flag-title="JZ2440的uboot-2009-11 移植<1>" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/05/12/JZ2440_uboot_2009_11_transplant_1/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/05/12/JZ2440_uboot_2009_11_transplant_1/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>整理下自己之前的移植uboot时记录的笔记！</p>
+<a id="more"></a>
+
+<h2 id="移植环境："><a href="#移植环境：" class="headerlink" title="移植环境："></a>移植环境：</h2><p>arm板子：JZ2440</p>
+<p>uboot版本：2009-11</p>
+<p>交叉编译链：arm-none-linux-gcc-4.4.3</p>
+<h2 id="下载："><a href="#下载：" class="headerlink" title="下载："></a>下载：</h2><p>uboot官方下载地址:<a href="ftp://ftp.denx.de/pub/u-boot" target="_blank" rel="noopener">uboot官方下载</a>,  </p>
+<p>交叉编译链:<a href>github.com/funful/Tools</a></p>
+<h2 id="uboot的启动流程"><a href="#uboot的启动流程" class="headerlink" title="uboot的启动流程"></a>uboot的启动流程</h2><h3 id="第一阶段"><a href="#第一阶段" class="headerlink" title="第一阶段"></a>第一阶段</h3><ol>
+<li>硬件设备初始化</li>
+<li>加载u-boot第二阶段代码到RAM的空间</li>
+<li>设置好栈</li>
+<li>跳转到第二阶段的代码入口</li>
+</ol>
+<h3 id="第二阶段"><a href="#第二阶段" class="headerlink" title="第二阶段"></a>第二阶段</h3><ol>
+<li>初始化本阶段所使用的硬件设备                                                 </li>
+<li>检测系统内存映射</li>
+<li>将内核从Flash读取到RAM中</li>
+<li>为内核设置启动参数</li>
+<li>调用内核</li>
+</ol>
+<h2 id="建立2440的配置"><a href="#建立2440的配置" class="headerlink" title="建立2440的配置"></a>建立2440的配置</h2><p>uboot-2009-11和之前的版本相比，有一点变化，我们在u-boot-2016.09/configs 可以看到各种板级支持配置，由于2440和2410相差不大，所以我们根据2410，来添加2440的配置</p>
+<h3 id="修改根目录的Makefile"><a href="#修改根目录的Makefile" class="headerlink" title="修改根目录的Makefile"></a>修改根目录的Makefile</h3><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#设置股下面两个变量</span></span><br><span class="line">ARCH = arm</span><br><span class="line">CROSS_COMPILE = arm-none-linux-gnueabi-</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加my2440配置文件"><a href="#添加my2440配置文件" class="headerlink" title="添加my2440配置文件"></a>添加my2440配置文件</h3><h4 id="新建配置文件"><a href="#新建配置文件" class="headerlink" title="新建配置文件"></a>新建配置文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp u-boot-2016.05/configs/smdk2410_defconfig   u-boot-2016.05/configs/my2440_defconfig</span><br></pre></td></tr></table></figure>
+
+<p>上面这条命令新建了my2440的板子配置</p>
+<h4 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-2016.05/configs/my2440_defconfig</span><br></pre></td></tr></table></figure>
+
+<h4 id="改动前后的内容如下"><a href="#改动前后的内容如下" class="headerlink" title="改动前后的内容如下:"></a>改动前后的内容如下:</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">改动前：</span><br><span class="line">	CONFIG_ARM=y</span><br><span class="line">	CONFIG_TARGET_SMDK2410=y</span><br><span class="line">	CONFIG_HUSH_PARSER=y</span><br><span class="line">	CONFIG_SYS_PROMPT="SMDK2410 # "</span><br><span class="line">	CONFIG_CMD_USB=y</span><br><span class="line"><span class="meta">	#</span> CONFIG_CMD_SETEXPR is not set</span><br><span class="line">	CONFIG_CMD_DHCP=y</span><br><span class="line">	CONFIG_CMD_PING=y</span><br><span class="line">	CONFIG_CMD_CACHE=y</span><br><span class="line">	CONFIG_CMD_EXT2=y</span><br><span class="line">	CONFIG_CMD_FAT=y</span><br><span class="line">改动后：</span><br><span class="line">    CONFIG_ARM=y</span><br><span class="line">    CONFIG_TARGET_MY2440=y      </span><br><span class="line">    CONFIG_HUSH_PARSER=y</span><br><span class="line">    CONFIG_SYS_PROMPT="MY2440 # "  #修改成我们自己板子名称</span><br><span class="line">    CONFIG_CMD_USB=y</span><br><span class="line">    # CONFIG_CMD_SETEXPR is not set</span><br><span class="line">    CONFIG_CMD_DHCP=y</span><br><span class="line">    CONFIG_CMD_PING=y</span><br><span class="line">    CONFIG_CMD_CACHE=y</span><br><span class="line">    CONFIG_CMD_EXT2=y</span><br><span class="line">    CONFIG_CMD_FAT=y</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加my2440板级支持文件"><a href="#添加my2440板级支持文件" class="headerlink" title="添加my2440板级支持文件"></a>添加my2440板级支持文件</h3><p>上一个步骤我们已经添加了配置文件，下面我们来添加支持文件，让编译器通过.UBoot源码中大部分和板子相关的代码在board目录下</p>
+<h4 id="新建板级支持-c文件"><a href="#新建板级支持-c文件" class="headerlink" title="新建板级支持.c文件"></a>新建板级支持.c文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -rf u-boot-2016.05/board/samsung/smdk2410/     u-boot-2016.05/board/samsung/my2440/</span><br></pre></td></tr></table></figure>
+
+<h4 id="将板级支持文件和板级配置文件关联"><a href="#将板级支持文件和板级配置文件关联" class="headerlink" title="将板级支持文件和板级配置文件关联"></a>将板级支持文件和板级配置文件关联</h4><ol>
+<li><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-2016.05/arch/arm/Kconfig</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>找到2410的配置，来在下面添加2440配置</p>
+   <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">在：</span><br><span class="line">config TARGET_SMDK2410</span><br><span class="line">	bool <span class="string">"Support smdk2410"</span></span><br><span class="line">	select CPU_ARM920T</span><br><span class="line">添加：  <span class="comment">#注意Kconfig的语法，需要使用[Tab]键，缩进</span></span><br><span class="line">config TARGET_MY2440</span><br><span class="line">	bool <span class="string">"Support my2440"</span></span><br><span class="line">	select CPU_ARM920T</span><br><span class="line">在：</span><br><span class="line">source <span class="string">"board/samsung/smdk2410/Kconfig"</span></span><br><span class="line">添加：</span><br><span class="line">source <span class="string">"board/samsung/myff2440/Kconfig"</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="修改板级支持文件夹里的Kconfig"><a href="#修改板级支持文件夹里的Kconfig" class="headerlink" title="修改板级支持文件夹里的Kconfig"></a>修改板级支持文件夹里的Kconfig</h4><ol>
+<li><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-<span class="number">2016.05</span>/board/samsung/my2440/Kconfig</span><br><span class="line">配置文件打开后，可以看到很多配置还都是smdk2410的配置:</span><br><span class="line"><span class="keyword">if</span> TARGET_SMDK2410</span><br><span class="line">config SYS_BOARD</span><br><span class="line">	default <span class="string">"smdk2410"</span></span><br><span class="line"></span><br><span class="line">config SYS_VENDOR</span><br><span class="line">	default <span class="string">"samsung"</span></span><br><span class="line">config SYS_SOC</span><br><span class="line">	default <span class="string">"s3c24x0"</span></span><br><span class="line">config SYS_CONFIG_NAME</span><br><span class="line">	default <span class="string">"smdk2410"</span></span><br><span class="line"><span class="keyword">endif</span></span><br><span class="line">修改为：</span><br><span class="line"><span class="keyword">if</span> TARGET_MYFF2440</span><br><span class="line"></span><br><span class="line">config SYS_BOARD</span><br><span class="line">	default <span class="string">"myff2440"</span></span><br><span class="line">config SYS_VENDOR</span><br><span class="line"> 	default <span class="string">"samsung"</span></span><br><span class="line">config SYS_SOC</span><br><span class="line">	default <span class="string">"s3c24x0"</span></span><br><span class="line">config SYS_CONFIG_NAME</span><br><span class="line">	default <span class="string">"myff2440"</span></span><br><span class="line"><span class="keyword">endif</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="修改板级支持文件名字"><a href="#修改板级支持文件名字" class="headerlink" title="修改板级支持文件名字"></a>修改板级支持文件名字</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv u-boot-2016.05/board/samsung/my2440/smdk2410.c   u-boot-2016.05/board/samsung/my2440/my2440.c</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改板级支持文件夹里的my2440-c"><a href="#修改板级支持文件夹里的my2440-c" class="headerlink" title="修改板级支持文件夹里的my2440.c"></a>修改板级支持文件夹里的my2440.c</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot<span class="number">-2016.05</span>/board/samsung/my2440/my2440.c</span><br><span class="line">打开后搜索: SMDK2410</span><br><span class="line">将</span><br><span class="line"> gd-&gt;bd-&gt;bi_arch_number = MACH_TYPE_SMDK2410;</span><br><span class="line"> 该为：</span><br><span class="line"> gd-&gt;bd-&gt;bi_arch_number = MACH_TYPE_MINI2440;</span><br></pre></td></tr></table></figure>
+
+<p>  这里板子底层初始化部分先暂时使用MINI2440板子的参数配置，目的先是为了编译能通过。</p>
+<h4 id="修改板级支持文件夹里的Makefile"><a href="#修改板级支持文件夹里的Makefile" class="headerlink" title="修改板级支持文件夹里的Makefile"></a>修改板级支持文件夹里的Makefile</h4><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-<span class="number">2016.05</span>/board/samsung/my2440/Makefile</span><br><span class="line">修改前：</span><br><span class="line">       obj-y := smdk2410.o</span><br><span class="line">       obj-y += lowlevel_init.o</span><br><span class="line">修改后：</span><br><span class="line">       obj-y:= my2440.o</span><br><span class="line">       obj-y += lowlevel_init.o</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改my2440-c的头文件"><a href="#修改my2440-c的头文件" class="headerlink" title="修改my2440.c的头文件"></a>修改my2440.c的头文件</h4><ol>
+<li><p>添加my2440的头文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp u-boot-2016.05/include/configs/smdk2410.h</span><br><span class="line">u-boot-2016.05/include/configs/my2440.h</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gedit   u-boot-2016.05/include/configs/my2440.h</span><br><span class="line">修改前：</span><br><span class="line">       #define CONFIG_S3C24X0 /* This is a SAMSUNG S3C24x0-type SoC */</span><br><span class="line">       #define CONFIG_S3C2410 /* specifically a SAMSUNG S3C2410 SoC */</span><br><span class="line">       #define CONFIG_SMDK2410 /* on a SAMSUNG SMDK2410 Board */</span><br><span class="line">修改后：</span><br><span class="line">       #define CONFIG_S3C24X0 /* This is a SAMSUNG S3C24x0-type SoC */</span><br><span class="line">       #define CONFIG_S3C2440/* specifically a SAMSUNG S3C2440 SoC */</span><br><span class="line">       #define CONFIG_MY2440/* on custom my2440 Board */</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="编译调试"><a href="#编译调试" class="headerlink" title="编译调试"></a>编译调试</h2><ol>
+<li><p>进入源码目录,cd u-boot-2016.09-11</p>
+</li>
+<li><p>在编译前先清空一次目录,sudo make distclean</p>
+</li>
+<li><p>修改编译配置,make my2440_config</p>
+</li>
+<li><p>make</p>
+</li>
+<li><p>sudo make</p>
+</li>
+<li><p>不出意外的话，就能顺利通过，如果没有通过的话，我们可以看看根目录下的.config文件的配置是够正确</p>
+<p>​</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/移植/" rel="tag"># 移植</a>
+              <a href="/tags/arm/" rel="tag"># arm</a>
+              <a href="/tags/linux/" rel="tag"># linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/03/30/2019-3-30_SSH/" rel="next" title="SSH基本原理及使用<一>">
+                  <i class="fa fa-chevron-left"></i> SSH基本原理及使用<一>
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/05/13/JZ2440_uboot_2009_11_transplant_3_nor_flash/" rel="prev" title="JZ2440的uboot-2009-11移植<3>_支持Nor Flash">
+                  JZ2440的uboot-2009-11移植<3>_支持Nor Flash <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#移植环境："><span class="nav-number">1.</span> <span class="nav-text">移植环境：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载："><span class="nav-number">2.</span> <span class="nav-text">下载：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#uboot的启动流程"><span class="nav-number">3.</span> <span class="nav-text">uboot的启动流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一阶段"><span class="nav-number">3.1.</span> <span class="nav-text">第一阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二阶段"><span class="nav-number">3.2.</span> <span class="nav-text">第二阶段</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立2440的配置"><span class="nav-number">4.</span> <span class="nav-text">建立2440的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修改根目录的Makefile"><span class="nav-number">4.1.</span> <span class="nav-text">修改根目录的Makefile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加my2440配置文件"><span class="nav-number">4.2.</span> <span class="nav-text">添加my2440配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#新建配置文件"><span class="nav-number">4.2.1.</span> <span class="nav-text">新建配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改"><span class="nav-number">4.2.2.</span> <span class="nav-text">修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#改动前后的内容如下"><span class="nav-number">4.2.3.</span> <span class="nav-text">改动前后的内容如下:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加my2440板级支持文件"><span class="nav-number">4.3.</span> <span class="nav-text">添加my2440板级支持文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#新建板级支持-c文件"><span class="nav-number">4.3.1.</span> <span class="nav-text">新建板级支持.c文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#将板级支持文件和板级配置文件关联"><span class="nav-number">4.3.2.</span> <span class="nav-text">将板级支持文件和板级配置文件关联</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改板级支持文件夹里的Kconfig"><span class="nav-number">4.3.3.</span> <span class="nav-text">修改板级支持文件夹里的Kconfig</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改板级支持文件名字"><span class="nav-number">4.3.4.</span> <span class="nav-text">修改板级支持文件名字</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改板级支持文件夹里的my2440-c"><span class="nav-number">4.3.5.</span> <span class="nav-text">修改板级支持文件夹里的my2440.c</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改板级支持文件夹里的Makefile"><span class="nav-number">4.3.6.</span> <span class="nav-text">修改板级支持文件夹里的Makefile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改my2440-c的头文件"><span class="nav-number">4.3.7.</span> <span class="nav-text">修改my2440.c的头文件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译调试"><span class="nav-number">5.</span> <span class="nav-text">编译调试</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="ZhaoH.T"
+    src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">ZhaoH.T</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/funful" title="GitHub &rarr; https://github.com/funful" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:funful@gmail.com" title="E-Mail &rarr; mailto:funful@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhaoH.T</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">74k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:07</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+<script src="/js/utils.js?v=7.4.2"></script>
+<script src="/js/schemes/muse.js?v=7.4.2"></script>
+<script src="/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: true,
+    appId: 'JaUiU8OP9MCeeHHLD5oaGUs7-gzGzoHsz',
+    appKey: 'LGnGVXtECCbFtsqezlPc9wcI',
+    placeholder: "快来评论一个吧(请填写邮箱以便收到回复提醒)",
+    avatar: 'monsterid',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true,
+    lang: 'zh-cn' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

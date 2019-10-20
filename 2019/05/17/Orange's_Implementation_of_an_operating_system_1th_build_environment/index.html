@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=7.4.2">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.2">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-fill-left.min.css?v=1.0.2">
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"right","display":"always","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"manual","top_n_per_article":5,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="这章节主要是搭建操作系统环境和编写一个简单程序">
+<meta name="keywords" content="操作系统,nasm,bochs,deepin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Orange&#39;s:一个操作系统的实现_1th_环境搭建">
+<meta property="og:url" content="http://www.funful.ink/2019/05/17/Orange's_Implementation_of_an_operating_system_1th_build_environment/index.html">
+<meta property="og:site_name" content="FunfulBlog">
+<meta property="og:description" content="这章节主要是搭建操作系统环境和编写一个简单程序">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-1.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-2.png">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-3.png">
+<meta property="og:updated_time" content="2019-10-18T16:49:41.160Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Orange&#39;s:一个操作系统的实现_1th_环境搭建">
+<meta name="twitter:description" content="这章节主要是搭建操作系统环境和编写一个简单程序">
+<meta name="twitter:image" content="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-1.png">
+
+<link rel="canonical" href="http://www.funful.ink/2019/05/17/Orange's_Implementation_of_an_operating_system_1th_build_environment/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Orange's:一个操作系统的实现_1th_环境搭建 | FunfulBlog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">FunfulBlog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Funful的个人博客</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-首页">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-文章分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>文章分类</a>
+
+  </li>
+        <li class="menu-item menu-item-标签">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-归档">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/05/17/Orange's_Implementation_of_an_operating_system_1th_build_environment/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="ZhaoH.T">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FunfulBlog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Orange's:一个操作系统的实现_1th_环境搭建
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-05-17 00:00:00" itemprop="dateCreated datePublished" datetime="2019-05-17T00:00:00Z">2019-05-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-18 16:49:41" itemprop="dateModified" datetime="2019-10-18T16:49:41Z">2019-10-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/操作系统/" itemprop="url" rel="index">
+                    <span itemprop="name">操作系统</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/05/17/Orange's_Implementation_of_an_operating_system_1th_build_environment/" class="post-meta-item leancloud_visitors" data-flag-title="Orange's:一个操作系统的实现_1th_环境搭建" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/05/17/Orange's_Implementation_of_an_operating_system_1th_build_environment/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/05/17/Orange's_Implementation_of_an_operating_system_1th_build_environment/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这章节主要是搭建操作系统环境和编写一个简单程序</p>
+<a id="more"></a>
+
+<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><ul>
+<li>Deepin操作系统</li>
+<li>Nasm</li>
+<li>bochs</li>
+<li>bximage(bochs自带的软盘映象制作软件)</li>
+<li>参考书籍：《Orange’S:一个操作系统的实现》</li>
+<li>我们自己写一个操作系统的话就需要有个虚拟机和软盘来运行这个操作系统，但是我们又不至于真的买个软盘，所以我们可以使用bximage生成一个虚拟软盘，把我们写的系统生成相应的文件烧录到虚拟软盘里面，使用dd命令就可以，在bochs启动的时候选择使用我们的虚拟软盘启动就可以。</li>
+</ul>
+<h1 id="软件安装及简单命令"><a href="#软件安装及简单命令" class="headerlink" title="软件安装及简单命令"></a>软件安装及简单命令</h1><h2 id="Nasm"><a href="#Nasm" class="headerlink" title="Nasm"></a>Nasm</h2><ol>
+<li><p>Nasm源码下载地址：<a href="https://www.nasm.us/pub/nasm/releasebuilds/2.14rc16/" target="_blank" rel="noopener">Nasm</a>  </p>
+</li>
+<li><p>解压并进入解压目录</p>
+</li>
+<li><p>执行命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>简单指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">汇编指令：</span><br><span class="line">nasm boot.asm -o boot.bin</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="Bochs"><a href="#Bochs" class="headerlink" title="Bochs"></a>Bochs</h2><ol>
+<li><p>Bochs下载地址：<a href="http://bochs.sourceforge.net/" target="_blank" rel="noopener">Bochs官网</a></p>
+</li>
+<li><p>解压并进入解压目录</p>
+</li>
+<li><p>Bochs依赖软件安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential</span><br><span class="line">sudo apt-get install  xorg-dev</span><br><span class="line">如果执行4命令报出别错误的话可能是别的依赖软件没有安装 ，请自行百度</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行以下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure --enable-debugger --enable-disasm   ；//这个命令是将bochs设置为可调式的</span><br><span class="line">make</span><br><span class="line">make instal</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Bochs简单命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">我们在使用bochs启动的时候可以选择硬盘启动或者是软盘启动，所以这个时候，我们需要配置相应的配置文件，我们可能会在bochs源码里面发现有“.bochsrc”或者是“bochsrc” ，我们也可以自己写一个配置文件使用“bochs -f yourname” 这命令来启动我们自己写的配置文件“yourname&quot;。（linux下的.文件被隐藏使用 “ls -al”查看）</span><br><span class="line">启动配置文件:  bochs -f yourname（直接bochs也可以启动默认配置文件）</span><br><span class="line">继续执行直到遇见断点：c</span><br><span class="line">单步执行 : n</span><br><span class="line">看寄存器信息：dump_cpu</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h1 id="打印一个”Hello-World”"><a href="#打印一个”Hello-World”" class="headerlink" title="打印一个”Hello World”"></a>打印一个”Hello World”</h1><p>在我们接触C语言的时候最基础的工程就是使用printf打印出”Hello World!”.这里我们也使用汇编打印一个hello</p>
+<ol>
+<li><p>创建boot.asm并书写一下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">org 07c00h          ; 告诉编译器程序加载到7c00处</span><br><span class="line">mov ax, cs</span><br><span class="line">mov ds, ax</span><br><span class="line">mov es, ax</span><br><span class="line">call    DispStr         ; 调用显示字符串例程</span><br><span class="line">jmp $          ; 无限循环</span><br><span class="line">DispStr:</span><br><span class="line">mov ax, BootMessage</span><br><span class="line">mov bp, ax          ; ES:BP = 串地址</span><br><span class="line">mov cx, 16          ; CX = 串长度</span><br><span class="line">mov ax, 01301h      ; AH = 13,  AL = 01h</span><br><span class="line">mov bx, 000ch       ; 页号为0(BH = 0) 黑底红字(BL = 0Ch,高亮)</span><br><span class="line">mov dl, 0</span><br><span class="line">int 10h         ; 10h 号中断</span><br><span class="line">ret</span><br><span class="line">BootMessage:        db  &quot;Hello, OS world!&quot;</span><br><span class="line">times   510-($-$$)   db  0   ; 填充剩下的空间，使生成的二进制代码恰好为512字节</span><br><span class="line">dw  0xaa55              ; 结束标志</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成bin文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nasm boot.asm -o boot.bin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>bximage生成512字节的虚拟软盘</p>
+<ol>
+<li>在终端下执行bximage <img src="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-1.png" alt></li>
+<li>选择1，再输入”fd”（选择虚拟软盘），再确认，再确认，最终生成1.44M的a.img文件</li>
+<li>也可以使用dd命令代替bximage，<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd if=/dev/zero of=a.img bs=1440k count=1</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>dd命令将boot.bin烧录到a.img</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd if=./boot.bin of=./a.img bs=512 count=1 conv=notrunc</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置bochs文件</p>
+<ol>
+<li>将烧录的a.img移到bochs的源码目录中</li>
+<li>在bochs的源码目录里面，执行“ls -al”,可以看到一个.bochsrc</li>
+<li>vim .bochsrc<ol>
+<li>设置floppya</li>
+<li>将boot设置为：floppy<br><img src="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-2.png" alt></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>终端执行”bochs -f .bochsrc”</p>
+</li>
+<li><p>Please choose one: [6] 6</p>
+</li>
+<li><p>如果bochs带调试功能：需要输入c继续执行，才能执行。</p>
+</li>
+<li><p>现象：<img src="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-3.png" alt></p>
+</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这个章节主要是搭建操作系统运行的环境和编写一个简单的裸机文件，这个汇编程序比较简单，但是这个org命令让我想到了之前在学习内核的时候的相对地址和绝对地址，疑问编译器编译的指令是相对地址是从000h编译的，但是我们自己创建的引导扇区是从07C00h开始执行的，所以需要用到org命令。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/操作系统/" rel="tag"># 操作系统</a>
+              <a href="/tags/nasm/" rel="tag"># nasm</a>
+              <a href="/tags/bochs/" rel="tag"># bochs</a>
+              <a href="/tags/deepin/" rel="tag"># deepin</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/05/16/ESP8266_SDK_api_HelloWorld/" rel="next" title="ES8266模块二次开发SDK之<输出hello world>">
+                  <i class="fa fa-chevron-left"></i> ES8266模块二次开发SDK之<输出hello world>
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/05/18/STM32_FreeRTOS_config_1/" rel="prev" title="STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1>">
+                  STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1> <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#环境"><span class="nav-number">1.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#软件安装及简单命令"><span class="nav-number">2.</span> <span class="nav-text">软件安装及简单命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Nasm"><span class="nav-number">2.1.</span> <span class="nav-text">Nasm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bochs"><span class="nav-number">2.2.</span> <span class="nav-text">Bochs</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#打印一个”Hello-World”"><span class="nav-number">3.</span> <span class="nav-text">打印一个”Hello World”</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="ZhaoH.T"
+    src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">ZhaoH.T</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/funful" title="GitHub &rarr; https://github.com/funful" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:funful@gmail.com" title="E-Mail &rarr; mailto:funful@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhaoH.T</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">74k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:07</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+<script src="/js/utils.js?v=7.4.2"></script>
+<script src="/js/schemes/muse.js?v=7.4.2"></script>
+<script src="/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: true,
+    appId: 'JaUiU8OP9MCeeHHLD5oaGUs7-gzGzoHsz',
+    appKey: 'LGnGVXtECCbFtsqezlPc9wcI',
+    placeholder: "快来评论一个吧(请填写邮箱以便收到回复提醒)",
+    avatar: 'monsterid',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true,
+    lang: 'zh-cn' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

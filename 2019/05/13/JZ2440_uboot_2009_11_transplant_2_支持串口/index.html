@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=7.4.2">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.2">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-fill-left.min.css?v=1.0.2">
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"right","display":"always","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"manual","top_n_per_article":5,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="整理下自己之前的移植uboot时记录的笔记！这个章节是对uboot的第一阶段的代码进行优化和代码的修改，使其可以正确的启动串口。">
+<meta name="keywords" content="移植,arm,linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JZ2440的uboot-2009-11移植&lt;2&gt;_串口输出">
+<meta property="og:url" content="http://www.funful.ink/2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/index.html">
+<meta property="og:site_name" content="FunfulBlog">
+<meta property="og:description" content="整理下自己之前的移植uboot时记录的笔记！这个章节是对uboot的第一阶段的代码进行优化和代码的修改，使其可以正确的启动串口。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://p9zz81nyl.bkt.clouddn.com/1.jpg">
+<meta property="og:updated_time" content="2019-10-18T16:52:00.920Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JZ2440的uboot-2009-11移植&lt;2&gt;_串口输出">
+<meta name="twitter:description" content="整理下自己之前的移植uboot时记录的笔记！这个章节是对uboot的第一阶段的代码进行优化和代码的修改，使其可以正确的启动串口。">
+<meta name="twitter:image" content="http://p9zz81nyl.bkt.clouddn.com/1.jpg">
+
+<link rel="canonical" href="http://www.funful.ink/2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>JZ2440的uboot-2009-11移植<2>_串口输出 | FunfulBlog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">FunfulBlog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Funful的个人博客</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-首页">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-文章分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>文章分类</a>
+
+  </li>
+        <li class="menu-item menu-item-标签">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-归档">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="ZhaoH.T">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FunfulBlog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JZ2440的uboot-2009-11移植<2>_串口输出
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-05-13 00:00:00" itemprop="dateCreated datePublished" datetime="2019-05-13T00:00:00Z">2019-05-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-18 16:52:00" itemprop="dateModified" datetime="2019-10-18T16:52:00Z">2019-10-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/uboot移植/" itemprop="url" rel="index">
+                    <span itemprop="name">uboot移植</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/" class="post-meta-item leancloud_visitors" data-flag-title="JZ2440的uboot-2009-11移植<2>_串口输出" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/05/13/JZ2440_uboot_2009_11_transplant_2_支持串口/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>整理下自己之前的移植uboot时记录的笔记！这个章节是对uboot的第一阶段的代码进行优化和代码的修改，使其可以正确的启动串口。</p>
+<a id="more"></a>
+
+<h2 id="修改启动代码"><a href="#修改启动代码" class="headerlink" title="修改启动代码"></a>修改启动代码</h2><ul>
+<li><p>在上个章节，当我们编译完成之后会发现在根目录下面会有一个u-boot.lds的文件，这是链接文件，这个文件就在 u-boot-2016.09/arch/arm/cpu/u-boot.lds </p>
+</li>
+<li><p>进去之后发现，板子启动执行的第一个文件是start.S,代码流程      </p>
+<h3 id="第一阶段启动代码修改"><a href="#第一阶段启动代码修改" class="headerlink" title="第一阶段启动代码修改"></a>第一阶段启动代码修改</h3><ul>
+<li><p>设置cpu为SVC32 模式</p>
+</li>
+<li><p>关闭看门狗</p>
+</li>
+<li><p>屏蔽中断，这个地方我们需要添加对2440的支持，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> 在</span><br><span class="line"> #if defined(CONFIG_S3C2410)</span><br><span class="line">	ldr	r1, =0x3ff</span><br><span class="line">	ldr	r0, =INTSUBMSK</span><br><span class="line">	str	r1, [r0]</span><br><span class="line">添加：</span><br><span class="line">#elif  defined(CONFIG_S3C2440)</span><br><span class="line">	ldr	r1, =0x7fff</span><br><span class="line">	ldr	r0, =INTSUBMSK</span><br><span class="line">	str	r1, [r0]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置系统时钟，查看S3C2440的数据手册可以，FCLK:HCLK:PCLK=1:4:8,FCLK=405Mhz</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">修改如下：</span><br><span class="line">	ldr	r0, =CLKDIVN</span><br><span class="line">	mov	r1, #5</span><br><span class="line">	str	r1, [r0]</span><br><span class="line">/**配置为异步模式**/</span><br><span class="line">	mrc p15, 0, r1, c1, c0, 0		</span><br><span class="line">	orr r1, r1, #0xc0000000 		</span><br><span class="line">	mcr p15, 0, r1, c1, c0, 0		</span><br><span class="line">#define S3C2440_MPLL_400MHZ 	((0x7f&lt;&lt;12)|(0x02&lt;&lt;4)|(0x01))/* </span><br><span class="line">	ldr r0, =0x4c000004</span><br><span class="line">	ldr r1, =S3C2440_MPLL_400MHZ</span><br><span class="line">	str r1, [r0]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>跳转到cpu_init_crit，关闭MMU，关闭I/D caches ,再进入lowlevel_init</p>
+</li>
+<li><p>lowlevel_init，这个是配置Memory控制器。 在u-boot-2016.09/board/samsung/myff2440/lowlevel_init.S</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">上面我们修改了系统时钟的分频系数，所以此时的存储器控制器的SDRAM的刷新周期也需要更改，查数据手册，可知</span><br><span class="line">将</span><br><span class="line">#define REFCNT			1113	/* period=15.6us, HCLK=60Mhz, (2048+1-15.6*6.) */</span><br><span class="line">修改为：</span><br><span class="line">#define REFCNT			1269	/* period=7.8us, HCLK=100Mhz, (2048+1-7.8*100) */</span><br></pre></td></tr></table></figure>
+
+<p>​</p>
+</li>
+<li><p>然后进入 _main分支，也就是对第二阶段板子外设的设置， 位于uboot2016.9\ubootproject\u-boot-2016.09\arch\arm\lib\crt0.S</p>
+</li>
+</ul>
+<h3 id="系统时钟移植"><a href="#系统时钟移植" class="headerlink" title="系统时钟移植"></a>系统时钟移植</h3><h4 id="添加s3c2440配置的宏"><a href="#添加s3c2440配置的宏" class="headerlink" title="添加s3c2440配置的宏"></a>添加s3c2440配置的宏</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">进入include/configs/myff2440.h</span><br><span class="line">将：</span><br><span class="line">	<span class="meta">#<span class="meta-keyword">define</span> CONFIG_S3C2440		<span class="comment">/* specifically a SAMSUNG S3C2410 SoC */</span></span></span><br><span class="line">	<span class="meta">#<span class="meta-keyword">define</span> CONFIG_MYFF2440		<span class="comment">/* on a SAMSUNG SMDK2410 Board */</span></span></span><br><span class="line">修改为：</span><br><span class="line">	<span class="meta">#<span class="meta-keyword">define</span> CONFIG_S3C2440		<span class="comment">/* specifically a SAMSUNG S3C2410 SoC */</span></span></span><br><span class="line">	<span class="meta">#<span class="meta-keyword">define</span> CONFIG_MYFF2440		<span class="comment">/* on a SAMSUNG SMDK2410 Board */</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="修改分频系数"><a href="#修改分频系数" class="headerlink" title="修改分频系数"></a>修改分频系数</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">进入uboot2016<span class="number">.9</span>\ubootproject\u-boot<span class="number">-2016.09</span>\board\samsung\myff2440\Myff2440.c</span><br><span class="line">将：</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FCLK_SPEED 1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> (FCLK_SPEED == 0)		<span class="comment">/* Fout = 203MHz, Fin = 12MHz for Audio */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_MDIV	0xC3</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_PDIV	0x4</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_SDIV	0x1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">elif</span> (FCLK_SPEED == 1)		<span class="comment">/* Fout = 202.8MHz */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_MDIV	0xA1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_PDIV	0x3</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_SDIV	0x1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">修改为：</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FCLK_SPEED 1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> (FCLK_SPEED == 0)		<span class="comment">/* Fout = 203MHz, Fin = 12MHz for Audio */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_MDIV	0xC3</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_PDIV	0x4</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_SDIV	0x1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">elif</span> (FCLK_SPEED == 1)		<span class="comment">/* Fout = 405.8MHz */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_MDIV	0x7f        <span class="comment">/*查数据手册可知，为了是FCLK=405MHZ，这三个分频值依次是0x7f、0x2、0x1*/</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_PDIV	0x2</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M_SDIV	0x1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<p>​</p>
+<h4 id="修改获取时钟函数"><a href="#修改获取时钟函数" class="headerlink" title="修改获取时钟函数"></a>修改获取时钟函数</h4><p>在：u-boot-2016.09\arch\arm\cpu\arm920t\s3c24x0\Speed.c</p>
+<ul>
+<li><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">将：</span><br><span class="line"><span class="function"><span class="keyword">static</span> ulong <span class="title">get_PLLCLK</span><span class="params">(<span class="keyword">int</span> pllreg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> *<span class="title">clk_power</span> = <span class="title">s3c24x0_get_base_clock_power</span>();</span></span><br><span class="line">        ulong r, m, p, s;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (pllreg == MPLL)</span><br><span class="line">                r = readl(&amp;clk_power-&gt;mpllcon);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (pllreg == UPLL)</span><br><span class="line">                r = readl(&amp;clk_power-&gt;upllcon);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">                hang();</span><br><span class="line">        m = ((r &amp; <span class="number">0xFF000</span>) &gt;&gt; <span class="number">12</span>) + <span class="number">8</span>;</span><br><span class="line">        p = ((r &amp; <span class="number">0x003F0</span>) &gt;&gt; <span class="number">4</span>) + <span class="number">2</span>;</span><br><span class="line">        s = r &amp; <span class="number">0x3</span>;</span><br><span class="line">        <span class="keyword">return</span> (CONFIG_SYS_CLK_FREQ * m) / (p &lt;&lt; s);</span><br><span class="line">&#125;</span><br><span class="line">修改为：</span><br><span class="line"><span class="function"><span class="keyword">static</span> ulong <span class="title">get_PLLCLK</span><span class="params">(<span class="keyword">int</span> pllreg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> *<span class="title">clk_power</span> = <span class="title">s3c24x0_get_base_clock_power</span>();</span></span><br><span class="line">        ulong r, m, p, s;</span><br><span class="line">        <span class="keyword">if</span> (pllreg == MPLL)</span><br><span class="line">                r = readl(&amp;clk_power-&gt;mpllcon);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (pllreg == UPLL)</span><br><span class="line">                r = readl(&amp;clk_power-&gt;upllcon);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">                hang();</span><br><span class="line">        m = ((r &amp; <span class="number">0xFF000</span>) &gt;&gt; <span class="number">12</span>) + <span class="number">8</span>;</span><br><span class="line">        p = ((r &amp; <span class="number">0x003F0</span>) &gt;&gt; <span class="number">4</span>) + <span class="number">2</span>;</span><br><span class="line">        s = r &amp; <span class="number">0x3</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(CONFIG_S3C2440)</span></span><br><span class="line">        <span class="keyword">if</span> (pllreg == MPLL)</span><br><span class="line">                <span class="keyword">return</span> <span class="number">2</span> * m * (CONFIG_SYS_CLK_FREQ / (p &lt;&lt; s));</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">        <span class="keyword">return</span> (CONFIG_SYS_CLK_FREQ * m) / (p &lt;&lt; s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">将：</span><br><span class="line"><span class="function">ulong <span class="title">get_HCLK</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> *<span class="title">clk_power</span> = <span class="title">s3c24x0_get_base_clock_power</span>();</span></span><br><span class="line">        <span class="keyword">return</span> (readl(&amp;clk_power-&gt;clkdivn) &amp; <span class="number">2</span>) ? get_FCLK() / <span class="number">2</span> : get_FCLK();</span><br><span class="line">&#125;</span><br><span class="line">修改为：</span><br><span class="line"><span class="function">ulong <span class="title">get_HCLK</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> *<span class="title">clk_power</span> = <span class="title">s3c24x0_get_base_clock_power</span>();</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_S3C2440</span></span><br><span class="line">        <span class="keyword">switch</span> (readl(&amp;clk_power-&gt;clkdivn) &amp; <span class="number">0x6</span>) &#123;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> get_FCLK();</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                <span class="keyword">return</span> get_FCLK() / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">                <span class="keyword">return</span> (readl(&amp;clk_power-&gt;camdivn) &amp; (<span class="number">1</span> &lt;&lt; <span class="number">9</span>)) ?</span><br><span class="line">                        get_FCLK() / <span class="number">8</span> : get_FCLK() / <span class="number">4</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">6</span>:</span><br><span class="line">                <span class="keyword">return</span> (readl(&amp;clk_power-&gt;camdivn) &amp; (<span class="number">1</span> &lt;&lt; <span class="number">8</span>)) ?</span><br><span class="line">                        get_FCLK() / <span class="number">6</span> : get_FCLK() / <span class="number">3</span>;</span><br><span class="line">        &#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">        <span class="keyword">return</span> (readl(&amp;clk_power-&gt;clkdivn) &amp; <span class="number">2</span>) ? get_FCLK() / <span class="number">2</span> : get_FCLK();</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="添加摄像头分频寄存器CAMDIVN"><a href="#添加摄像头分频寄存器CAMDIVN" class="headerlink" title="添加摄像头分频寄存器CAMDIVN"></a>添加摄像头分频寄存器CAMDIVN</h4><p>因为我们在修改get_HCLK函数时，用到了camera寄存器所以我们需要添加相关的宏。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">在：u-boot<span class="number">-2016.09</span>\arch\arm\include\<span class="keyword">asm</span>\arch-s3c24x0\S3c24x0.h</span><br><span class="line">将：</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> &#123;</span></span><br><span class="line">	u32	locktime;</span><br><span class="line">	u32	mpllcon;</span><br><span class="line">	u32	upllcon;</span><br><span class="line">	u32	clkcon;</span><br><span class="line">	u32	clkslow;</span><br><span class="line">	u32	clkdivn;</span><br><span class="line">&#125;;</span><br><span class="line">修改为：</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">s3c24x0_clock_power</span> &#123;</span></span><br><span class="line">	u32	locktime;</span><br><span class="line">	u32	mpllcon;</span><br><span class="line">	u32	upllcon;</span><br><span class="line">	u32	clkcon;</span><br><span class="line">	u32	clkslow;</span><br><span class="line">	u32	clkdivn;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(CONFIG_S3C2440)</span></span><br><span class="line">	u32	camdivn;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="支持CONFIG-S3C2440-CONFIG-MYFF2440的宏配置"><a href="#支持CONFIG-S3C2440-CONFIG-MYFF2440的宏配置" class="headerlink" title="支持CONFIG_S3C2440/CONFIG_MYFF2440的宏配置"></a>支持CONFIG_S3C2440/CONFIG_MYFF2440的宏配置</h3><p>在前面我们修改板级支持的头文件中，我们修改了两个宏下面我们需要将系统中的CONFIG_S3C2410替换成CONFIG_S3C2440，将CONFIG_SMDK2410替换成CONFIG_MYFF2440</p>
+<p>在ubuntu的根目录下，执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find .|xargs grep -ri "CONFIG_S3C2410" -l</span><br></pre></td></tr></table></figure>
+
+<p> 会列出包含CONFIG_S3C2410的文件，将其替换，</p>
+<p>同理执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find .|xargs grep -ri &quot;CONFIG_SMDK2410&quot; -l</span><br></pre></td></tr></table></figure>
+
+<p>也将其替换</p>
+<h2 id="编译调试"><a href="#编译调试" class="headerlink" title="编译调试"></a>编译调试</h2><p>经过上面这几个步骤我们执行如下命令：</p>
+<p> 在u-boot-2009.11的顶层目录，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make MyFF2440_config&amp;&amp;make</span><br></pre></td></tr></table></figure>
+
+<p>不出意外的话，就可以顺利生成u-boot.bin文件，烧进板子里面nor 启动，串口就能正常输出    </p>
+<img src="http://p9zz81nyl.bkt.clouddn.com/1.jpg">
+
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>我们在注释的时候尽量使用“/**/”符号，不要用“//”,因为有些交叉编译器不识别单行注释</p>
+<p>​</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/移植/" rel="tag"># 移植</a>
+              <a href="/tags/arm/" rel="tag"># arm</a>
+              <a href="/tags/linux/" rel="tag"># linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/05/13/JZ2440_uboot_2009_11_transplant_3_nor_flash/" rel="next" title="JZ2440的uboot-2009-11移植<3>_支持Nor Flash">
+                  <i class="fa fa-chevron-left"></i> JZ2440的uboot-2009-11移植<3>_支持Nor Flash
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/05/14/ESP8266_Connect_TO_PhoneAndPC_WithTCP/" rel="prev" title="ES8266模块AT操作<多连接TCP通信>">
+                  ES8266模块AT操作<多连接TCP通信> <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#修改启动代码"><span class="nav-number">1.</span> <span class="nav-text">修改启动代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一阶段启动代码修改"><span class="nav-number">1.1.</span> <span class="nav-text">第一阶段启动代码修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#系统时钟移植"><span class="nav-number">1.2.</span> <span class="nav-text">系统时钟移植</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#添加s3c2440配置的宏"><span class="nav-number">1.2.1.</span> <span class="nav-text">添加s3c2440配置的宏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改分频系数"><span class="nav-number">1.2.2.</span> <span class="nav-text">修改分频系数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改获取时钟函数"><span class="nav-number">1.2.3.</span> <span class="nav-text">修改获取时钟函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加摄像头分频寄存器CAMDIVN"><span class="nav-number">1.2.4.</span> <span class="nav-text">添加摄像头分频寄存器CAMDIVN</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#支持CONFIG-S3C2440-CONFIG-MYFF2440的宏配置"><span class="nav-number">1.3.</span> <span class="nav-text">支持CONFIG_S3C2440/CONFIG_MYFF2440的宏配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译调试"><span class="nav-number">2.</span> <span class="nav-text">编译调试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意"><span class="nav-number">3.</span> <span class="nav-text">注意</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="ZhaoH.T"
+    src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">ZhaoH.T</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/funful" title="GitHub &rarr; https://github.com/funful" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:funful@gmail.com" title="E-Mail &rarr; mailto:funful@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhaoH.T</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">74k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:07</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+<script src="/js/utils.js?v=7.4.2"></script>
+<script src="/js/schemes/muse.js?v=7.4.2"></script>
+<script src="/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: true,
+    appId: 'JaUiU8OP9MCeeHHLD5oaGUs7-gzGzoHsz',
+    appKey: 'LGnGVXtECCbFtsqezlPc9wcI',
+    placeholder: "快来评论一个吧(请填写邮箱以便收到回复提醒)",
+    avatar: 'monsterid',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true,
+    lang: 'zh-cn' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

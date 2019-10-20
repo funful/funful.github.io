@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=7.4.2">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.2">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-fill-left.min.css?v=1.0.2">
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"right","display":"always","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"manual","top_n_per_article":5,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="日常开发中遇到过使用回调函数的场景，但是对其具体定义和实现方式一直没有清晰的认识，导致平时能不用就不用，这次做一个总结克服它。">
+<meta name="keywords" content="C++相关,回调函数,Qt输出日志">
+<meta property="og:type" content="article">
+<meta property="og:title" content="回调函数及其应用场景分析">
+<meta property="og:url" content="http://www.funful.ink/2018/12/02/2018-12-02-callback-function/index.html">
+<meta property="og:site_name" content="FunfulBlog">
+<meta property="og:description" content="日常开发中遇到过使用回调函数的场景，但是对其具体定义和实现方式一直没有清晰的认识，导致平时能不用就不用，这次做一个总结克服它。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-02T15:11:02.109Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="回调函数及其应用场景分析">
+<meta name="twitter:description" content="日常开发中遇到过使用回调函数的场景，但是对其具体定义和实现方式一直没有清晰的认识，导致平时能不用就不用，这次做一个总结克服它。">
+
+<link rel="canonical" href="http://www.funful.ink/2018/12/02/2018-12-02-callback-function/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>回调函数及其应用场景分析 | FunfulBlog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">FunfulBlog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Funful的个人博客</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-首页">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-文章分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>文章分类</a>
+
+  </li>
+        <li class="menu-item menu-item-标签">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-归档">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2018/12/02/2018-12-02-callback-function/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="ZhaoH.T">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FunfulBlog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          回调函数及其应用场景分析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2018-12-02 00:00:00 / 修改时间：15:11:02" itemprop="dateCreated datePublished" datetime="2018-12-02T00:00:00Z">2018-12-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/Qt/" itemprop="url" rel="index">
+                    <span itemprop="name">Qt</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2018/12/02/2018-12-02-callback-function/" class="post-meta-item leancloud_visitors" data-flag-title="回调函数及其应用场景分析" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2018/12/02/2018-12-02-callback-function/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2018/12/02/2018-12-02-callback-function/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>日常开发中遇到过使用回调函数的场景，但是对其具体定义和实现方式一直没有清晰的认识，导致平时能不用就不用，这次做一个总结克服它。</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="一-回调函数的定义"><a href="#一-回调函数的定义" class="headerlink" title="一  回调函数的定义"></a>一  回调函数的定义</h2><h3 id="1-1-百度百科定义"><a href="#1-1-百度百科定义" class="headerlink" title="1.1 百度百科定义"></a>1.1 百度百科定义</h3><p>如果你把函数的指针（地址）<strong>作为参数</strong>传递给另一个函数，当这个指针被用来调用其所指向的函数时，我们就说这是回调函数。回调函数<strong>不是由该函数的实现方直接调用</strong>，而是在特定的事件或条件发生时由<strong>另外的一方调用的</strong>，用于对该事件或条件进行响应。</p>
+<h3 id="1-2其他定义"><a href="#1-2其他定义" class="headerlink" title="1.2其他定义"></a>1.2其他定义</h3><ol>
+<li><p>回调函数是指<strong>使用者自己定义一个函数</strong>，实现这个函数的程序内容，然后把这个函数（入口地址）作为参数传入别人（或系统）的函数中，由别人（或系统）的函数在运行时来调用的函数。<strong>函数是你实现的</strong>，但由别人（或系统）的函数在运行时通过参数传递的方式调用，这就是所谓的回调函数。简单来说，就是<strong>由别人的函数运行期间通过函数指针来回调你实现的函数</strong>。 </p>
+</li>
+<li><p>所谓回调，就是模块A要通过模块B的某个函数b()完成一定的功能，但是函数b()自己无法实现全部功能，需要反过头来调用模块A中的某个函数a()来完成，这个a()就是回调函数。 </p>
+</li>
+</ol>
+<p>   总结来说，<strong>回调函数这一设计允许了底层代码调用在高层定义的子程序。</strong></p>
+<h2 id="二-回调函数简单实例"><a href="#二-回调函数简单实例" class="headerlink" title="二  回调函数简单实例"></a>二  回调函数简单实例</h2><h3 id="2-1无参数的回调实例"><a href="#2-1无参数的回调实例" class="headerlink" title="2.1无参数的回调实例"></a>2.1无参数的回调实例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//定义带参回调函数</span><br><span class="line">void PrintfText(char* s) </span><br><span class="line">&#123;</span><br><span class="line">    printf(s);</span><br><span class="line">&#125;</span><br><span class="line">//定义实现带参回调函数的&quot;调用函数&quot;</span><br><span class="line">void CallPrintfText(void (*callfuct)(char*),char* s)</span><br><span class="line">&#123;</span><br><span class="line">    callfuct(s);</span><br><span class="line">&#125;</span><br><span class="line">//在main函数中实现带参的函数回调</span><br><span class="line">int main(int argc,char* argv[])</span><br><span class="line">&#123;</span><br><span class="line">    CallPrintfText(PrintfText,&quot;Hello World!\n&quot;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2将上述代码修改为带参函数"><a href="#2-2将上述代码修改为带参函数" class="headerlink" title="2.2将上述代码修改为带参函数"></a>2.2将上述代码修改为带参函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//定义带参回调函数</span><br><span class="line">void PrintfText(char* s) </span><br><span class="line">&#123;</span><br><span class="line">    printf(s);</span><br><span class="line">&#125;</span><br><span class="line">//定义实现带参回调函数的&quot;调用函数&quot;</span><br><span class="line">void CallPrintfText(void (*callfuct)(char*),char* s)</span><br><span class="line">&#123;</span><br><span class="line">    callfuct(s);</span><br><span class="line">&#125;</span><br><span class="line">//在main函数中实现带参的函数回调</span><br><span class="line">int main(int argc,char* argv[])</span><br><span class="line">&#123;</span><br><span class="line">    CallPrintfText(PrintfText,&quot;Hello World!\n&quot;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上两个实例对回调函数的定义有了清晰的说明，但是没有指明回调函数的真正用途：<strong>回调函数这一设计允许了底层代码调用在高层定义的子程序。</strong>这也是前文提到的，回调函数主要是为了让其他人已经实现的函数调用，而不是让自己实现的函数调用。第三章将给出回调函数的实用用途。</p>
+<h2 id="三-Qt5中引入的消息重定向机制使用的回调函数"><a href="#三-Qt5中引入的消息重定向机制使用的回调函数" class="headerlink" title="三  Qt5中引入的消息重定向机制使用的回调函数"></a>三  Qt5中引入的消息重定向机制使用的回调函数</h2><h3 id="3-1使用场景"><a href="#3-1使用场景" class="headerlink" title="3.1使用场景"></a>3.1使用场景</h3><p>一般在开发Qt程序时，主要由两种调试方式：一种是在debug模式下调试，另一种是在程序中使用qDebug()等函数打印信息帮助调试。一旦程序release投入实际使用，这些打印信息将无法被开发人员看到，qt5使用消息重定向机制使得打印信息可以重定向输出至log文件。这样即使软件在使用过程中发生问题也可以凭借日志文件追溯。</p>
+<p>如下是Qt帮助文档对于注册回调函数的描述：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Installs a Qt message handler which has been defined previously. Returns a pointer to the previous message handler.</span><br><span class="line">The message handler is a function that prints out debug messages, warnings, critical and fatal error messages. The Qt library (debug mode) contains hundreds of warning messages that are printed when internal errors (usually invalid function arguments) occur. Qt built in release mode also contains such warnings unless QT_NO_WARNING_OUTPUT and/or QT_NO_DEBUG_OUTPUT have been set during compilation. If you implement your own message handler, you get total control of these messages.</span><br><span class="line">The default message handler prints the message to the standard output under X11 or to the debugger under Windows. If it is a fatal message, the application aborts immediately.</span><br><span class="line">Only one message handler can be defined, since this is usually done on an application-wide basis to control debug output.</span><br><span class="line">To restore the message handler, call qInstallMessageHandler(0).</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2Qt回调代码实例"><a href="#3-2Qt回调代码实例" class="headerlink" title="3.2Qt回调代码实例"></a>3.2Qt回调代码实例</h3><p>如下代码是qt提供的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;qapplication.h&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">void myMessageOutput(QtMsgType type, const QMessageLogContext &amp;context, const QString &amp;msg)</span><br><span class="line">&#123;</span><br><span class="line">    QByteArray localMsg = msg.toLocal8Bit();</span><br><span class="line">    switch (type)</span><br><span class="line">    &#123;</span><br><span class="line">        case QtDebugMsg:</span><br><span class="line">        fprintf(stderr, &quot;Debug: %s (%s:%u, %s)\n&quot;, localMsg.constData(), context.file, context.line, context.function);</span><br><span class="line">        break;</span><br><span class="line">        case QtInfoMsg:</span><br><span class="line">        fprintf(stderr, &quot;Info: %s (%s:%u, %s)\n&quot;, localMsg.constData(), context.file, context.line, context.function);</span><br><span class="line">        break;</span><br><span class="line">        case QtWarningMsg:</span><br><span class="line">        fprintf(stderr, &quot;Warning: %s (%s:%u, %s)\n&quot;, localMsg.constData(), context.file, context.line, context.function);</span><br><span class="line">        break;</span><br><span class="line">        case QtCriticalMsg:</span><br><span class="line">        fprintf(stderr, &quot;Critical: %s (%s:%u, %s)\n&quot;, localMsg.constData(), context.file, context.line, context.function);</span><br><span class="line">        break;</span><br><span class="line">        case QtFatalMsg:</span><br><span class="line">        fprintf(stderr, &quot;Fatal: %s (%s:%u, %s)\n&quot;, localMsg.constData(), context.file, context.line, context.function);</span><br><span class="line">        abort();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, char **argv)</span><br><span class="line">&#123;</span><br><span class="line">    qInstallMessageHandler(myMessageOutput);</span><br><span class="line">    QApplication app(argc, argv);</span><br><span class="line">    ...</span><br><span class="line">    return app.exec();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上代码，函数void myMessageOutput(QtMsgType type, const QMessageLogContext &amp;context, const QString &amp;msg)可以看做是我们自己实现的回调函数，qInstallMessageHandler(myMessageOutput)是Qt提供的注册回调函数。之后，一旦Qt提供的几种消息类型发生就会调用我们定义的回调函数。</p>
+<p>以上代码稍做修改即可实现重定向消息输出至log文件，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">void myMessageOutput(QtMsgType type, const QMessageLogContext &amp;context, const QString &amp;msg)</span><br><span class="line">&#123;</span><br><span class="line">    QByteArray localMsg = msg.toLocal8Bit();</span><br><span class="line">    switch (type) &#123;</span><br><span class="line">    case QtDebugMsg:</span><br><span class="line">        fprintf(stderr, &quot;Debug: %s (%s:%u, %s)\n&quot;, localMsg.constData(), context.file, context.line, context.function);</span><br><span class="line">        break;</span><br><span class="line">    case QtInfoMsg:</span><br><span class="line">        fprintf(stderr, &quot;Info: %s (%s:%u, %s)\n&quot;, localMsg.constData(), context.file, context.line, context.function);</span><br><span class="line">        break;</span><br><span class="line">    case QtWarningMsg:</span><br><span class="line">        fprintf(stderr, &quot;Warning: %s (%s:%u, %s)\n&quot;, localMsg.constData(), context.file, context.line, context.function);</span><br><span class="line">        break;</span><br><span class="line">    case QtCriticalMsg:</span><br><span class="line">        fprintf(stderr, &quot;Critical: %s (%s:%u, %s)\n&quot;, localMsg.constData(), context.file, context.line, context.function);</span><br><span class="line">        break;</span><br><span class="line">    case QtFatalMsg:</span><br><span class="line">        fprintf(stderr, &quot;Fatal: %s (%s:%u, %s)\n&quot;, localMsg.constData(), context.file, context.line, context.function);</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">int main(int argc, char *argv[])</span><br><span class="line">&#123;</span><br><span class="line">    qInstallMessageHandler( myMessageOutput );</span><br><span class="line">    QCoreApplication a(argc, argv);</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过修改后的回调函数可以实现将打印信息及其所在的，文件，函数，代码行等输出至log文件。</p>
+<p><strong>这个例子可以帮助我们清晰的认识回调函数的具体应用场景。</strong></p>
+<h2 id="四-标准回调函数定义方式"><a href="#四-标准回调函数定义方式" class="headerlink" title="四 标准回调函数定义方式"></a>四 标准回调函数定义方式</h2><blockquote>
+<p>回调函数的定义及其实现方式并不复杂，如果不清楚其应用场景只是一味的看概念确实容易对其理解有偏差。本小结将给出关于回调函数及注册回调函数一些标准的定义。  </p>
+</blockquote>
+<h3 id="4-1回调函数定义"><a href="#4-1回调函数定义" class="headerlink" title="4.1回调函数定义"></a>4.1回调函数定义</h3><p>定义时最好符合如下函数原型：typedef void (*SCT_XXX)(LPVOID lp, const CBParamStruct&amp; cbNode);   </p>
+<p>其中SCT_XXX是回调函数名称，lp是回调上下文，CBParamStruct是回调参数，一般由于要回调的参数不止一个，所以定义一个结构体比较方便。</p>
+<h3 id="4-2注册回调函数"><a href="#4-2注册回调函数" class="headerlink" title="4.2注册回调函数"></a>4.2注册回调函数</h3><p>注册回调函数原型：void RCF_XXX(SCT_XXX pfn, LPVOID lp);</p>
+<p>其中，RCF_XXX是注册函数名，pfn是回调函数名称（是指针），lp是回调上下文。 </p>
+<blockquote>
+<p>后记CSDN论坛一个<a href="https://bbs.csdn.net/topics/390081829" target="_blank" rel="noopener">关于为什么要使用回调函数</a>的帖子可能对深入理解回调函数有帮助，毕竟争论出真知。</p>
+</blockquote>
+<p><strong>参考：</strong></p>
+<ul>
+<li><a href="https://www.cnblogs.com/ioleon13/archive/2010/03/02/1676621.html" target="_blank" rel="noopener">ioleon13的博客</a></li>
+<li><a href="https://baike.baidu.com/item/%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/7545973?fr=aladdin" target="_blank" rel="noopener">百度百科回调函数词条</a></li>
+</ul>
+<p>修订记录：2018.12.02  22:46  完成初稿</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C-相关/" rel="tag"># C++相关</a>
+              <a href="/tags/回调函数/" rel="tag"># 回调函数</a>
+              <a href="/tags/Qt输出日志/" rel="tag"># Qt输出日志</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2018/11/30/2018-11-29-this-pointer/" rel="next" title="this指针小结">
+                  <i class="fa fa-chevron-left"></i> this指针小结
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/01/15/Linux的文件IO/" rel="prev" title="Linux 文件IO">
+                  Linux 文件IO <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-回调函数的定义"><span class="nav-number">1.</span> <span class="nav-text">一  回调函数的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-百度百科定义"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 百度百科定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2其他定义"><span class="nav-number">1.2.</span> <span class="nav-text">1.2其他定义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-回调函数简单实例"><span class="nav-number">2.</span> <span class="nav-text">二  回调函数简单实例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1无参数的回调实例"><span class="nav-number">2.1.</span> <span class="nav-text">2.1无参数的回调实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2将上述代码修改为带参函数"><span class="nav-number">2.2.</span> <span class="nav-text">2.2将上述代码修改为带参函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-Qt5中引入的消息重定向机制使用的回调函数"><span class="nav-number">3.</span> <span class="nav-text">三  Qt5中引入的消息重定向机制使用的回调函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1使用场景"><span class="nav-number">3.1.</span> <span class="nav-text">3.1使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2Qt回调代码实例"><span class="nav-number">3.2.</span> <span class="nav-text">3.2Qt回调代码实例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-标准回调函数定义方式"><span class="nav-number">4.</span> <span class="nav-text">四 标准回调函数定义方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1回调函数定义"><span class="nav-number">4.1.</span> <span class="nav-text">4.1回调函数定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2注册回调函数"><span class="nav-number">4.2.</span> <span class="nav-text">4.2注册回调函数</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="ZhaoH.T"
+    src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">ZhaoH.T</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/funful" title="GitHub &rarr; https://github.com/funful" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:funful@gmail.com" title="E-Mail &rarr; mailto:funful@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhaoH.T</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">74k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:07</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+<script src="/js/utils.js?v=7.4.2"></script>
+<script src="/js/schemes/muse.js?v=7.4.2"></script>
+<script src="/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: true,
+    appId: 'JaUiU8OP9MCeeHHLD5oaGUs7-gzGzoHsz',
+    appKey: 'LGnGVXtECCbFtsqezlPc9wcI',
+    placeholder: "快来评论一个吧(请填写邮箱以便收到回复提醒)",
+    avatar: 'monsterid',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true,
+    lang: 'zh-cn' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

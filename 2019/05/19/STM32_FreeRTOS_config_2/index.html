@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=7.4.2">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.2">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-fill-left.min.css?v=1.0.2">
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"right","display":"always","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"manual","top_n_per_article":5,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="上一篇，对config宏的基础配置和部分相关的配置，有些宏我们暂时没有用上，所以对这些宏定义的概念不太清楚，这章节是对余下部分解析。">
+<meta name="keywords" content="Stm32F407,FreeRTOS,MDK5">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STM2F407与FreeRTOS的FreeRTOSConfig.h详解&lt;2&gt;">
+<meta property="og:url" content="http://www.funful.ink/2019/05/19/STM32_FreeRTOS_config_2/index.html">
+<meta property="og:site_name" content="FunfulBlog">
+<meta property="og:description" content="上一篇，对config宏的基础配置和部分相关的配置，有些宏我们暂时没有用上，所以对这些宏定义的概念不太清楚，这章节是对余下部分解析。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-18T16:54:10.921Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="STM2F407与FreeRTOS的FreeRTOSConfig.h详解&lt;2&gt;">
+<meta name="twitter:description" content="上一篇，对config宏的基础配置和部分相关的配置，有些宏我们暂时没有用上，所以对这些宏定义的概念不太清楚，这章节是对余下部分解析。">
+
+<link rel="canonical" href="http://www.funful.ink/2019/05/19/STM32_FreeRTOS_config_2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>STM2F407与FreeRTOS的FreeRTOSConfig.h详解<2> | FunfulBlog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">FunfulBlog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Funful的个人博客</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-首页">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-文章分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>文章分类</a>
+
+  </li>
+        <li class="menu-item menu-item-标签">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-归档">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-关于">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.funful.ink/2019/05/19/STM32_FreeRTOS_config_2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="ZhaoH.T">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FunfulBlog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          STM2F407与FreeRTOS的FreeRTOSConfig.h详解<2>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-05-19 00:00:00" itemprop="dateCreated datePublished" datetime="2019-05-19T00:00:00Z">2019-05-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-18 16:54:10" itemprop="dateModified" datetime="2019-10-18T16:54:10Z">2019-10-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/STM32/" itemprop="url" rel="index">
+                    <span itemprop="name">STM32</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/2019/05/19/STM32_FreeRTOS_config_2/" class="post-meta-item leancloud_visitors" data-flag-title="STM2F407与FreeRTOS的FreeRTOSConfig.h详解<2>" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/05/19/STM32_FreeRTOS_config_2/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/05/19/STM32_FreeRTOS_config_2/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>上一篇，对config宏的基础配置和部分相关的配置，有些宏我们暂时没有用上，所以对这些宏定义的概念不太清楚，这章节是对余下部分解析。</p>
+<a id="more"></a>
+
+<h1 id="config"><a href="#config" class="headerlink" title="config_*"></a>config_*</h1><h2 id="FreeRTOS与钩子函数有关的配置选项"><a href="#FreeRTOS与钩子函数有关的配置选项" class="headerlink" title="FreeRTOS与钩子函数有关的配置选项"></a>FreeRTOS与钩子函数有关的配置选项</h2><h3 id="configUSE-IDLE-HOOK"><a href="#configUSE-IDLE-HOOK" class="headerlink" title="configUSE_IDLE_HOOK"></a>configUSE_IDLE_HOOK</h3><p>为1的话，就是使能空闲任务回调函数，也就是如果系统调用空闲函数的话，就会回调钩子函数，我们自己去实现这个函数，函数声明如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vApplicationIdleHook</span><span class="params">( <span class="keyword">void</span> )</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="configUSE-TICK-HOOK"><a href="#configUSE-TICK-HOOK" class="headerlink" title="configUSE_TICK_HOOK"></a>configUSE_TICK_HOOK</h3><p>为1的话使能时间片钩子函数，但是需要我们自己去实现这个函数，函数声明如下：    </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vApplicationTickHook</span><span class="params">( <span class="keyword">void</span> )</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="FreeRTOS与运行时间和任务状态收集有关的配置选项"><a href="#FreeRTOS与运行时间和任务状态收集有关的配置选项" class="headerlink" title="FreeRTOS与运行时间和任务状态收集有关的配置选项"></a>FreeRTOS与运行时间和任务状态收集有关的配置选项</h2><h3 id="configGENERATE-RUN-TIME-STATS"><a href="#configGENERATE-RUN-TIME-STATS" class="headerlink" title="configGENERATE_RUN_TIME_STATS"></a>configGENERATE_RUN_TIME_STATS</h3><p>为1 的话开启时间统计功能，如果定义这个宏的话，就必须还有定义另外两个宏，这个在后面的任务查询的时候我们有可能会配置，这两个宏分别是：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">portCONFIGURE_TIMER_FOR_RUN_TIME_STATS</span><br><span class="line">portALT_GET_RUN_TIME_COUNTER_VALUE</span><br></pre></td></tr></table></figure>
+
+<h3 id="configUSE-TRACE-FACILITY"><a href="#configUSE-TRACE-FACILITY" class="headerlink" title="configUSE_TRACE_FACILITY"></a>configUSE_TRACE_FACILITY</h3><p>为1的话启动可视化跟踪调试，会增加一些结构体成员和API函数。</p>
+<h3 id="configUSE-STATS-FORMATTING-FUNCTIONS"><a href="#configUSE-STATS-FORMATTING-FUNCTIONS" class="headerlink" title="configUSE_STATS_FORMATTING_FUNCTIONS"></a>configUSE_STATS_FORMATTING_FUNCTIONS</h3><p>Set configUSE_TRACE_FACILITY and configUSE_STATS_FORMATTING_FUNCTIONS to 1<br>to include the vTaskList() and vTaskGetRunTimeStats() </p>
+<h2 id="FreeRTOS与协程有关的配置选项（现在的MCU很强大，不需要节约资源，所以基本不配置协程）"><a href="#FreeRTOS与协程有关的配置选项（现在的MCU很强大，不需要节约资源，所以基本不配置协程）" class="headerlink" title="FreeRTOS与协程有关的配置选项（现在的MCU很强大，不需要节约资源，所以基本不配置协程）"></a>FreeRTOS与协程有关的配置选项（现在的MCU很强大，不需要节约资源，所以基本不配置协程）</h2><h3 id="configUSE-CO-ROUTINES"><a href="#configUSE-CO-ROUTINES" class="headerlink" title="configUSE_CO_ROUTINES"></a>configUSE_CO_ROUTINES</h3><p>为1的话，工程需要编译协程，需要把协程文件包含进来，相应的API函数才会被编译。</p>
+<h3 id="configMAX-CO-ROUTINE-PRIORITIES"><a href="#configMAX-CO-ROUTINE-PRIORITIES" class="headerlink" title="configMAX_CO_ROUTINE_PRIORITIES"></a>configMAX_CO_ROUTINE_PRIORITIES</h3><p>设置协程的最大优先级，设置完之后，协程使用的优先级范围0~configMAX_CO_ROUTINE_PRIORITIES-1</p>
+<h3 id="FreeRTOS与软件定时器有关的配置选项"><a href="#FreeRTOS与软件定时器有关的配置选项" class="headerlink" title="FreeRTOS与软件定时器有关的配置选项"></a>FreeRTOS与软件定时器有关的配置选项</h3><h3 id="configUSE-TIMERS"><a href="#configUSE-TIMERS" class="headerlink" title="configUSE_TIMERS"></a>configUSE_TIMERS</h3><p>为1则启动软件定时器，还有三个宏也需要定义，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">configTIMER_TASK_PRIORITY</span><br><span class="line">configTIMER_QUEUE_LENGTH </span><br><span class="line">configTIMER_TASK_STACK_DEPTHxxxxxxxxxx</span><br></pre></td></tr></table></figure>
+
+<h3 id="configTIMER-TASK-PRIORITY"><a href="#configTIMER-TASK-PRIORITY" class="headerlink" title="configTIMER_TASK_PRIORITY"></a>configTIMER_TASK_PRIORITY</h3><p>设置定时器任务的优先级，0~configMAX_PRIORITIES-1，如果定时器任务的优先级高的话，定时器的队列和回调函数会及时处理。</p>
+<h3 id="configTIMER-QUEUE-LENGTH"><a href="#configTIMER-QUEUE-LENGTH" class="headerlink" title="configTIMER_QUEUE_LENGTH"></a>configTIMER_QUEUE_LENGTH</h3><p>设置定时器队列的队列长度。</p>
+<h3 id="configTIMER-TASK-STACK-DEPTH"><a href="#configTIMER-TASK-STACK-DEPTH" class="headerlink" title="configTIMER_TASK_STACK_DEPTH"></a>configTIMER_TASK_STACK_DEPTH</h3><p>定时器任务的堆栈，可以根据定时器回调函数的大小，定义定时器任务堆栈大小。</p>
+<h2 id="FreeRTOS与中断有关的配置选项"><a href="#FreeRTOS与中断有关的配置选项" class="headerlink" title="FreeRTOS与中断有关的配置选项"></a>FreeRTOS与中断有关的配置选项</h2><h3 id="NVIC-PRIO-BITS"><a href="#NVIC-PRIO-BITS" class="headerlink" title="__NVIC_PRIO_BITS"></a>__NVIC_PRIO_BITS</h3><p>设置优先级位数，STMF407,是高四位，也就是BIT4，5，6，7</p>
+<h3 id="configLIBRARY-LOWEST-INTERRUPT-PRIORITY"><a href="#configLIBRARY-LOWEST-INTERRUPT-PRIORITY" class="headerlink" title="configLIBRARY_LOWEST_INTERRUPT_PRIORITY"></a>configLIBRARY_LOWEST_INTERRUPT_PRIORITY</h3><p>设置最低优先级，因为STM32的NVIC配置的组4，也就是16位抢占优先级，所以最低优先级为15，ARM的0优先级最大。</p>
+<h3 id="configLIBRARY-MAX-SYSCALL-INTERRUPT-PRIORITY"><a href="#configLIBRARY-MAX-SYSCALL-INTERRUPT-PRIORITY" class="headerlink" title="configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY"></a>configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY</h3><p>FreeRTOS可以管理的最低优先级，如果设为5的话，0-5不归FREERTOS管，其余的RTOS可以通过API函数管理。与BASEPRI这个寄存器相关。</p>
+<h3 id="configKERNEL-INTERRUPT-PRIORITY"><a href="#configKERNEL-INTERRUPT-PRIORITY" class="headerlink" title="configKERNEL_INTERRUPT_PRIORITY"></a>configKERNEL_INTERRUPT_PRIORITY</h3><p>这个是设置内核中断优先级，也就是系统中断的PenSV和SysTick（滴答定时器）</p>
+<h3 id="configMAX-SYSCALL-INTERRUPT-PRIORITY"><a href="#configMAX-SYSCALL-INTERRUPT-PRIORITY" class="headerlink" title="configMAX_SYSCALL_INTERRUPT_PRIORITY"></a>configMAX_SYSCALL_INTERRUPT_PRIORITY</h3><p>设置FreeRTOS的API函数的优先级，低于此优先级的中断可以安全调用FREERTOS的API函数，高于此优先级时，如果调用API函数，中断也可以打断。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>上面有些宏，从字面意思理解并不难，但是我们需要结合相应的功能，才能熟练运用。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Stm32F407/" rel="tag"># Stm32F407</a>
+              <a href="/tags/FreeRTOS/" rel="tag"># FreeRTOS</a>
+              <a href="/tags/MDK5/" rel="tag"># MDK5</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/05/18/STM32_FreeRTOS_config_1/" rel="next" title="STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1>">
+                  <i class="fa fa-chevron-left"></i> STM2F407与FreeRTOS的FreeRTOSConfig.h详解<1>
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/05/20/ESP8266_SDK_MQTT_LED/" rel="prev" title="ES8266模块二次开发SDK之MQTT局域网控制LED">
+                  ES8266模块二次开发SDK之MQTT局域网控制LED <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#config"><span class="nav-number">1.</span> <span class="nav-text">config_*</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#FreeRTOS与钩子函数有关的配置选项"><span class="nav-number">1.1.</span> <span class="nav-text">FreeRTOS与钩子函数有关的配置选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-IDLE-HOOK"><span class="nav-number">1.1.1.</span> <span class="nav-text">configUSE_IDLE_HOOK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-TICK-HOOK"><span class="nav-number">1.1.2.</span> <span class="nav-text">configUSE_TICK_HOOK</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FreeRTOS与运行时间和任务状态收集有关的配置选项"><span class="nav-number">1.2.</span> <span class="nav-text">FreeRTOS与运行时间和任务状态收集有关的配置选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#configGENERATE-RUN-TIME-STATS"><span class="nav-number">1.2.1.</span> <span class="nav-text">configGENERATE_RUN_TIME_STATS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-TRACE-FACILITY"><span class="nav-number">1.2.2.</span> <span class="nav-text">configUSE_TRACE_FACILITY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-STATS-FORMATTING-FUNCTIONS"><span class="nav-number">1.2.3.</span> <span class="nav-text">configUSE_STATS_FORMATTING_FUNCTIONS</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FreeRTOS与协程有关的配置选项（现在的MCU很强大，不需要节约资源，所以基本不配置协程）"><span class="nav-number">1.3.</span> <span class="nav-text">FreeRTOS与协程有关的配置选项（现在的MCU很强大，不需要节约资源，所以基本不配置协程）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-CO-ROUTINES"><span class="nav-number">1.3.1.</span> <span class="nav-text">configUSE_CO_ROUTINES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configMAX-CO-ROUTINE-PRIORITIES"><span class="nav-number">1.3.2.</span> <span class="nav-text">configMAX_CO_ROUTINE_PRIORITIES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FreeRTOS与软件定时器有关的配置选项"><span class="nav-number">1.3.3.</span> <span class="nav-text">FreeRTOS与软件定时器有关的配置选项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configUSE-TIMERS"><span class="nav-number">1.3.4.</span> <span class="nav-text">configUSE_TIMERS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configTIMER-TASK-PRIORITY"><span class="nav-number">1.3.5.</span> <span class="nav-text">configTIMER_TASK_PRIORITY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configTIMER-QUEUE-LENGTH"><span class="nav-number">1.3.6.</span> <span class="nav-text">configTIMER_QUEUE_LENGTH</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configTIMER-TASK-STACK-DEPTH"><span class="nav-number">1.3.7.</span> <span class="nav-text">configTIMER_TASK_STACK_DEPTH</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FreeRTOS与中断有关的配置选项"><span class="nav-number">1.4.</span> <span class="nav-text">FreeRTOS与中断有关的配置选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NVIC-PRIO-BITS"><span class="nav-number">1.4.1.</span> <span class="nav-text">__NVIC_PRIO_BITS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configLIBRARY-LOWEST-INTERRUPT-PRIORITY"><span class="nav-number">1.4.2.</span> <span class="nav-text">configLIBRARY_LOWEST_INTERRUPT_PRIORITY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configLIBRARY-MAX-SYSCALL-INTERRUPT-PRIORITY"><span class="nav-number">1.4.3.</span> <span class="nav-text">configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configKERNEL-INTERRUPT-PRIORITY"><span class="nav-number">1.4.4.</span> <span class="nav-text">configKERNEL_INTERRUPT_PRIORITY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#configMAX-SYSCALL-INTERRUPT-PRIORITY"><span class="nav-number">1.4.5.</span> <span class="nav-text">configMAX_SYSCALL_INTERRUPT_PRIORITY</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="ZhaoH.T"
+    src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">ZhaoH.T</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/funful" title="GitHub &rarr; https://github.com/funful" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:funful@gmail.com" title="E-Mail &rarr; mailto:funful@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhaoH.T</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">74k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:07</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+<script src="/js/utils.js?v=7.4.2"></script>
+<script src="/js/schemes/muse.js?v=7.4.2"></script>
+<script src="/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: true,
+    appId: 'JaUiU8OP9MCeeHHLD5oaGUs7-gzGzoHsz',
+    appKey: 'LGnGVXtECCbFtsqezlPc9wcI',
+    placeholder: "快来评论一个吧(请填写邮箱以便收到回复提醒)",
+    avatar: 'monsterid',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: true,
+    lang: 'zh-cn' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>
