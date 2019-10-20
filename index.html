@@ -392,29 +392,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <a id="more"></a>
-
-<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+          <a id="more"></a><h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
 <li>Ubuntu： Ubuntu 19.04</li>
 <li>固件： 全志CQA64-LinuxQT</li>
 <li>arm交叉编译器：crosstool-NG linaro-1.13.1-4.9-2014.09 - Linaro GCC 4.9-2014.09</li>
 <li>时间：19-10-2019</li>
-</ul>
-<h2 id="错误描述"><a href="#错误描述" class="headerlink" title="错误描述"></a>错误描述</h2><ul>
+</ul><h2 id="错误描述"><a href="#错误描述" class="headerlink" title="错误描述"></a>错误描述</h2><ul>
 <li><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">freadahead.c: In function 'freadahead':</span><br><span class="line">freadahead.c:<span class="number">92</span>:<span class="number">3</span>: error: <span class="meta">#<span class="meta-keyword">error</span> <span class="meta-string">"Please port gnulib freadahead.c to your platform! Look at the definition of fflush, fread, ungetc on your system, then report this to bug-gnulib."</span></span></span><br><span class="line">  <span class="meta">#<span class="meta-keyword">error</span> <span class="meta-string">"Please port gnulib freadahead.c to your platform! Look at the definition of fflush, fread, ungetc on your system, then report this to bug-gnulib."</span></span></span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
-<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><ul>
-<li><p>进入host-m4-1.4.18/lib中，对fflush.c，fpending.c，fpurge.c，freadahead.c，freading.c，fseeko.c中”_IO_ftrylockfile“ 替换为“_IO_EOF_SEEN”</p>
-</li>
-<li><p>进入host-m4-1.4.18/lib中，对stdio-impl.h中添加</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+<span class="comment">/* Glibc 2.28 made _IO_IN_BACKUP private.  For now, work around this</span></span><br><span class="line"><span class="comment">+   problem by defining it ourselves.  <span class="doctag">FIXME:</span> Do not rely on glibc</span></span><br><span class="line"><span class="comment">+   internals.  */</span></span><br><span class="line">+<span class="meta">#<span class="meta-keyword">if</span> !defined _IO_IN_BACKUP &amp;&amp; defined _IO_EOF_SEEN</span></span><br><span class="line">+<span class="meta"># <span class="meta-keyword">define</span> _IO_IN_BACKUP 0x100</span></span><br><span class="line">+<span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
-
-<p>参考Patch：<a href="http://git.openembedded.org/openembedded-core/tree/meta/recipes-devtools/m4/m4/m4-1.4.18-glibc-change-work-around.patch" target="_blank" rel="noopener">m4.patch</a></p>
-</li>
-</ul>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/10/19/2019-10-19-全志A64编译固件报Fault/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
