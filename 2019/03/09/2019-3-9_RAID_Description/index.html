@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000">
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top">
+  
+  
+  <title>独立冗余磁盘阵列（RAID） | Hexo</title>
+  <meta name="description" content="独立冗余磁盘阵列，简称RAID，是通过多个磁盘相互组合提高对硬盘设备IO读取速度和数据安全性的一种技术，目前已有的磁盘阵列方案比较多，标准的RAID有：RAID0、RAID1、RAID2、RAID3、RAID4、RAID5、RAID6。本文主要讲解及在VM虚拟机下使用相关命令配置RAID0、RAID1、RAID5、6、10。">
+<meta name="keywords" content="RAID,独立冗余磁盘阵列">
+<meta property="og:type" content="article">
+<meta property="og:title" content="独立冗余磁盘阵列（RAID）">
+<meta property="og:url" content="http://www.funful.ink/2019/03/09/2019-3-9_RAID_Description/index.html">
+<meta property="og:site_name" content="FunfulBlog">
+<meta property="og:description" content="独立冗余磁盘阵列，简称RAID，是通过多个磁盘相互组合提高对硬盘设备IO读取速度和数据安全性的一种技术，目前已有的磁盘阵列方案比较多，标准的RAID有：RAID0、RAID1、RAID2、RAID3、RAID4、RAID5、RAID6。本文主要讲解及在VM虚拟机下使用相关命令配置RAID0、RAID1、RAID5、6、10。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-9_RAID0.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-9_RAID1.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-9_RAID5%EF%BC%88nor%EF%BC%89.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-9_RAID6.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-9_RAID10.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-10_lsblk.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-10_mdadm0.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-10_mdadm0iointest.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-10_raid10.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-10_raid10des.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-10_raid10rebui.png">
+<meta property="og:image" content="http://cdn.funful.ink/Blog_2019-3-10_raid10add.png">
+<meta property="og:updated_time" content="2019-05-25T06:59:55.693Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="独立冗余磁盘阵列（RAID）">
+<meta name="twitter:description" content="独立冗余磁盘阵列，简称RAID，是通过多个磁盘相互组合提高对硬盘设备IO读取速度和数据安全性的一种技术，目前已有的磁盘阵列方案比较多，标准的RAID有：RAID0、RAID1、RAID2、RAID3、RAID4、RAID5、RAID6。本文主要讲解及在VM虚拟机下使用相关命令配置RAID0、RAID1、RAID5、6、10。">
+<meta name="twitter:image" content="http://cdn.funful.ink/Blog_2019-3-9_RAID0.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://www.funful.ink/2019/03/09/2019-3-9_RAID_Description/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="FunfulBlog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  
+  
+</head>
+
+
+<body class="main-right theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/cofess" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/BUG调试/">BUG调试</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Qt/">Qt</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/ESP8266/">ESP8266</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Qt/">Qt</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STM32/">STM32</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/uboot移植/">uboot移植</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/各个方面方案解决/">各个方面方案解决</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/4412/">4412</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ARM汇编/">ARM汇编</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AT指令集/">AT指令集</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-相关/">C++相关</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Digital-Signature/">Digital Signature</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ESP8266/">ESP8266</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FreeRTOS/">FreeRTOS</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IO/">IO</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MDK5/">MDK5</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MQTT/">MQTT</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mplayer/">Mplayer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nor-Flash/">Nor Flash</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Qt/">Qt</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Qt输出日志/">Qt输出日志</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RAID/">RAID</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDK/">SDK</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SSH/">SSH</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Stm32F407/">Stm32F407</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP通信/">TCP通信</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V4L2/">V4L2</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/arm/">arm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bochs/">bochs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deepin/">deepin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nasm/">nasm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/return不同类型/">return不同类型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/this指针/">this指针</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/动态库/">动态库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/回调函数/">回调函数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/局域网/">局域网</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/独立冗余磁盘阵列/">独立冗余磁盘阵列</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/移植/">移植</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态库/">静态库</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/4412/" style="font-size: 13px;">4412</a> <a href="/tags/ARM汇编/" style="font-size: 13px;">ARM汇编</a> <a href="/tags/AT指令集/" style="font-size: 13px;">AT指令集</a> <a href="/tags/C-相关/" style="font-size: 13.67px;">C++相关</a> <a href="/tags/Digital-Signature/" style="font-size: 13px;">Digital Signature</a> <a href="/tags/ESP8266/" style="font-size: 13.67px;">ESP8266</a> <a href="/tags/FreeRTOS/" style="font-size: 13.33px;">FreeRTOS</a> <a href="/tags/IO/" style="font-size: 13px;">IO</a> <a href="/tags/Linux/" style="font-size: 14px;">Linux</a> <a href="/tags/MDK5/" style="font-size: 13.33px;">MDK5</a> <a href="/tags/MQTT/" style="font-size: 13px;">MQTT</a> <a href="/tags/Mplayer/" style="font-size: 13px;">Mplayer</a> <a href="/tags/Nor-Flash/" style="font-size: 13px;">Nor Flash</a> <a href="/tags/QEMU/" style="font-size: 13.33px;">QEMU</a> <a href="/tags/Qt/" style="font-size: 13.33px;">Qt</a> <a href="/tags/Qt输出日志/" style="font-size: 13px;">Qt输出日志</a> <a href="/tags/RAID/" style="font-size: 13px;">RAID</a> <a href="/tags/SDK/" style="font-size: 13.33px;">SDK</a> <a href="/tags/SSH/" style="font-size: 13px;">SSH</a> <a href="/tags/Stm32F407/" style="font-size: 13.33px;">Stm32F407</a> <a href="/tags/TCP通信/" style="font-size: 13px;">TCP通信</a> <a href="/tags/V4L2/" style="font-size: 13px;">V4L2</a> <a href="/tags/arm/" style="font-size: 13.67px;">arm</a> <a href="/tags/bochs/" style="font-size: 13px;">bochs</a> <a href="/tags/deepin/" style="font-size: 13px;">deepin</a> <a href="/tags/linux/" style="font-size: 13.67px;">linux</a> <a href="/tags/nasm/" style="font-size: 13px;">nasm</a> <a href="/tags/return不同类型/" style="font-size: 13px;">return不同类型</a> <a href="/tags/this指针/" style="font-size: 13px;">this指针</a> <a href="/tags/动态库/" style="font-size: 13px;">动态库</a> <a href="/tags/回调函数/" style="font-size: 13px;">回调函数</a> <a href="/tags/局域网/" style="font-size: 13px;">局域网</a> <a href="/tags/操作系统/" style="font-size: 13px;">操作系统</a> <a href="/tags/独立冗余磁盘阵列/" style="font-size: 13px;">独立冗余磁盘阵列</a> <a href="/tags/移植/" style="font-size: 14px;">移植</a> <a href="/tags/静态库/" style="font-size: 13px;">静态库</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled ">
+        
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2019/10/19/2019-10-19-全志A64编译固件报Fault/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/BUG调试/">BUG调试</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/10/19/2019-10-19-全志A64编译固件报Fault/" class="title">全志A64编译固件报Fault</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-10-19T00:00:00.000Z" itemprop="datePublished">2019-10-19</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2019/08/24/2019-08-24-C-Assembly/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Linux/">Linux</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/08/24/2019-08-24-C-Assembly/" class="title">C内嵌ARM汇编</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-08-24T00:00:00.000Z" itemprop="datePublished">2019-08-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2019/07/30/2019-07-30-QEMU-ARM-A9-TFTP-NFS/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Linux/">Linux</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/07/30/2019-07-30-QEMU-ARM-A9-TFTP-NFS/" class="title">QEMU模拟AMRM-A9（tftp挂载kenel，nfs挂载rotfs）</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-07-30T00:00:00.000Z" itemprop="datePublished">2019-07-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2019/05/25/2019-05-25-V4L2/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Linux/">Linux</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/05/25/2019-05-25-V4L2/" class="title">Video for Linux two</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-05-25T00:00:00.000Z" itemprop="datePublished">2019-05-25</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2019/05/20/ESP8266_SDK_MQTT_LED/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/ESP8266/">ESP8266</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/05/20/ESP8266_SDK_MQTT_LED/" class="title">ES8266模块二次开发SDK之MQTT局域网控制LED</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-05-20T00:00:00.000Z" itemprop="datePublished">2019-05-20</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-2019-3-9_RAID_Description" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      独立冗余磁盘阵列（RAID）
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/03/09/2019-3-9_RAID_Description/" class="article-date">
+	  <time datetime="2019-03-09T00:00:00.000Z" itemprop="datePublished">2019-03-09</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/RAID/">RAID</a>, <a class="article-tag-link" href="/tags/独立冗余磁盘阵列/">独立冗余磁盘阵列</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/03/09/2019-3-9_RAID_Description/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>独立冗余磁盘阵列，简称RAID，是通过多个磁盘相互组合提高对硬盘设备IO读取速度和数据安全性的一种技术，目前已有的磁盘阵列方案比较多，标准的RAID有：RAID0、RAID1、RAID2、RAID3、RAID4、RAID5、RAID6。本文主要讲解及在VM虚拟机下使用相关命令配置RAID0、RAID1、RAID5、6、10。</p>
+<a id="more"></a>
+
+<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><ul>
+<li>系统：RHEL7.6 </li>
+<li>虚拟机：VM</li>
+</ul>
+<h1 id="RAID介绍"><a href="#RAID介绍" class="headerlink" title="RAID介绍"></a>RAID介绍</h1><h2 id="RAID0"><a href="#RAID0" class="headerlink" title="RAID0"></a>RAID0</h2><p>RAID0是通过硬件或者是软件的方式将其连接在一起，至少需要两块硬盘，数据分段之后依次写入各个物理硬盘上面。RAID的存储速度最快，但是没有备份，空间利用率达到100%，但是硬盘损坏之后，数据无法修复。零容错。</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID0.png" alt></p>
+<h2 id="RAID1"><a href="#RAID1" class="headerlink" title="RAID1"></a>RAID1</h2><p>RAID0是对数据分开存放的，任何一个硬盘发生故障，那么整个数据都将不可用。RAID1则提高数据安全性，将数据同时存入多个硬盘当中，相当于镜像存储，磁盘阵列无论挂载多少个硬盘，都相当于容量最小的硬盘，写入速度相对于RAID0慢，但是数据安全性大大提高，但是这种读取速度是一个硬盘读取速度乘于硬盘个数。</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID1.png" alt></p>
+<h2 id="RAID5"><a href="#RAID5" class="headerlink" title="RAID5"></a>RAID5</h2><p>RAID1虽然安全性大大提高，但是硬盘空间利用率大大降低。RAID5兼顾RAID0和RAID1的优点提出来的一种技术方案。RAID5与RAID3和RAID4不同的是RAID4是使用固定盘来存储奇偶校验位，而RAID5是将数据和数据对应的校验位在分散存储在各个硬盘上面。RAID5的数据和RAID0数据分布相似，都是把数据以块为单位分布到各个评判上面。上面这两个RAID5技术方案特点，使得RAID至少需要3块磁盘。RAID5没有备份数据，只保存数据的校验位，在硬盘损坏之后通过奇偶校验位进行数据恢复。RAID5受到系统故障之后，重建时间比较长。</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID5%EF%BC%88nor%EF%BC%89.png" alt></p>
+<h2 id="RAID6"><a href="#RAID6" class="headerlink" title="RAID6"></a>RAID6</h2><p>RAID5可以知道，如果某一个盘故障之后，可以通过其他盘的校验位和其余的数据记性数据恢复，但是如果同时有两个盘故障的话，则不能完全进行数据恢复（假如上图的Disk1和Disk2同时损坏，A的数据可以通过A1和ParityA恢复，D的数据可以通过D3和ParityD恢复，而B,C的数据由于校验位数据丢失不能恢复）。所以这是出现RAID6，RAID6是在RAID5增加一个安全等级，就是RIAD6在RAID5的基础上，在其他盘又增加XOR校验区，这两个XOR校验使用不同的算法，这个阵列需要至少4块硬盘。这样磁盘阵列允许同时两个硬盘故障，容错功能提高。但是在写入数据的时候需要计算两个XOR区，速度大大降低，空间利用率也降低。</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID6.png" alt></p>
+<h2 id="RAID10"><a href="#RAID10" class="headerlink" title="RAID10"></a>RAID10</h2><p>由于RAID磁盘阵列的读写速度和数据安全性是相互制约，RAID10通过将RAID0和RAID1进行组合，他利用RAID0的快速读写和RAID1的安全性。性能超过RAID6和RAID5.只要同一组的硬盘不全部损坏，那么数据就不会丢失。RAID10至少需要4块硬盘。如图 ：</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID10.png" alt></p>
+<h2 id="热备磁盘"><a href="#热备磁盘" class="headerlink" title="热备磁盘"></a>热备磁盘</h2><p>针对磁盘阵列，不同的方案容错成都也不一样，一般都会有热备磁盘，也就是在磁盘阵列中某个磁盘挂了，热备磁盘可以立刻代替损坏磁盘的位置，这时候，我们的磁盘阵列就会重建，一个磁盘阵列可以包含多个热备磁盘。</p>
+<h1 id="mdadm命令"><a href="#mdadm命令" class="headerlink" title="mdadm命令"></a>mdadm命令</h1><p>mdadm命令是Linux下创建和管理磁盘阵列的命令，具体参数如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">参数</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-a</td>
+<td align="center">检测设备名称</td>
+</tr>
+<tr>
+<td align="center">-n</td>
+<td align="center">指定设备数量</td>
+</tr>
+<tr>
+<td align="center">-l</td>
+<td align="center">设定RAID级别</td>
+</tr>
+<tr>
+<td align="center">-C</td>
+<td align="center">创建磁盘阵列名称</td>
+</tr>
+<tr>
+<td align="center">-v</td>
+<td align="center">显示创建过程</td>
+</tr>
+<tr>
+<td align="center">-f</td>
+<td align="center">模拟设备损坏</td>
+</tr>
+<tr>
+<td align="center">-r</td>
+<td align="center">移除设备</td>
+</tr>
+<tr>
+<td align="center">-Q</td>
+<td align="center">查看摘要信息</td>
+</tr>
+<tr>
+<td align="center">-D</td>
+<td align="center">查看详细信息</td>
+</tr>
+<tr>
+<td align="center">-S</td>
+<td align="center">停止磁盘阵列</td>
+</tr>
+</tbody></table>
+<h1 id="虚拟磁盘部署磁盘阵列实验"><a href="#虚拟磁盘部署磁盘阵列实验" class="headerlink" title="虚拟磁盘部署磁盘阵列实验"></a>虚拟磁盘部署磁盘阵列实验</h1><h2 id="RAID0-1"><a href="#RAID0-1" class="headerlink" title="RAID0"></a>RAID0</h2><ul>
+<li>步骤一（添加磁盘）</li>
+</ul>
+<p>在虚拟机系统关机状态下，添加两个SCSI磁盘。（虚拟机-&gt;设置-&gt;添加-&gt;硬盘-&gt;SCSI-&gt;创建新虚拟磁盘-&gt;容量20G，完成），按照这个步骤添加两个硬盘。</p>
+<ul>
+<li>步骤二（查看磁盘）</li>
+</ul>
+<p>虚拟机下开机（打开系统），进入终端（桌面版），使用lsblk或者“fdisk  -l”命令，可以看到我们添加的两个硬盘，如图：</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-10_lsblk.png" alt></p>
+<ul>
+<li>步骤三（分区）</li>
+</ul>
+<p>分区，上面步骤已经添加两个磁盘，下面使用fdisk对磁盘进行分区。1. “fdisk   /dev/sdb” （关于fdisk分区自行根据提示进行就可以，这里我们只分一个主分区，默认编号是1，大小是上限值就即可，设置完成之后，切记分区表同步到磁盘（w   write table to disk and exit））。重复操作对/dev/sdc进行分区 。（不对磁盘分区，应该也可以直接构建磁盘阵列也就是不需要第三步骤也可以）</p>
+<ul>
+<li>步骤四（创建磁盘阵列）</li>
+</ul>
+<p>使用mdadm命令创建磁盘阵列，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mdadm  -C  /dev/md0  -a yes   -l0   -n2   /dev/sdb1  /dev/sdc1</span><br></pre></td></tr></table></figure>
+
+<p>参数说明：  -C  创建阵列  ；  -a  yes  自动创建设备文件；  -l +数字 是阵列模式-l0就是说RAD0；-n2 是指连个磁盘创建磁盘阵列；</p>
+<ul>
+<li>步骤五（格式化）</li>
+</ul>
+<p>格式化磁盘阵列 “mkfs.xfs   /dev/md0”;  这个mkfs格式工具很强大，mkfs.ext3、mkfs.ext4.都比较方便。</p>
+<ul>
+<li>步骤六（查看磁盘阵列信息）</li>
+</ul>
+<p>查看我们创建的磁盘阵列：终端命令“cat  /proc/mdstat”或者使用“mdadm  -D   /dev/md0”详细查看RAID0 配置，如图：</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-10_mdadm0.png" alt></p>
+<ul>
+<li>步骤七（挂载）</li>
+</ul>
+<p>使用mount挂在磁盘阵列只能在本次开机有效，要想开机自动挂载可以将磁盘阵列信息写入到/etc/fstab。这里只使用mount挂载。“sudo mkdir /RAID/raid0”  ; “mount  /dev/md0    /RAID/raid0”。到此为止我们就可以正常使用磁盘阵列。</p>
+<ul>
+<li>步骤八（读取写入速度测试）</li>
+</ul>
+<ol>
+<li><p>写入测试</p>
+<p>先给磁盘阵列写入，使用dd和time命令，dd有复制功能，time可以计时,写入1GB。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">time dd  if=/dev/zero  of=/RAID/raid0/iointest bs=8k count=131072</span><br></pre></td></tr></table></figure>
+
+<p>在直接写入本地:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo time dd  if=/dev/zero  of=/home/funful/iointest bs=8k count=131072</span><br></pre></td></tr></table></figure>
+
+<p>如图可以看出来，虽然是虚拟磁盘模拟出来的，但是写入速度与时间还是有差距的(忽略数值，电脑配置比较低)。</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-10_mdadm0iointest.png" alt></p>
+</li>
+<li><p>读取测试</p>
+<p>先读取磁盘阵列数据，命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo time dd  if=/RAID/raid0/iointest   of=/dev/null  bs=8k count=131072</span><br></pre></td></tr></table></figure>
+
+<p>再测试读取本地数据，命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo time dd  if=/home/funful/iointest   of=/dev/null  bs=8k count=131072</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>由于各个磁盘阵列的方案实施过程相似，所以就不一一进行实验，下面只对RAID10进行创建</p>
+<h2 id="RADI10"><a href="#RADI10" class="headerlink" title="RADI10"></a>RADI10</h2><ul>
+<li><p>步骤一（添加磁盘）</p>
+<p>和RAID0的过程相似，在虚拟机系统关机状态下添加5个虚拟磁盘（每个20GB）,4个数据盘，一个热备份盘。如图：</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-10_raid10.png" alt></p>
+</li>
+<li><p>步骤二（创建磁盘阵列+备份盘 ）</p>
+<p>使用命令创建磁盘阵列：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mdadm -C /dev/md0 -n 4  -l 10 -x 1 /dev/sdb /dev/sdc /dev/sdd  /dev/sde  /dev/sdf</span><br></pre></td></tr></table></figure>
+
+<p>使用命令查看磁盘阵列信息：“mdadm -D    /dev/md0”  如图：</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-10_raid10des.png" alt></p>
+<p>从上图可以看出来，总共有5个磁盘，四个活动磁盘，一个备份磁盘。/dev/sdf作为备份盘。</p>
+</li>
+</ul>
+<ul>
+<li><p>步骤三（格式化磁盘阵列）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs.xfs   /dev/md0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>步骤四（主动破坏某个数据盘）</p>
+<p>使用mdadm的-f命令主动从磁盘阵列移除一个磁盘，命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mdadm /dev/md0 -f /dev/sdb</span><br></pre></td></tr></table></figure>
+
+<p>可以从图中可以看到，/dev/sdb已经挂了，而之前的备份盘正在顶替sdb的位置，而且正在rebuilding，所以此时活动盘只有3个。过一会再使用这个命令可以看到，rebuilding完毕之后，顶替之前位置。</p>
+<p><img src="http://cdn.funful.ink/Blog_2019-3-10_raid10rebui.png" alt></p>
+</li>
+</ul>
+<ul>
+<li><p>步骤五（添加热备磁盘）</p>
+<p>下面我们将模拟损坏的磁盘，作为热备磁盘加进磁盘阵列，命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>移除损坏磁盘</span><br><span class="line">sudo mdadm  /dev/md0 -r /dev/sdb</span><br><span class="line"><span class="meta">   #</span>添加备份磁盘</span><br><span class="line">   sudo mdadm  /dev/md0 -a /dev/sdb</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://cdn.funful.ink/Blog_2019-3-10_raid10add.png" alt></p>
+<p>从上图可以看到我们刚才模拟损坏的sdb盘，已经作为热备份盘，添加到磁盘阵列当中。</p>
+</li>
+</ul>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>由于是使用虚拟磁盘来创建磁盘阵列，所以性能对比差距不是那么明显。但是我们可以通过软件的方式使用命令来管理磁盘阵列。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://www.funful.ink/2019/03/09/2019-3-9_RAID_Description/" title="独立冗余磁盘阵列（RAID）" target="_blank" rel="external">http://www.funful.ink/2019/03/09/2019-3-9_RAID_Description/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/03/30/2019-3-30_SSH/" title="SSH基本原理及使用&lt;一&gt;"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2019/01/15/Linux的文件IO/" title="Linux 文件IO"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

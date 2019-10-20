@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000">
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top">
+  
+  
+  <title>JZ2440的uboot-2009-11 移植&lt;1&gt; | Hexo</title>
+  <meta name="description" content="整理下自己之前的移植uboot时记录的笔记！">
+<meta name="keywords" content="移植,arm,linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JZ2440的uboot-2009-11 移植&lt;1&gt;">
+<meta property="og:url" content="http://www.funful.ink/2019/05/12/JZ2440_uboot_2009_11_transplant_1/index.html">
+<meta property="og:site_name" content="FunfulBlog">
+<meta property="og:description" content="整理下自己之前的移植uboot时记录的笔记！">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-18T16:53:00.271Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JZ2440的uboot-2009-11 移植&lt;1&gt;">
+<meta name="twitter:description" content="整理下自己之前的移植uboot时记录的笔记！">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://www.funful.ink/2019/05/12/JZ2440_uboot_2009_11_transplant_1/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="FunfulBlog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  
+  
+</head>
+
+
+<body class="main-right theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/cofess" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/BUG调试/">BUG调试</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Qt/">Qt</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/ESP8266/">ESP8266</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Qt/">Qt</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STM32/">STM32</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/uboot移植/">uboot移植</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/各个方面方案解决/">各个方面方案解决</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/4412/">4412</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ARM汇编/">ARM汇编</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AT指令集/">AT指令集</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-相关/">C++相关</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Digital-Signature/">Digital Signature</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ESP8266/">ESP8266</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FreeRTOS/">FreeRTOS</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IO/">IO</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MDK5/">MDK5</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MQTT/">MQTT</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mplayer/">Mplayer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nor-Flash/">Nor Flash</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Qt/">Qt</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Qt输出日志/">Qt输出日志</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RAID/">RAID</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDK/">SDK</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SSH/">SSH</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Stm32F407/">Stm32F407</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP通信/">TCP通信</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V4L2/">V4L2</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/arm/">arm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bochs/">bochs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deepin/">deepin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nasm/">nasm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/return不同类型/">return不同类型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/this指针/">this指针</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/动态库/">动态库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/回调函数/">回调函数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/局域网/">局域网</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/独立冗余磁盘阵列/">独立冗余磁盘阵列</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/移植/">移植</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态库/">静态库</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/4412/" style="font-size: 13px;">4412</a> <a href="/tags/ARM汇编/" style="font-size: 13px;">ARM汇编</a> <a href="/tags/AT指令集/" style="font-size: 13px;">AT指令集</a> <a href="/tags/C-相关/" style="font-size: 13.67px;">C++相关</a> <a href="/tags/Digital-Signature/" style="font-size: 13px;">Digital Signature</a> <a href="/tags/ESP8266/" style="font-size: 13.67px;">ESP8266</a> <a href="/tags/FreeRTOS/" style="font-size: 13.33px;">FreeRTOS</a> <a href="/tags/IO/" style="font-size: 13px;">IO</a> <a href="/tags/Linux/" style="font-size: 14px;">Linux</a> <a href="/tags/MDK5/" style="font-size: 13.33px;">MDK5</a> <a href="/tags/MQTT/" style="font-size: 13px;">MQTT</a> <a href="/tags/Mplayer/" style="font-size: 13px;">Mplayer</a> <a href="/tags/Nor-Flash/" style="font-size: 13px;">Nor Flash</a> <a href="/tags/QEMU/" style="font-size: 13.33px;">QEMU</a> <a href="/tags/Qt/" style="font-size: 13.33px;">Qt</a> <a href="/tags/Qt输出日志/" style="font-size: 13px;">Qt输出日志</a> <a href="/tags/RAID/" style="font-size: 13px;">RAID</a> <a href="/tags/SDK/" style="font-size: 13.33px;">SDK</a> <a href="/tags/SSH/" style="font-size: 13px;">SSH</a> <a href="/tags/Stm32F407/" style="font-size: 13.33px;">Stm32F407</a> <a href="/tags/TCP通信/" style="font-size: 13px;">TCP通信</a> <a href="/tags/V4L2/" style="font-size: 13px;">V4L2</a> <a href="/tags/arm/" style="font-size: 13.67px;">arm</a> <a href="/tags/bochs/" style="font-size: 13px;">bochs</a> <a href="/tags/deepin/" style="font-size: 13px;">deepin</a> <a href="/tags/linux/" style="font-size: 13.67px;">linux</a> <a href="/tags/nasm/" style="font-size: 13px;">nasm</a> <a href="/tags/return不同类型/" style="font-size: 13px;">return不同类型</a> <a href="/tags/this指针/" style="font-size: 13px;">this指针</a> <a href="/tags/动态库/" style="font-size: 13px;">动态库</a> <a href="/tags/回调函数/" style="font-size: 13px;">回调函数</a> <a href="/tags/局域网/" style="font-size: 13px;">局域网</a> <a href="/tags/操作系统/" style="font-size: 13px;">操作系统</a> <a href="/tags/独立冗余磁盘阵列/" style="font-size: 13px;">独立冗余磁盘阵列</a> <a href="/tags/移植/" style="font-size: 14px;">移植</a> <a href="/tags/静态库/" style="font-size: 13px;">静态库</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled ">
+        
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2019/10/19/2019-10-19-全志A64编译固件报Fault/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/BUG调试/">BUG调试</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/10/19/2019-10-19-全志A64编译固件报Fault/" class="title">全志A64编译固件报Fault</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-10-19T00:00:00.000Z" itemprop="datePublished">2019-10-19</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2019/08/24/2019-08-24-C-Assembly/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Linux/">Linux</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/08/24/2019-08-24-C-Assembly/" class="title">C内嵌ARM汇编</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-08-24T00:00:00.000Z" itemprop="datePublished">2019-08-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2019/07/30/2019-07-30-QEMU-ARM-A9-TFTP-NFS/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Linux/">Linux</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/07/30/2019-07-30-QEMU-ARM-A9-TFTP-NFS/" class="title">QEMU模拟AMRM-A9（tftp挂载kenel，nfs挂载rotfs）</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-07-30T00:00:00.000Z" itemprop="datePublished">2019-07-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2019/05/25/2019-05-25-V4L2/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Linux/">Linux</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/05/25/2019-05-25-V4L2/" class="title">Video for Linux two</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-05-25T00:00:00.000Z" itemprop="datePublished">2019-05-25</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2019/05/20/ESP8266_SDK_MQTT_LED/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/ESP8266/">ESP8266</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/05/20/ESP8266_SDK_MQTT_LED/" class="title">ES8266模块二次开发SDK之MQTT局域网控制LED</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-05-20T00:00:00.000Z" itemprop="datePublished">2019-05-20</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-JZ2440_uboot_2009_11_transplant_1" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JZ2440的uboot-2009-11 移植&lt;1&gt;
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/05/12/JZ2440_uboot_2009_11_transplant_1/" class="article-date">
+	  <time datetime="2019-05-12T00:00:00.000Z" itemprop="datePublished">2019-05-12</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/uboot移植/">uboot移植</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/arm/">arm</a>, <a class="article-tag-link" href="/tags/linux/">linux</a>, <a class="article-tag-link" href="/tags/移植/">移植</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/05/12/JZ2440_uboot_2009_11_transplant_1/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>整理下自己之前的移植uboot时记录的笔记！</p>
+<a id="more"></a>
+
+<h2 id="移植环境："><a href="#移植环境：" class="headerlink" title="移植环境："></a>移植环境：</h2><p>arm板子：JZ2440</p>
+<p>uboot版本：2009-11</p>
+<p>交叉编译链：arm-none-linux-gcc-4.4.3</p>
+<h2 id="下载："><a href="#下载：" class="headerlink" title="下载："></a>下载：</h2><p>uboot官方下载地址:<a href="ftp://ftp.denx.de/pub/u-boot" target="_blank" rel="noopener">uboot官方下载</a>,  </p>
+<p>交叉编译链:<a href>github.com/funful/Tools</a></p>
+<h2 id="uboot的启动流程"><a href="#uboot的启动流程" class="headerlink" title="uboot的启动流程"></a>uboot的启动流程</h2><h3 id="第一阶段"><a href="#第一阶段" class="headerlink" title="第一阶段"></a>第一阶段</h3><ol>
+<li>硬件设备初始化</li>
+<li>加载u-boot第二阶段代码到RAM的空间</li>
+<li>设置好栈</li>
+<li>跳转到第二阶段的代码入口</li>
+</ol>
+<h3 id="第二阶段"><a href="#第二阶段" class="headerlink" title="第二阶段"></a>第二阶段</h3><ol>
+<li>初始化本阶段所使用的硬件设备                                                 </li>
+<li>检测系统内存映射</li>
+<li>将内核从Flash读取到RAM中</li>
+<li>为内核设置启动参数</li>
+<li>调用内核</li>
+</ol>
+<h2 id="建立2440的配置"><a href="#建立2440的配置" class="headerlink" title="建立2440的配置"></a>建立2440的配置</h2><p>uboot-2009-11和之前的版本相比，有一点变化，我们在u-boot-2016.09/configs 可以看到各种板级支持配置，由于2440和2410相差不大，所以我们根据2410，来添加2440的配置</p>
+<h3 id="修改根目录的Makefile"><a href="#修改根目录的Makefile" class="headerlink" title="修改根目录的Makefile"></a>修改根目录的Makefile</h3><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#设置股下面两个变量</span></span><br><span class="line">ARCH = arm</span><br><span class="line">CROSS_COMPILE = arm-none-linux-gnueabi-</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加my2440配置文件"><a href="#添加my2440配置文件" class="headerlink" title="添加my2440配置文件"></a>添加my2440配置文件</h3><h4 id="新建配置文件"><a href="#新建配置文件" class="headerlink" title="新建配置文件"></a>新建配置文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp u-boot-2016.05/configs/smdk2410_defconfig   u-boot-2016.05/configs/my2440_defconfig</span><br></pre></td></tr></table></figure>
+
+<p>上面这条命令新建了my2440的板子配置</p>
+<h4 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-2016.05/configs/my2440_defconfig</span><br></pre></td></tr></table></figure>
+
+<h4 id="改动前后的内容如下"><a href="#改动前后的内容如下" class="headerlink" title="改动前后的内容如下:"></a>改动前后的内容如下:</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">改动前：</span><br><span class="line">	CONFIG_ARM=y</span><br><span class="line">	CONFIG_TARGET_SMDK2410=y</span><br><span class="line">	CONFIG_HUSH_PARSER=y</span><br><span class="line">	CONFIG_SYS_PROMPT="SMDK2410 # "</span><br><span class="line">	CONFIG_CMD_USB=y</span><br><span class="line"><span class="meta">	#</span> CONFIG_CMD_SETEXPR is not set</span><br><span class="line">	CONFIG_CMD_DHCP=y</span><br><span class="line">	CONFIG_CMD_PING=y</span><br><span class="line">	CONFIG_CMD_CACHE=y</span><br><span class="line">	CONFIG_CMD_EXT2=y</span><br><span class="line">	CONFIG_CMD_FAT=y</span><br><span class="line">改动后：</span><br><span class="line">    CONFIG_ARM=y</span><br><span class="line">    CONFIG_TARGET_MY2440=y      </span><br><span class="line">    CONFIG_HUSH_PARSER=y</span><br><span class="line">    CONFIG_SYS_PROMPT="MY2440 # "  #修改成我们自己板子名称</span><br><span class="line">    CONFIG_CMD_USB=y</span><br><span class="line">    # CONFIG_CMD_SETEXPR is not set</span><br><span class="line">    CONFIG_CMD_DHCP=y</span><br><span class="line">    CONFIG_CMD_PING=y</span><br><span class="line">    CONFIG_CMD_CACHE=y</span><br><span class="line">    CONFIG_CMD_EXT2=y</span><br><span class="line">    CONFIG_CMD_FAT=y</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加my2440板级支持文件"><a href="#添加my2440板级支持文件" class="headerlink" title="添加my2440板级支持文件"></a>添加my2440板级支持文件</h3><p>上一个步骤我们已经添加了配置文件，下面我们来添加支持文件，让编译器通过.UBoot源码中大部分和板子相关的代码在board目录下</p>
+<h4 id="新建板级支持-c文件"><a href="#新建板级支持-c文件" class="headerlink" title="新建板级支持.c文件"></a>新建板级支持.c文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -rf u-boot-2016.05/board/samsung/smdk2410/     u-boot-2016.05/board/samsung/my2440/</span><br></pre></td></tr></table></figure>
+
+<h4 id="将板级支持文件和板级配置文件关联"><a href="#将板级支持文件和板级配置文件关联" class="headerlink" title="将板级支持文件和板级配置文件关联"></a>将板级支持文件和板级配置文件关联</h4><ol>
+<li><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-2016.05/arch/arm/Kconfig</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>找到2410的配置，来在下面添加2440配置</p>
+   <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">在：</span><br><span class="line">config TARGET_SMDK2410</span><br><span class="line">	bool <span class="string">"Support smdk2410"</span></span><br><span class="line">	select CPU_ARM920T</span><br><span class="line">添加：  <span class="comment">#注意Kconfig的语法，需要使用[Tab]键，缩进</span></span><br><span class="line">config TARGET_MY2440</span><br><span class="line">	bool <span class="string">"Support my2440"</span></span><br><span class="line">	select CPU_ARM920T</span><br><span class="line">在：</span><br><span class="line">source <span class="string">"board/samsung/smdk2410/Kconfig"</span></span><br><span class="line">添加：</span><br><span class="line">source <span class="string">"board/samsung/myff2440/Kconfig"</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="修改板级支持文件夹里的Kconfig"><a href="#修改板级支持文件夹里的Kconfig" class="headerlink" title="修改板级支持文件夹里的Kconfig"></a>修改板级支持文件夹里的Kconfig</h4><ol>
+<li><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-<span class="number">2016.05</span>/board/samsung/my2440/Kconfig</span><br><span class="line">配置文件打开后，可以看到很多配置还都是smdk2410的配置:</span><br><span class="line"><span class="keyword">if</span> TARGET_SMDK2410</span><br><span class="line">config SYS_BOARD</span><br><span class="line">	default <span class="string">"smdk2410"</span></span><br><span class="line"></span><br><span class="line">config SYS_VENDOR</span><br><span class="line">	default <span class="string">"samsung"</span></span><br><span class="line">config SYS_SOC</span><br><span class="line">	default <span class="string">"s3c24x0"</span></span><br><span class="line">config SYS_CONFIG_NAME</span><br><span class="line">	default <span class="string">"smdk2410"</span></span><br><span class="line"><span class="keyword">endif</span></span><br><span class="line">修改为：</span><br><span class="line"><span class="keyword">if</span> TARGET_MYFF2440</span><br><span class="line"></span><br><span class="line">config SYS_BOARD</span><br><span class="line">	default <span class="string">"myff2440"</span></span><br><span class="line">config SYS_VENDOR</span><br><span class="line"> 	default <span class="string">"samsung"</span></span><br><span class="line">config SYS_SOC</span><br><span class="line">	default <span class="string">"s3c24x0"</span></span><br><span class="line">config SYS_CONFIG_NAME</span><br><span class="line">	default <span class="string">"myff2440"</span></span><br><span class="line"><span class="keyword">endif</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="修改板级支持文件名字"><a href="#修改板级支持文件名字" class="headerlink" title="修改板级支持文件名字"></a>修改板级支持文件名字</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv u-boot-2016.05/board/samsung/my2440/smdk2410.c   u-boot-2016.05/board/samsung/my2440/my2440.c</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改板级支持文件夹里的my2440-c"><a href="#修改板级支持文件夹里的my2440-c" class="headerlink" title="修改板级支持文件夹里的my2440.c"></a>修改板级支持文件夹里的my2440.c</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot<span class="number">-2016.05</span>/board/samsung/my2440/my2440.c</span><br><span class="line">打开后搜索: SMDK2410</span><br><span class="line">将</span><br><span class="line"> gd-&gt;bd-&gt;bi_arch_number = MACH_TYPE_SMDK2410;</span><br><span class="line"> 该为：</span><br><span class="line"> gd-&gt;bd-&gt;bi_arch_number = MACH_TYPE_MINI2440;</span><br></pre></td></tr></table></figure>
+
+<p>  这里板子底层初始化部分先暂时使用MINI2440板子的参数配置，目的先是为了编译能通过。</p>
+<h4 id="修改板级支持文件夹里的Makefile"><a href="#修改板级支持文件夹里的Makefile" class="headerlink" title="修改板级支持文件夹里的Makefile"></a>修改板级支持文件夹里的Makefile</h4><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gedit u-boot-<span class="number">2016.05</span>/board/samsung/my2440/Makefile</span><br><span class="line">修改前：</span><br><span class="line">       obj-y := smdk2410.o</span><br><span class="line">       obj-y += lowlevel_init.o</span><br><span class="line">修改后：</span><br><span class="line">       obj-y:= my2440.o</span><br><span class="line">       obj-y += lowlevel_init.o</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改my2440-c的头文件"><a href="#修改my2440-c的头文件" class="headerlink" title="修改my2440.c的头文件"></a>修改my2440.c的头文件</h4><ol>
+<li><p>添加my2440的头文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp u-boot-2016.05/include/configs/smdk2410.h</span><br><span class="line">u-boot-2016.05/include/configs/my2440.h</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gedit   u-boot-2016.05/include/configs/my2440.h</span><br><span class="line">修改前：</span><br><span class="line">       #define CONFIG_S3C24X0 /* This is a SAMSUNG S3C24x0-type SoC */</span><br><span class="line">       #define CONFIG_S3C2410 /* specifically a SAMSUNG S3C2410 SoC */</span><br><span class="line">       #define CONFIG_SMDK2410 /* on a SAMSUNG SMDK2410 Board */</span><br><span class="line">修改后：</span><br><span class="line">       #define CONFIG_S3C24X0 /* This is a SAMSUNG S3C24x0-type SoC */</span><br><span class="line">       #define CONFIG_S3C2440/* specifically a SAMSUNG S3C2440 SoC */</span><br><span class="line">       #define CONFIG_MY2440/* on custom my2440 Board */</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="编译调试"><a href="#编译调试" class="headerlink" title="编译调试"></a>编译调试</h2><ol>
+<li><p>进入源码目录,cd u-boot-2016.09-11</p>
+</li>
+<li><p>在编译前先清空一次目录,sudo make distclean</p>
+</li>
+<li><p>修改编译配置,make my2440_config</p>
+</li>
+<li><p>make</p>
+</li>
+<li><p>sudo make</p>
+</li>
+<li><p>不出意外的话，就能顺利通过，如果没有通过的话，我们可以看看根目录下的.config文件的配置是够正确</p>
+<p>​</p>
+</li>
+</ol>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://www.funful.ink/2019/05/12/JZ2440_uboot_2009_11_transplant_1/" title="JZ2440的uboot-2009-11 移植&lt;1&gt;" target="_blank" rel="external">http://www.funful.ink/2019/05/12/JZ2440_uboot_2009_11_transplant_1/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/05/13/JZ2440_uboot_2009_11_transplant_3_nor_flash/" title="JZ2440的uboot-2009-11移植&lt;3&gt;_支持Nor Flash"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2019/03/30/2019-3-30_SSH/" title="SSH基本原理及使用&lt;一&gt;"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

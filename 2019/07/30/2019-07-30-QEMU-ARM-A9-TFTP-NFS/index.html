@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000">
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top">
+  
+  
+  <title>QEMU模拟AMRM-A9（tftp挂载kenel，nfs挂载rotfs） | Hexo</title>
+  <meta name="description" content="初次接触linux系统是使用的2440的板子，跟着韦东山老师学习了uboot kernel 和文件系统，也算是入门了，后面又使用4412板子做了一些应用层的项目。但是底层的uboot和内核和文件系统都是在厂商的支持下，做的较为简单二次开发。已经毕业一个月了，业余时间太多，想好好学学驱动层的东西，但是苦于刚毕业，所以准备采用qemu模拟出arm的开发环境，这样我们只用关注软件层面。">
+<meta name="keywords" content="Linux,QEMU">
+<meta property="og:type" content="article">
+<meta property="og:title" content="QEMU模拟AMRM-A9（tftp挂载kenel，nfs挂载rotfs）">
+<meta property="og:url" content="http://www.funful.ink/2019/07/30/2019-07-30-QEMU-ARM-A9-TFTP-NFS/index.html">
+<meta property="og:site_name" content="FunfulBlog">
+<meta property="og:description" content="初次接触linux系统是使用的2440的板子，跟着韦东山老师学习了uboot kernel 和文件系统，也算是入门了，后面又使用4412板子做了一些应用层的项目。但是底层的uboot和内核和文件系统都是在厂商的支持下，做的较为简单二次开发。已经毕业一个月了，业余时间太多，想好好学学驱动层的东西，但是苦于刚毕业，所以准备采用qemu模拟出arm的开发环境，这样我们只用关注软件层面。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn.funful.ink/2019-7-30-1.png">
+<meta property="og:image" content="http://cdn.funful.ink/2019-7-30-2.png">
+<meta property="og:image" content="http://cdn.funful.ink/2019-7-30-3.png">
+<meta property="og:image" content="http://cdn.funful.ink/2019-7-30-4.png">
+<meta property="og:image" content="http://cdn.funful.ink/2019-7-30-5.png">
+<meta property="og:image" content="http://cdn.funful.ink/2019-7-31-1.png">
+<meta property="og:updated_time" content="2019-08-25T04:15:15.502Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="QEMU模拟AMRM-A9（tftp挂载kenel，nfs挂载rotfs）">
+<meta name="twitter:description" content="初次接触linux系统是使用的2440的板子，跟着韦东山老师学习了uboot kernel 和文件系统，也算是入门了，后面又使用4412板子做了一些应用层的项目。但是底层的uboot和内核和文件系统都是在厂商的支持下，做的较为简单二次开发。已经毕业一个月了，业余时间太多，想好好学学驱动层的东西，但是苦于刚毕业，所以准备采用qemu模拟出arm的开发环境，这样我们只用关注软件层面。">
+<meta name="twitter:image" content="http://cdn.funful.ink/2019-7-30-1.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://www.funful.ink/2019/07/30/2019-07-30-QEMU-ARM-A9-TFTP-NFS/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="FunfulBlog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  
+  
+</head>
+
+
+<body class="main-right theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/cofess" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/BUG调试/">BUG调试</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Qt/">Qt</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/ESP8266/">ESP8266</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Qt/">Qt</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/STM32/">STM32</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/uboot移植/">uboot移植</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/各个方面方案解决/">各个方面方案解决</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/4412/">4412</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ARM汇编/">ARM汇编</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AT指令集/">AT指令集</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-相关/">C++相关</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Digital-Signature/">Digital Signature</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ESP8266/">ESP8266</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FreeRTOS/">FreeRTOS</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IO/">IO</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MDK5/">MDK5</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MQTT/">MQTT</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mplayer/">Mplayer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nor-Flash/">Nor Flash</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QEMU/">QEMU</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Qt/">Qt</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Qt输出日志/">Qt输出日志</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RAID/">RAID</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDK/">SDK</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SSH/">SSH</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Stm32F407/">Stm32F407</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TCP通信/">TCP通信</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/V4L2/">V4L2</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/arm/">arm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bochs/">bochs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deepin/">deepin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nasm/">nasm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/return不同类型/">return不同类型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/this指针/">this指针</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/动态库/">动态库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/回调函数/">回调函数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/局域网/">局域网</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/独立冗余磁盘阵列/">独立冗余磁盘阵列</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/移植/">移植</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态库/">静态库</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/4412/" style="font-size: 13px;">4412</a> <a href="/tags/ARM汇编/" style="font-size: 13px;">ARM汇编</a> <a href="/tags/AT指令集/" style="font-size: 13px;">AT指令集</a> <a href="/tags/C-相关/" style="font-size: 13.67px;">C++相关</a> <a href="/tags/Digital-Signature/" style="font-size: 13px;">Digital Signature</a> <a href="/tags/ESP8266/" style="font-size: 13.67px;">ESP8266</a> <a href="/tags/FreeRTOS/" style="font-size: 13.33px;">FreeRTOS</a> <a href="/tags/IO/" style="font-size: 13px;">IO</a> <a href="/tags/Linux/" style="font-size: 14px;">Linux</a> <a href="/tags/MDK5/" style="font-size: 13.33px;">MDK5</a> <a href="/tags/MQTT/" style="font-size: 13px;">MQTT</a> <a href="/tags/Mplayer/" style="font-size: 13px;">Mplayer</a> <a href="/tags/Nor-Flash/" style="font-size: 13px;">Nor Flash</a> <a href="/tags/QEMU/" style="font-size: 13.33px;">QEMU</a> <a href="/tags/Qt/" style="font-size: 13.33px;">Qt</a> <a href="/tags/Qt输出日志/" style="font-size: 13px;">Qt输出日志</a> <a href="/tags/RAID/" style="font-size: 13px;">RAID</a> <a href="/tags/SDK/" style="font-size: 13.33px;">SDK</a> <a href="/tags/SSH/" style="font-size: 13px;">SSH</a> <a href="/tags/Stm32F407/" style="font-size: 13.33px;">Stm32F407</a> <a href="/tags/TCP通信/" style="font-size: 13px;">TCP通信</a> <a href="/tags/V4L2/" style="font-size: 13px;">V4L2</a> <a href="/tags/arm/" style="font-size: 13.67px;">arm</a> <a href="/tags/bochs/" style="font-size: 13px;">bochs</a> <a href="/tags/deepin/" style="font-size: 13px;">deepin</a> <a href="/tags/linux/" style="font-size: 13.67px;">linux</a> <a href="/tags/nasm/" style="font-size: 13px;">nasm</a> <a href="/tags/return不同类型/" style="font-size: 13px;">return不同类型</a> <a href="/tags/this指针/" style="font-size: 13px;">this指针</a> <a href="/tags/动态库/" style="font-size: 13px;">动态库</a> <a href="/tags/回调函数/" style="font-size: 13px;">回调函数</a> <a href="/tags/局域网/" style="font-size: 13px;">局域网</a> <a href="/tags/操作系统/" style="font-size: 13px;">操作系统</a> <a href="/tags/独立冗余磁盘阵列/" style="font-size: 13px;">独立冗余磁盘阵列</a> <a href="/tags/移植/" style="font-size: 14px;">移植</a> <a href="/tags/静态库/" style="font-size: 13px;">静态库</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled ">
+        
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2019/10/19/2019-10-19-全志A64编译固件报Fault/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/BUG调试/">BUG调试</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/10/19/2019-10-19-全志A64编译固件报Fault/" class="title">全志A64编译固件报Fault</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-10-19T00:00:00.000Z" itemprop="datePublished">2019-10-19</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2019/08/24/2019-08-24-C-Assembly/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Linux/">Linux</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/08/24/2019-08-24-C-Assembly/" class="title">C内嵌ARM汇编</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-08-24T00:00:00.000Z" itemprop="datePublished">2019-08-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2019/07/30/2019-07-30-QEMU-ARM-A9-TFTP-NFS/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Linux/">Linux</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/07/30/2019-07-30-QEMU-ARM-A9-TFTP-NFS/" class="title">QEMU模拟AMRM-A9（tftp挂载kenel，nfs挂载rotfs）</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-07-30T00:00:00.000Z" itemprop="datePublished">2019-07-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2019/05/25/2019-05-25-V4L2/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Linux/">Linux</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/05/25/2019-05-25-V4L2/" class="title">Video for Linux two</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-05-25T00:00:00.000Z" itemprop="datePublished">2019-05-25</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-thumb">
+              <a href="/2019/05/20/ESP8266_SDK_MQTT_LED/" class="thumb">
+    
+    
+        <span class="thumb-image thumb-none"></span>
+    
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/ESP8266/">ESP8266</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/05/20/ESP8266_SDK_MQTT_LED/" class="title">ES8266模块二次开发SDK之MQTT局域网控制LED</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-05-20T00:00:00.000Z" itemprop="datePublished">2019-05-20</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-2019-07-30-QEMU-ARM-A9-TFTP-NFS" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      QEMU模拟AMRM-A9（tftp挂载kenel，nfs挂载rotfs）
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/07/30/2019-07-30-QEMU-ARM-A9-TFTP-NFS/" class="article-date">
+	  <time datetime="2019-07-30T00:00:00.000Z" itemprop="datePublished">2019-07-30</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/Linux/">Linux</a>, <a class="article-tag-link" href="/tags/QEMU/">QEMU</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/07/30/2019-07-30-QEMU-ARM-A9-TFTP-NFS/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>初次接触linux系统是使用的2440的板子，跟着韦东山老师学习了uboot kernel 和文件系统，也算是入门了，后面又使用4412板子做了一些应用层的项目。但是底层的uboot和内核和文件系统都是在厂商的支持下，做的较为简单二次开发。已经毕业一个月了，业余时间太多，想好好学学驱动层的东西，但是苦于刚毕业，所以准备采用qemu模拟出arm的开发环境，这样我们只用关注软件层面。</p>
+<a id="more"></a>
+
+<h1 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h1><ul>
+<li>Ubuntu：Ubuntu 19.04</li>
+<li>qemu： QEMU emulator version 3.1.0 </li>
+<li>arm交叉编译器：gcc version 4.8.3 20140320 </li>
+</ul>
+<h1 id="QEMU简介"><a href="#QEMU简介" class="headerlink" title="QEMU简介"></a>QEMU简介</h1><h1 id="Ubuntu安装qemu-system-arm"><a href="#Ubuntu安装qemu-system-arm" class="headerlink" title="Ubuntu安装qemu-system-arm"></a>Ubuntu安装qemu-system-arm</h1><p>这里有两种方法：</p>
+<h2 id="系统提供的源安装："><a href="#系统提供的源安装：" class="headerlink" title="系统提供的源安装："></a>系统提供的源安装：</h2><p>在ubuntu的Terminal下输入以下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install qemu</span><br><span class="line">sudo apt-get install qemu-system-arm</span><br><span class="line">安装完之后：qemu-system-arm  -version 查看qemu版本</span><br></pre></td></tr></table></figure>
+
+<p>  使用ubuntn16版本的时候，使用第一个命令安装就可以，但是使用Ubuntu19.04时，使用第一个命令安装完，搜索不到qemu-system-arm这个命令，还需要使用第二个命令安装。使用系统的源安装可以解决库依赖的问题。</p>
+<h2 id="源文件编译安装："><a href="#源文件编译安装：" class="headerlink" title="源文件编译安装："></a>源文件编译安装：</h2><p>使用源文件安装我们需要使用git 将工程clone到本地（如果没有git的话，需要先去官网注册，然后在Ubuntu安装，配置等），安装之前还需要解决QEMU编译依赖的包，也可以在安装的过程中根据缺少的库依次安装。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">下载源码：sudo git clone git://git.qemu.org/qemu.git</span><br><span class="line">可以使用git命令切换到稳定版本：git checkout  xxxx</span><br><span class="line">编译配置 ./configure (可以使用 ./configure -help 查看支持的参数)</span><br><span class="line">安装:  make &amp;&amp; make install (不出意外的话可以成功安装)</span><br></pre></td></tr></table></figure>
+
+<p>比较这个两种方法可以知道，第二种虽然比较复杂，但是灵活度更高，可以配置参数。第一种安装简单。</p>
+<p>在启动uboot之前，我们还需要安装arm的交叉编译器，这里推荐不要用太老，也不要用太新的编译器（个人建议，以为有时候uboot kernel和文件系统会因为交叉编译器太老启动失败），可以直接去CodeSourcery  Linaro   或者别的官网下载源码。</p>
+<h1 id="qemu-system-arm启动uboot"><a href="#qemu-system-arm启动uboot" class="headerlink" title="qemu-system-arm启动uboot"></a>qemu-system-arm启动uboot</h1><p>下载uboot源码：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.在浏览器下载：https://ftp.denx.de/pub/u-boot/</span><br><span class="line">2.wget命令下载：wget  https://ftp.denx.de/pub/u-boot/u-boot-xxxxx.tar.bz2（版本自己选择）</span><br></pre></td></tr></table></figure>
+
+<p>检测arm交叉编译器是否安装成功：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arm-none-linux-gnueabi-gcc  -v</span><br></pre></td></tr></table></figure>
+
+<p>这里我自己编译一个简单的脚本 配置生成uboot</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/bash </span><br><span class="line">export ARCH=arm        #指定编译生成架构 ，也可以在uboot根目录的Makefile修改</span><br><span class="line">export CROSS_COMPILE=arm-none-linux-gnueabi- #指定编译生成的交叉编译链，也可以在uboot根目录的Makefile修改</span><br><span class="line">make vexpress_ca9x4_defconfig   #编译我们要生成平台u-boot.bin的配置文件，在uboot根目录下会生成.config文件（主要有点，ls -al 才能看到）。另外make menuconfig图形化配置也会最终修改.config文件里面的内容。也可以直接修改.config</span><br><span class="line">source /etc/profile   #我将交叉编译链的环境变量添加到profile文件里面。以防万一，让其生效</span><br><span class="line">make          #生成</span><br></pre></td></tr></table></figure>
+
+<p>执行成功之后会看到生成u-boot u-boot.bin等文件，使用以下命令可以核对生成文件的架f构：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file u-boot</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://cdn.funful.ink/2019-7-30-1.png" alt></p>
+<p>qemu启动uboot脚本（注意给脚本权限）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"> #</span>!/bin/sh</span><br><span class="line">qemu-system-arm  \</span><br><span class="line">         -M  vexpress-a9 \  #指定开发板</span><br><span class="line">         -m 512M \          #内存</span><br><span class="line">         -nographic  \      #不使用LCD屏，即使用当前Terminal</span><br><span class="line">         -kernel  /home/linux/armuboot/u-boot-2017.05/u-boot \</span><br></pre></td></tr></table></figure>
+
+<p>uboot有一个循环的命令解释器，在启动3秒内（时间可设置），按任意键即可进入。</p>
+<p><img src="http://cdn.funful.ink/2019-7-30-2.png" alt></p>
+<p>可以在3秒内进入uboot的终端解释器，使用print打印当前的环境变量</p>
+<p><img src="http://cdn.funful.ink/2019-7-30-3.png" alt></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print     #打印当前变量</span><br><span class="line">serenv    #设置环境变量</span><br><span class="line">saveenv   #保存环境变量到flash</span><br></pre></td></tr></table></figure>
+
+<p>这里uboot已经启动成功，下面我们使用uboot加载kernel，如果有板子的话一般都是通过下载到板子里面然后再启动，但是这样子比较浪费时间，这里我们采用tftp网口下载直接运行的方式运行kernel。</p>
+<h1 id="uboot引导kernel-rootfs"><a href="#uboot引导kernel-rootfs" class="headerlink" title="uboot引导kernel+rootfs"></a>uboot引导kernel+rootfs</h1><p>在uboot初始化完成之后会将需要传给内核的参数放到一段内存空间，然后运行内核 文件系统，内核会从这段空间取相应的信息MachineID bootargs console等等信息(个人理解，如果不正确Email联系)</p>
+<h2 id="tftp加载kernel"><a href="#tftp加载kernel" class="headerlink" title="tftp加载kernel"></a>tftp加载kernel</h2><p>uboot通过以太网从ftp服务器获得kernel的uImage，所以我们在使用虚拟机Ubuntu系统要和qemu位于同一个网段，这里将Ubuntu设置位NAT模式。创建一个网桥，将ubuntu和qemu的网卡都连接到网桥。uImage和zImage的区别是uImage压缩过，解压之后uImage和zImage几乎相同。之前分析uboot的uboot代码的时候只支持uImage启动，但是可以通过修改uboot代码支持启动zImage，也不难。tftp加载kernel的原理就是在Ubuntu安装tftp服务器，uboot会从tftp下载内核。下面分步进行操作：</p>
+<ol>
+<li><p>创建网桥和qemu的虚拟网卡tap0</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">安装工具包：apt-get install uml-utilities bridge-utils</span><br><span class="line"></span><br><span class="line">修改/etc/network/interfaces文件：</span><br><span class="line">auto lo</span><br><span class="line">iface lo inet loopback</span><br><span class="line">auto tap0</span><br><span class="line">auto ens33</span><br><span class="line">auto tap0</span><br><span class="line">auto br0</span><br><span class="line">iface br0 inet dhcp</span><br><span class="line"> bridge_ports all tap0</span><br><span class="line">重启，使用nmcli可以看到添加到的br0桥</span><br><span class="line">添加tap0网卡，并将网卡连接到br0：</span><br><span class="line"> tunctl -t tap0 -u root</span><br><span class="line"> brctl addif br0 tap0</span><br><span class="line"> ifconfig tap0 0.0.0.0  promisc up</span><br><span class="line">配置之后重启网络： service networking  restart</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装tftp服务器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> apt-get install tftp-hpa tftpd-hpa xinetd</span><br><span class="line"> 修改配置文件:/etc/default/tftpd-hpa :</span><br><span class="line"> TFTP_USERNAME="tftp"</span><br><span class="line">TFTP_DIRECTORY="/home/linux/tftpboot"    #这个是我们创建的tftp服务器存放文件路径，权限：0777</span><br><span class="line">TFTP_ADDRESS="0.0.0.0:69"</span><br><span class="line">TFTP_OPTIONS="-l -c -s"</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编译内核：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">下载linux源码：https://mirrors.edge.kernel.org/pub/linux/kernel/</span><br><span class="line">进入源码根目录的Makefile：修改ARCH和CROSS_COMPILE</span><br><span class="line">ARCH  ？=arm</span><br><span class="line">CROSS_COMPILE？=arm-none-linux-gnueabi-</span><br><span class="line">执行配置文件：make vexpress_defconfig （linux-5.2/arch/arm/configs 里面放的各种板子支持的配置文件）</span><br><span class="line">使用图形配置kernel支持nfs和tftp：</span><br><span class="line">  make  menuconfig</span><br><span class="line">安装生成： make LOADADDR=0x60003000 uImage -j6 # (-j6是多线程执行)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>qemu的启动脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> qemu-system-arm \</span><br><span class="line">-M vexpress-a9 \</span><br><span class="line">-kernel /home/linux/armuboot/u-boot-2017.05/u-boot \</span><br><span class="line">-nographic \</span><br><span class="line">-m 512M \</span><br><span class="line">-net nic \</span><br><span class="line">-net tap,ifname=tap0</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="5">
+<li><p>加载内核</p>
+<ol>
+<li><p>手动加载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">在手动加载之前需要重启系统，并且确保tap0连接到br0网桥，使用nmcli命令查看br0的IP</span><br><span class="line">执行4步骤的脚本，在3秒内，任意键进入终端执行如下命令：</span><br><span class="line">setenv IPADDR 192.168.5.126</span><br><span class="line">setenv SERVERIP 192.168.5.128 #这里的IP是br0的IP</span><br><span class="line">tftp   0x60003000 uImage  #将tftp的路径下的uImage下载到0x60003000地址</span><br><span class="line">bootm  0x60003000   #手动启动内核</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>自动加载</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">进入uboot根目录 打开vim include/configs/vexpress_common.h</span><br><span class="line">修改如下：</span><br><span class="line"><span class="meta">#</span>define CONFIG_BOOTCOMMAND "tftp 0x60003000 uImage;tftp 0x60500000 vexpress-v2p-ca9.dtb; setenv bootargs 'root=/dev/mmcblk0  console=ttyAMA0';bootm 0x60003000 - 0x60500000;"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>define CONFIG_IPADDR 192.168.5.126 </span><br><span class="line"><span class="meta">#</span>define CONFIG_NETMASK 255.255.255.0</span><br><span class="line"><span class="meta">#</span>define CONFIG_SERVERIP 192.168.5.139</span><br><span class="line">执行4步骤的脚本，会相继看到下面两个过程</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://cdn.funful.ink/2019-7-30-4.png" alt></p>
+<p><img src="http://cdn.funful.ink/2019-7-30-5.png" alt></p>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="nfs加载rootfs"><a href="#nfs加载rootfs" class="headerlink" title="nfs加载rootfs"></a>nfs加载rootfs</h2><p>上面已经成功启动内核，但是还需要文件系统的支持才能进入命令行终端，可以使用busybox工具创建，可以参考网上教程。这里可以使用两种方式挂载rootfs，但是为了使用方便，我们通过nfs挂载，便于后续的开发调试。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">安装：</span><br><span class="line">sudo apt-get install nfs-kernel-server</span><br><span class="line">配置：</span><br><span class="line">在/etc/exports文件中添加：</span><br><span class="line">/home/linux/armsystem/rootfs *(rw,sync,no_root_squash,no_subtree_check)</span><br><span class="line">保存</span><br><span class="line">重启服务：</span><br><span class="line">service rpcbind restart</span><br><span class="line">service nfs-kernel-server restart</span><br><span class="line">进入uboot的根目录修改文件：</span><br><span class="line">vim  include/configs/vexpress_common.h</span><br><span class="line"><span class="meta"> #</span>define CONFIG_BOOTCOMMAND "tftp 0x60003000 uImage;tftp 0x60500000 vexpress    -v2p-ca9.dtb; setenv bootargs 'root=/dev/nfs rw nfsroot=192.168.5.140:/home/    linux/armsystem/rootfs ip=192.168.5.126:192.168.5.140:255.255.255.0:eh0:off     init=/linuxrc  console=ttyAMA0';bootm 0x60003000 - 0x60500000;"</span><br><span class="line"><span class="meta"> #</span>define CONFIG_IPADDR 192.168.5.126 </span><br><span class="line"><span class="meta"> #</span>define CONFIG_NETMASK 255.255.255.0</span><br><span class="line"><span class="meta"> #</span>define CONFIG_SERVERIP 192.168.5.140</span><br><span class="line">重新编译uboot</span><br><span class="line">执行上一节4步骤脚本</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://cdn.funful.ink/2019-7-31-1.png" alt></p>
+<p>到此整个环境就搭建完成了。期间会遇见很多不可知的错误，慢慢研究就肯定能搞明白。</p>
+<p>#nfs挂载一直失败</p>
+<p>使用nfs挂在文件系统的时候，前面搭建一切顺利，但就是挂载不上去的原因就是较新版本的Ubuntu系统，只支持nfs协议3和协议4，但是uboot只支持nfs协议2，所以需要修改Ubuntu的配置文件如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim  /etc/default/nfs-kernel-server</span><br><span class="line">尾行添加：RPCNFSDOPTS=&quot;--nfs-version 2,3,4 --debug --syslog&quot; </span><br><span class="line">保存，重启nfs即可</span><br></pre></td></tr></table></figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>使用qemu模拟arm有利也有弊，我们不能真正的点亮LED灯，但是对于学习内核驱动，不用关注硬件，将会有更多的时间学习驱动。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://www.funful.ink/2019/07/30/2019-07-30-QEMU-ARM-A9-TFTP-NFS/" title="QEMU模拟AMRM-A9（tftp挂载kenel，nfs挂载rotfs）" target="_blank" rel="external">http://www.funful.ink/2019/07/30/2019-07-30-QEMU-ARM-A9-TFTP-NFS/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/08/24/2019-08-24-C-Assembly/" title="C内嵌ARM汇编"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2019/05/25/2019-05-25-V4L2/" title="Video for Linux two"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
