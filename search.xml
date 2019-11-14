@@ -3,19 +3,20 @@
   <entry>
     <title>全志A64编译固件报Fault</title>
     <url>/2019/10/19/2019-10-19-%E5%85%A8%E5%BF%97A64%E7%BC%96%E8%AF%91%E5%9B%BA%E4%BB%B6%E6%8A%A5Fault/</url>
-    <content><![CDATA[<a id="more"></a><h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+    <content><![CDATA[<p>全志A64</p>
+<a id="more"></a>
+
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
 <li>Ubuntu： Ubuntu 19.04</li>
 <li>固件： 全志CQA64-LinuxQT</li>
 <li>arm交叉编译器：crosstool-NG linaro-1.13.1-4.9-2014.09 - Linaro GCC 4.9-2014.09</li>
 <li>时间：19-10-2019</li>
-</ul><h2 id="错误描述"><a href="#错误描述" class="headerlink" title="错误描述"></a>错误描述</h2><ul>
+</ul>
+<h2 id="错误描述"><a href="#错误描述" class="headerlink" title="错误描述"></a>错误描述</h2><ul>
 <li><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">freadahead.c: In function 'freadahead':</span><br><span class="line">freadahead.c:<span class="number">92</span>:<span class="number">3</span>: error: <span class="meta">#<span class="meta-keyword">error</span> <span class="meta-string">"Please port gnulib freadahead.c to your platform! Look at the definition of fflush, fread, ungetc on your system, then report this to bug-gnulib."</span></span></span><br><span class="line">  <span class="meta">#<span class="meta-keyword">error</span> <span class="meta-string">"Please port gnulib freadahead.c to your platform! Look at the definition of fflush, fread, ungetc on your system, then report this to bug-gnulib."</span></span></span><br></pre></td></tr></table></figure>
 
 </li>
-</ul><a id="more"></a>
-
-
-
+</ul>
 <h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><ul>
 <li><p>进入host-m4-1.4.18/lib中，对fflush.c，fpending.c，fpurge.c，freadahead.c，freading.c，fseeko.c中”_IO_ftrylockfile“ 替换为“_IO_EOF_SEEN”</p>
 </li>
