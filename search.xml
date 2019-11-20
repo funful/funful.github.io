@@ -3,7 +3,7 @@
   <entry>
     <title>全志A64编译固件报Fault</title>
     <url>/2019/10/19/2019-10-19-%E5%85%A8%E5%BF%97A64%E7%BC%96%E8%AF%91%E5%9B%BA%E4%BB%B6%E6%8A%A5Fault/</url>
-    <content><![CDATA[<p>全志A64<br><img src="/var/www/blog/sourcae/images/1.jpg" alt></p>
+    <content><![CDATA[<p>全志A64<br><img alt data-src="/var/www/blog/sourcae/images/1.jpg" class="lazyload"></p>
 <a id="more"></a>
 
 <h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
@@ -102,14 +102,14 @@
 <p>执行成功之后会看到生成u-boot u-boot.bin等文件，使用以下命令可以核对生成文件的架f构：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">file u-boot</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://cdn.funful.ink/2019-7-30-1.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/2019-7-30-1.png" class="lazyload"></p>
 <p>qemu启动uboot脚本（注意给脚本权限）</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta"> #</span>!/bin/sh</span><br><span class="line">qemu-system-arm  \</span><br><span class="line">         -M  vexpress-a9 \  #指定开发板</span><br><span class="line">         -m 512M \          #内存</span><br><span class="line">         -nographic  \      #不使用LCD屏，即使用当前Terminal</span><br><span class="line">         -kernel  /home/linux/armuboot/u-boot-2017.05/u-boot \</span><br></pre></td></tr></table></figure>
 
 <p>uboot有一个循环的命令解释器，在启动3秒内（时间可设置），按任意键即可进入。</p>
-<p><img src="http://cdn.funful.ink/2019-7-30-2.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/2019-7-30-2.png" class="lazyload"></p>
 <p>可以在3秒内进入uboot的终端解释器，使用print打印当前的环境变量</p>
-<p><img src="http://cdn.funful.ink/2019-7-30-3.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/2019-7-30-3.png" class="lazyload"></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">print     #打印当前变量</span><br><span class="line">serenv    #设置环境变量</span><br><span class="line">saveenv   #保存环境变量到flash</span><br></pre></td></tr></table></figure>
 
 <p>这里uboot已经启动成功，下面我们使用uboot加载kernel，如果有板子的话一般都是通过下载到板子里面然后再启动，但是这样子比较浪费时间，这里我们采用tftp网口下载直接运行的方式运行kernel。</p>
@@ -141,8 +141,8 @@
 <li><p>自动加载</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">进入uboot根目录 打开vim include/configs/vexpress_common.h</span><br><span class="line">修改如下：</span><br><span class="line"><span class="meta">#</span>define CONFIG_BOOTCOMMAND "tftp 0x60003000 uImage;tftp 0x60500000 vexpress-v2p-ca9.dtb; setenv bootargs 'root=/dev/mmcblk0  console=ttyAMA0';bootm 0x60003000 - 0x60500000;"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>define CONFIG_IPADDR 192.168.5.126 </span><br><span class="line"><span class="meta">#</span>define CONFIG_NETMASK 255.255.255.0</span><br><span class="line"><span class="meta">#</span>define CONFIG_SERVERIP 192.168.5.139</span><br><span class="line">执行4步骤的脚本，会相继看到下面两个过程</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://cdn.funful.ink/2019-7-30-4.png" alt></p>
-<p><img src="http://cdn.funful.ink/2019-7-30-5.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/2019-7-30-4.png" class="lazyload"></p>
+<p><img alt data-src="http://cdn.funful.ink/2019-7-30-5.png" class="lazyload"></p>
 </li>
 </ol>
 </li>
@@ -150,7 +150,7 @@
 <h2 id="nfs加载rootfs"><a href="#nfs加载rootfs" class="headerlink" title="nfs加载rootfs"></a>nfs加载rootfs</h2><p>上面已经成功启动内核，但是还需要文件系统的支持才能进入命令行终端，可以使用busybox工具创建，可以参考网上教程。这里可以使用两种方式挂载rootfs，但是为了使用方便，我们通过nfs挂载，便于后续的开发调试。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">安装：</span><br><span class="line">sudo apt-get install nfs-kernel-server</span><br><span class="line">配置：</span><br><span class="line">在/etc/exports文件中添加：</span><br><span class="line">/home/linux/armsystem/rootfs *(rw,sync,no_root_squash,no_subtree_check)</span><br><span class="line">保存</span><br><span class="line">重启服务：</span><br><span class="line">service rpcbind restart</span><br><span class="line">service nfs-kernel-server restart</span><br><span class="line">进入uboot的根目录修改文件：</span><br><span class="line">vim  include/configs/vexpress_common.h</span><br><span class="line"><span class="meta"> #</span>define CONFIG_BOOTCOMMAND "tftp 0x60003000 uImage;tftp 0x60500000 vexpress    -v2p-ca9.dtb; setenv bootargs 'root=/dev/nfs rw nfsroot=192.168.5.140:/home/    linux/armsystem/rootfs ip=192.168.5.126:192.168.5.140:255.255.255.0:eh0:off     init=/linuxrc  console=ttyAMA0';bootm 0x60003000 - 0x60500000;"</span><br><span class="line"><span class="meta"> #</span>define CONFIG_IPADDR 192.168.5.126 </span><br><span class="line"><span class="meta"> #</span>define CONFIG_NETMASK 255.255.255.0</span><br><span class="line"><span class="meta"> #</span>define CONFIG_SERVERIP 192.168.5.140</span><br><span class="line">重新编译uboot</span><br><span class="line">执行上一节4步骤脚本</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://cdn.funful.ink/2019-7-31-1.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/2019-7-31-1.png" class="lazyload"></p>
 <p>到此整个环境就搭建完成了。期间会遇见很多不可知的错误，慢慢研究就肯定能搞明白。</p>
 <p>#nfs挂载一直失败</p>
 <p>使用nfs挂在文件系统的时候，前面搭建一切顺利，但就是挂载不上去的原因就是较新版本的Ubuntu系统，只支持nfs协议3和协议4，但是uboot只支持nfs协议2，所以需要修改Ubuntu的配置文件如下：</p>
@@ -213,7 +213,7 @@
 </ul>
 </li>
 <li><p>具体流程图如图：</p>
-<p><img src="http://cdn.funful.ink/2019-5-25.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/2019-5-25.png" class="lazyload"></p>
 <h1 id="移植Qt的具体代码"><a href="#移植Qt的具体代码" class="headerlink" title="移植Qt的具体代码"></a>移植Qt的具体代码</h1></li>
 <li><p>V4L2_QT.cpp</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"v4l2_qt.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ui_v4l2_qt.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"v4l2_heade.h"</span></span></span><br><span class="line">V4L2_QT::V4L2_QT(QWidget *parent) :</span><br><span class="line">    QMainWindow(parent),</span><br><span class="line">    ui(<span class="keyword">new</span> Ui::V4L2_QT)</span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;setupUi(<span class="keyword">this</span>);</span><br><span class="line">    Camera_fd = <span class="number">-1</span>;</span><br><span class="line">     buffers = <span class="literal">NULL</span>;</span><br><span class="line">     n_buffers = <span class="number">0</span>;</span><br><span class="line">    device   =  <span class="string">"/dev/video0"</span>;<span class="comment">//linux</span></span><br><span class="line">    device_2 = <span class="string">"/dev/video4"</span>;<span class="comment">//</span></span><br><span class="line">    pixel_format = V4L2_PIX_FMT_YUYV;	<span class="comment">//视频格式为MJPEG</span></span><br><span class="line">    pre_w = WIDTH;	<span class="comment">//预览窗口w</span></span><br><span class="line">    pre_h = HEIGHT;	<span class="comment">//预览窗口h</span></span><br><span class="line">    timer=<span class="keyword">new</span> QTimer(<span class="keyword">this</span>);</span><br><span class="line">    frame=<span class="keyword">new</span> QImage(rgb,WIDTH,HEIGHT,QImage::Format_RGB888);</span><br><span class="line">    <span class="keyword">this</span>-&gt;setMaximumSize(<span class="number">640</span>,<span class="number">480</span>);</span><br><span class="line">    <span class="keyword">this</span>-&gt;setMinimumSize(<span class="number">640</span>,<span class="number">480</span>);</span><br><span class="line">    ui-&gt;label-&gt;setMaximumSize(<span class="number">640</span>,<span class="number">480</span>);</span><br><span class="line">    ui-&gt;label-&gt;setMinimumSize(<span class="number">640</span>,<span class="number">480</span>);</span><br><span class="line"></span><br><span class="line">     readCamera();  <span class="comment">//camera 初始化，开启视频流</span></span><br><span class="line">    connect(timer,SIGNAL(timeout()),<span class="keyword">this</span>,SLOT(post_preview()));  <span class="comment">//将视频流post到preview窗口中，实现预览</span></span><br><span class="line">    timer-&gt;start(<span class="number">100</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">V4L2_QT::~V4L2_QT()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">delete</span> ui;</span><br><span class="line">    releaseCamera();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> V4L2_QT::xioctl(<span class="keyword">int</span> fd, <span class="keyword">int</span> request, <span class="keyword">void</span> *arg)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> r;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">        r = ioctl(fd, request, arg);</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">-1</span> == r &amp;&amp; EINTR == errno);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">void</span> V4L2_QT::errno_exit(<span class="keyword">const</span> <span class="keyword">char</span> *s)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"%s error %d, %s\n"</span>, s, errno, strerror(errno));</span><br><span class="line">    <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span>  V4L2_QT::opendevice(<span class="keyword">char</span>*device)</span><br><span class="line"></span><br><span class="line">  &#123;</span><br><span class="line">    Camera_fd=open(device,O_RDWR);</span><br><span class="line">    <span class="keyword">if</span>(Camera_fd&lt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"Cann't Open %s,%d,%s/n"</span>,device,errno ,strerror(errno));</span><br><span class="line">         <span class="keyword">return</span> errno;</span><br><span class="line">    &#125;</span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">       &#123;</span><br><span class="line">        PRINTK(<span class="string">"OPen video Success\n"</span>);</span><br><span class="line">       <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//Memory Requset</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">void</span> V4L2_QT::init_mmap()</span><br><span class="line"></span><br><span class="line">  &#123;</span><br><span class="line">   <span class="class"><span class="keyword">struct</span> <span class="title">v4l2_requestbuffers</span> <span class="title">reqbufs</span>;</span><span class="comment">//向驱动申请帧缓冲的请求，里面包含申请的个数</span></span><br><span class="line">   CLEAR(reqbufs);<span class="comment">//clear</span></span><br><span class="line">   reqbufs.count=<span class="number">4</span>;<span class="comment">//缓存数量，也就是说在缓存队列里保持4张照片</span></span><br><span class="line">   reqbufs.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;<span class="comment">//数据流格式</span></span><br><span class="line">   reqbufs.memory = V4L2_MEMORY_MMAP;</span><br><span class="line">   <span class="keyword">if</span>(<span class="number">-1</span>==xioctl(Camera_fd,VIDIOC_REQBUFS,&amp;reqbufs))</span><br><span class="line">      &#123;</span><br><span class="line">       <span class="keyword">if</span> (EINVAL == errno)&#123;</span><br><span class="line">           <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"%s does not support memory mapping\n"</span>, device);</span><br><span class="line">           <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">           &#125;</span><br><span class="line">       <span class="keyword">else</span>&#123;</span><br><span class="line">       errno_exit(<span class="string">"VIDIOC_REQBUFS"</span>);</span><br><span class="line"></span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">      &#125;</span><br><span class="line">   <span class="keyword">if</span> (reqbufs.count &lt; <span class="number">2</span>)</span><br><span class="line">   &#123;</span><br><span class="line">       <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Insufficient buffer memory on %s\n"</span>, device);</span><br><span class="line">       <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">   &#125;</span><br><span class="line">   buffers = (struct buffer *)<span class="built_in">calloc</span>(reqbufs.count, <span class="keyword">sizeof</span>(*buffers));</span><br><span class="line">   <span class="keyword">if</span> (!buffers)</span><br><span class="line">   &#123;</span><br><span class="line">       <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Out of memory\n"</span>);</span><br><span class="line">       <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">for</span> (n_buffers = <span class="number">0</span>; n_buffers &lt; reqbufs.count; ++n_buffers)</span><br><span class="line">   &#123;</span><br><span class="line">       <span class="class"><span class="keyword">struct</span> <span class="title">v4l2_buffer</span> <span class="title">buf</span>;</span></span><br><span class="line"></span><br><span class="line">       CLEAR(buf);</span><br><span class="line"></span><br><span class="line">       buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;</span><br><span class="line">       buf.memory = V4L2_MEMORY_MMAP;</span><br><span class="line">       buf.index = n_buffers;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (<span class="number">-1</span> == xioctl(Camera_fd, VIDIOC_QUERYBUF, &amp;buf))</span><br><span class="line">           errno_exit(<span class="string">"VIDIOC_QUERYBUF"</span>);</span><br><span class="line"></span><br><span class="line">       buffers[n_buffers].length=buf.length;</span><br><span class="line">       buffers[n_buffers].start = (<span class="keyword">unsigned</span> <span class="keyword">char</span> *)mmap(<span class="literal">NULL</span>,buf.length,PROT_READ | PROT_WRITE ,MAP_SHARED ,Camera_fd, buf.m.offset);</span><br><span class="line">       <span class="keyword">if</span> (MAP_FAILED == buffers[n_buffers].start)</span><br><span class="line">           errno_exit(<span class="string">"mmap"</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   PRINTK(<span class="string">"init_mmap Success\n"</span>);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> V4L2_QT::init_device(<span class="keyword">unsigned</span> <span class="keyword">int</span> w, <span class="keyword">unsigned</span> <span class="keyword">int</span> h)</span><br><span class="line"></span><br><span class="line">  &#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">v4l2_capability</span> <span class="title">cap</span>;</span><span class="comment">//这个设备的功能，比如是否是视频输入设备</span></span><br><span class="line">      <span class="class"><span class="keyword">struct</span> <span class="title">v4l2_format</span> <span class="title">fmt</span>;</span><span class="comment">//帧的格式，比如宽度，高度等</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">v4l2_cropcap</span>  <span class="title">cropcap</span>;</span> <span class="comment">//输入设备裁剪</span></span><br><span class="line">   <span class="class"><span class="keyword">struct</span> <span class="title">v4l2_crop</span> <span class="title">crop</span>;</span> <span class="comment">//输入设备裁剪</span></span><br><span class="line"> <span class="keyword">if</span>(xioctl(Camera_fd,VIDIOC_QUERYCAP,&amp;cap))<span class="comment">//Check vedio input</span></span><br><span class="line"> &#123;</span><br><span class="line">     <span class="keyword">if</span>(EINVAL==errno)</span><br><span class="line">     &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"%s is no V4l2 device \n"</span>,device);</span><br><span class="line">        <span class="keyword">return</span>(EXIT_FAILURE);</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">else</span></span><br><span class="line">     &#123;</span><br><span class="line">         errno_exit(<span class="string">"VIDIOC_QUERYCAP"</span>);</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">if</span>(!(cap.capabilities&amp;V4L2_CAP_VIDEO_CAPTURE))</span><br><span class="line">  &#123;</span><br><span class="line">     <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"no video capture device\n"</span>);</span><br><span class="line">             <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line"> &#125;</span><br><span class="line"> cropcap.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;</span><br><span class="line"> <span class="keyword">if</span>(<span class="number">-1</span>==xioctl(Camera_fd,VIDIOC_CROPCAP,&amp;cropcap))</span><br><span class="line">      errno_exit(<span class="string">"VIDIOC_CROPCA"</span>);</span><br><span class="line"> crop.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;</span><br><span class="line"> crop.c = cropcap.defrect;</span><br><span class="line"> <span class="keyword">if</span> (<span class="number">-1</span> == xioctl(Camera_fd, VIDIOC_S_CROP, &amp;crop))</span><br><span class="line"> &#123;</span><br><span class="line"> <span class="keyword">switch</span> (errno)</span><br><span class="line"> &#123;</span><br><span class="line">     <span class="keyword">case</span> EINVAL:</span><br><span class="line">         <span class="keyword">break</span>;</span><br><span class="line">     <span class="keyword">default</span>:</span><br><span class="line">         <span class="keyword">break</span>;</span><br><span class="line">         &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> CLEAR(fmt);<span class="comment">//清除帧的格式</span></span><br><span class="line"> <span class="comment">//重新设置帧的格式</span></span><br><span class="line"> fmt.type=V4L2_BUF_TYPE_VIDEO_CAPTURE;<span class="comment">// 数据流类型，必须永远是//V4L2_BUF_TYPE_VIDEO_CAPTURE</span></span><br><span class="line"> fmt.fmt.pix.width=w;</span><br><span class="line"> fmt.fmt.pix.pixelformat = pixel_format;</span><br><span class="line"> fmt.fmt.pix.field = V4L2_FIELD_ANY;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">if</span> (<span class="number">-1</span> == xioctl(Camera_fd, VIDIOC_S_FMT, &amp;fmt))<span class="comment">//把刚才的帧格式写入</span></span><br><span class="line">     errno_exit(<span class="string">"VIDIOC_S_FMT"</span>);</span><br><span class="line"> <span class="keyword">if</span> ((fmt.fmt.pix.width != w) || (fmt.fmt.pix.height != h))<span class="comment">//判断是否写入</span></span><br><span class="line"> &#123;</span><br><span class="line">     qWarning(<span class="string">"  Frame size:   %ux%u (requested size %ux%u is not supported by device)\n"</span>,</span><br><span class="line">         fmt.fmt.pix.width, fmt.fmt.pix.height, w, h);</span><br><span class="line">     w = fmt.fmt.pix.width;</span><br><span class="line">     h = fmt.fmt.pix.height;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span> &#123;</span><br><span class="line">     qWarning(<span class="string">"  Frame size:   %dx%d\n"</span>, w, h);</span><br><span class="line"> &#125;</span><br><span class="line">     PRINTK(<span class="string">"init_device Success\n"</span>);</span><br><span class="line">    <span class="comment">//配置完成之后，接下来进行内存分配</span></span><br><span class="line">init_mmap();</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">void</span> V4L2_QT::readCamera()</span><br><span class="line"></span><br><span class="line">  &#123;</span><br><span class="line"><span class="keyword">if</span>(opendevice(device))&#123;</span><br><span class="line">   init_device(pre_w,pre_h);</span><br><span class="line">   stream_on();</span><br><span class="line">  &#125;</span><br><span class="line"> <span class="keyword">else</span>&#123;</span><br><span class="line"> opendevice(device_2);</span><br><span class="line"> init_device(pre_w,pre_h);</span><br><span class="line">  stream_on();</span><br><span class="line">  &#125;</span><br><span class="line">PRINTK(<span class="string">"readCamera Success\n"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">void</span> V4L2_QT::process_image(<span class="keyword">unsigned</span> <span class="keyword">char</span> *buf, <span class="keyword">int</span> size)</span><br><span class="line">  &#123;</span><br><span class="line">  qDebug()&lt;&lt;size&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">      PRINTK(<span class="string">"process_image get in"</span>);</span><br><span class="line">   <span class="comment">//showPicData(buf, size);</span></span><br><span class="line">  convertMJPEG2Mat(buf);</span><br><span class="line">  PRINTK(<span class="string">"yuv--&gt;rgb Success out \n"</span>);</span><br><span class="line"></span><br><span class="line"> <span class="comment">//convertMJPEG2Mat(buf);</span></span><br><span class="line">      &#125;</span><br><span class="line">  <span class="keyword">void</span> V4L2_QT::stream_on()</span><br><span class="line">  &#123;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> i;</span><br><span class="line">   <span class="keyword">enum</span> v4l2_buf_type type;</span><br><span class="line"> <span class="class"><span class="keyword">struct</span> <span class="title">v4l2_buffer</span> <span class="title">buf</span>;</span><span class="comment">//代表驱动中的一帧</span></span><br><span class="line"> <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;n_buffers;++i)</span><br><span class="line"> &#123;</span><br><span class="line">     CLEAR(buf);</span><br><span class="line">     buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;</span><br><span class="line">     buf.memory = V4L2_MEMORY_MMAP;</span><br><span class="line">     buf.index=i;</span><br><span class="line">     <span class="keyword">if</span> (<span class="number">-1</span> == xioctl(Camera_fd, VIDIOC_QBUF, &amp;buf))</span><br><span class="line">         errno_exit(<span class="string">"VIDIOC_QBUF"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> type = V4L2_BUF_TYPE_VIDEO_CAPTURE;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">if</span> (<span class="number">-1</span> == xioctl(Camera_fd, VIDIOC_STREAMON, &amp;type))</span><br><span class="line">     errno_exit(<span class="string">"VIDIOC_STREAMON"</span>);</span><br><span class="line"> PRINTK(<span class="string">"stream_on Success\n"</span>);</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">void</span> V4L2_QT::post_preview()</span><br><span class="line"></span><br><span class="line">  &#123;</span><br><span class="line"> <span class="class"><span class="keyword">struct</span> <span class="title">v4l2_buffer</span> <span class="title">buf</span>;</span></span><br><span class="line">  CLEAR(buf);</span><br><span class="line">  buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;</span><br><span class="line">  buf.memory = V4L2_MEMORY_MMAP;</span><br><span class="line">  <span class="keyword">if</span> (<span class="number">-1</span> == xioctl(Camera_fd, VIDIOC_DQBUF, &amp;buf))</span><br><span class="line">      errno_exit(<span class="string">"VIDIOC_DQBUF"</span>);</span><br><span class="line">   assert(buf.index &lt; n_buffers);</span><br><span class="line">     PRINTK(<span class="string">"post_preview---&gt;process_images\n"</span>);</span><br><span class="line">   process_image(buffers[buf.index].start, buf.bytesused);</span><br><span class="line">   PRINTK(<span class="string">"process_image Sucess\n"</span>);</span><br><span class="line"></span><br><span class="line">   v4l2_buffer queue_buf;</span><br><span class="line">   CLEAR(queue_buf);</span><br><span class="line">   queue_buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;</span><br><span class="line">   queue_buf.memory = V4L2_MEMORY_MMAP;</span><br><span class="line">   queue_buf.index =buf.index;</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">-1</span> == xioctl(Camera_fd, VIDIOC_QBUF, &amp;queue_buf))</span><br><span class="line">         errno_exit(<span class="string">"VIDIOC_QBUF"</span>);</span><br><span class="line">   PRINTK(<span class="string">"number=%d\n"</span>,number++);</span><br><span class="line">     &#125;</span><br><span class="line"> <span class="keyword">void</span> V4L2_QT::releaseCamera()</span><br><span class="line"></span><br><span class="line">  &#123;</span><br><span class="line"> <span class="keyword">unsigned</span> <span class="keyword">int</span> i;</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; n_buffers; ++i)</span><br><span class="line">  &#123;</span><br><span class="line">      munmap(buffers[i].start, buffers[i].length);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">free</span>(buffers);</span><br><span class="line">  <span class="keyword">if</span> (<span class="number">-1</span> == ::close(Camera_fd))</span><br><span class="line">      errno_exit(<span class="string">"close"</span>);</span><br><span class="line">  Camera_fd = <span class="number">-1</span>;</span><br><span class="line">  timer-&gt;stop();</span><br><span class="line"> &#125;</span><br><span class="line">     <span class="keyword">int</span> V4L2_QT::convert_yuv_to_rgb_pixel(<span class="keyword">int</span> y, <span class="keyword">int</span> u, <span class="keyword">int</span> v)  <span class="comment">//</span></span><br><span class="line">  &#123;</span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">int</span> pixel32 = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span> *pixel = (<span class="keyword">unsigned</span> <span class="keyword">char</span> *)&amp;pixel32;</span><br><span class="line">  <span class="keyword">int</span> r, g, b;</span><br><span class="line">  r = y + (<span class="number">1.370705</span> * (v<span class="number">-128</span>));</span><br><span class="line">  g = y - (<span class="number">0.698001</span> * (v<span class="number">-128</span>)) - (<span class="number">0.337633</span> * (u<span class="number">-128</span>));</span><br><span class="line">  b = y + (<span class="number">1.732446</span> * (u<span class="number">-128</span>));</span><br><span class="line">  <span class="keyword">if</span>(r &gt; <span class="number">255</span>) r = <span class="number">255</span>;</span><br><span class="line">  <span class="keyword">if</span>(g &gt; <span class="number">255</span>) g = <span class="number">255</span>;</span><br><span class="line">  <span class="keyword">if</span>(b &gt; <span class="number">255</span>) b = <span class="number">255</span>;</span><br><span class="line">  <span class="keyword">if</span>(r &lt; <span class="number">0</span>) r = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">if</span>(g &lt; <span class="number">0</span>) g = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">if</span>(b &lt; <span class="number">0</span>) b = <span class="number">0</span>;</span><br><span class="line">  pixel[<span class="number">0</span>] = r * <span class="number">220</span> / <span class="number">256</span>;</span><br><span class="line">  pixel[<span class="number">1</span>] = g * <span class="number">220</span> / <span class="number">256</span>;</span><br><span class="line">  pixel[<span class="number">2</span>] = b * <span class="number">220</span> / <span class="number">256</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> pixel32;</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//yuv422×ªRGB24</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> V4L2_QT::convert_yuv_to_rgb_buffer(<span class="keyword">unsigned</span> <span class="keyword">char</span> *yuv, <span class="keyword">unsigned</span> <span class="keyword">char</span> *rgb, <span class="keyword">unsigned</span> <span class="keyword">int</span> width, <span class="keyword">unsigned</span> <span class="keyword">int</span> height)    <span class="comment">//Êý×é ÏñËØÑÕÉ«×ª»»yuv ×ª»»rgb</span></span><br><span class="line"></span><br><span class="line">  &#123;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> in;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> out = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> pixel_16=<span class="number">0</span>;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span> pixel_24[<span class="number">3</span>];</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> pixel32;</span><br><span class="line">  <span class="keyword">int</span> y0, u, y1, v;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span>(in = <span class="number">0</span>; in &lt; width * height * <span class="number">2</span>; in += <span class="number">4</span>)</span><br><span class="line">  &#123;</span><br><span class="line">      pixel_16 = yuv[in + <span class="number">3</span>] &lt;&lt; <span class="number">24</span> |</span><br><span class="line">                 yuv[in + <span class="number">2</span>] &lt;&lt; <span class="number">16</span> |</span><br><span class="line">                 yuv[in + <span class="number">1</span>] &lt;&lt;  <span class="number">8</span> |</span><br><span class="line">                 yuv[in + <span class="number">0</span>];</span><br><span class="line">      y0 = (pixel_16 &amp; <span class="number">0x000000ff</span>);</span><br><span class="line">      u  = (pixel_16 &amp; <span class="number">0x0000ff00</span>) &gt;&gt;  <span class="number">8</span>;</span><br><span class="line">      y1 = (pixel_16 &amp; <span class="number">0x00ff0000</span>) &gt;&gt; <span class="number">16</span>;</span><br><span class="line">      v  = (pixel_16 &amp; <span class="number">0xff000000</span>) &gt;&gt; <span class="number">24</span>;</span><br><span class="line"></span><br><span class="line">      pixel32 = convert_yuv_to_rgb_pixel(y0, u, v);<span class="comment">//YUV UV·ÖÁ¿×÷ÓÃ²»Ã÷ÏÔ ŒõÐ¡UV·ÖÁ¿ ÔÚŒÆËãRGBµÄÊ±ºòÓÃÁÙœüµÄŽúÌæ</span></span><br><span class="line">      pixel_24[<span class="number">0</span>] = (pixel32 &amp; <span class="number">0x000000ff</span>);</span><br><span class="line">      pixel_24[<span class="number">1</span>] = (pixel32 &amp; <span class="number">0x0000ff00</span>) &gt;&gt; <span class="number">8</span>;</span><br><span class="line">      pixel_24[<span class="number">2</span>] = (pixel32 &amp; <span class="number">0x00ff0000</span>) &gt;&gt; <span class="number">16</span>;</span><br><span class="line">      rgb[out++] = pixel_24[<span class="number">0</span>];</span><br><span class="line">      rgb[out++] = pixel_24[<span class="number">1</span>];</span><br><span class="line">      rgb[out++] = pixel_24[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line">      pixel32 = convert_yuv_to_rgb_pixel(y1, u, v);<span class="comment">//YUV UV·ÖÁ¿×÷ÓÃ²»Ã÷ÏÔ ŒõÐ¡UV·ÖÁ¿ ÔÚŒÆËãRGBµÄÊ±ºòÓÃÁÙœüµÄŽúÌæ</span></span><br><span class="line">      pixel_24[<span class="number">0</span>] = (pixel32 &amp; <span class="number">0x000000ff</span>);</span><br><span class="line">      pixel_24[<span class="number">1</span>] = (pixel32 &amp; <span class="number">0x0000ff00</span>) &gt;&gt; <span class="number">8</span>;</span><br><span class="line">      pixel_24[<span class="number">2</span>] = (pixel32 &amp; <span class="number">0x00ff0000</span>) &gt;&gt; <span class="number">16</span>;</span><br><span class="line">      rgb[out++] = pixel_24[<span class="number">0</span>];</span><br><span class="line">      rgb[out++] = pixel_24[<span class="number">1</span>];</span><br><span class="line">      rgb[out++] = pixel_24[<span class="number">2</span>];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>; </span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">void</span> V4L2_QT::convertMJPEG2Mat(<span class="keyword">unsigned</span> <span class="keyword">char</span>*mjpeg)</span><br><span class="line"></span><br><span class="line">  &#123;</span><br><span class="line"></span><br><span class="line"> convert_yuv_to_rgb_buffer(mjpeg,rgb,WIDTH,HEIGHT);</span><br><span class="line">     pixmap = QPixmap::fromImage(*frame);</span><br><span class="line"> ui-&gt;label-&gt;setPixmap(pixmap);</span><br><span class="line">PRINTK(<span class="string">"yuv--&gt;rgb Success\n"</span>);</span><br><span class="line">      <span class="comment">//sprintf(ImageName,"ImageName%04ld.jpg",ImageNum++);</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">//imwrite(ImageName,RGBImage);</span></span><br><span class="line"></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
@@ -243,7 +243,7 @@
 <li>下载链接 <a href="https://www.espressif.com/zh-hans/support/download/sdks-demos" target="_blank" rel="noopener">乐鑫</a></li>
 <li>选用的平台NON-OS SDK</li>
 <li>使用安信可一体化编程软件打开，文档的导入具体去安信可官网搜索，这里直接讲解导入后的操作。 删除third_party,将esp_mqtt_proj从example拉出来，将driver_lib的Makefile添加后.bak,目的是为了不讲driver_lib不编译进工程</li>
-<li>如图，<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25.png" alt></li>
+<li>如图，<img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25.png" class="lazyload"></li>
 </ol>
 <h2 id="MQTT的windows环境准备"><a href="#MQTT的windows环境准备" class="headerlink" title="MQTT的windows环境准备"></a>MQTT的windows环境准备</h2><ol>
 <li>下载EMQ压缩包，根据你的windows环境选择，下载地址<a href="http://www.emqtt.com/downloads" target="_blank" rel="noopener">链接</a></li>
@@ -312,10 +312,10 @@
 </li>
 <li><p>右击该工程，Clean Project &amp;&amp;Build Project</p>
 </li>
-<li><p>可以看到顺利通过编译，如图<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-2.png" alt></p>
-<p>依照安信可官方提供的烧录方法可以知道，<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-3.png" alt></p>
+<li><p>可以看到顺利通过编译，如图<img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-2.png" class="lazyload"></p>
+<p>依照安信可官方提供的烧录方法可以知道，<img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-3.png" class="lazyload"></p>
 <p>blank.bin、esp_init_data_default_v05.bin是乐鑫SDK提供的，而eagle.flash.bin和eagle.irom0text.bin是编译工程生成的，，下载地址需要我们将工程给的地址和安信可提供地址组合得到，如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-4.png" alt></p>
+<p><img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-4.png" class="lazyload"></p>
 <table>
 <thead>
 <tr>
@@ -344,13 +344,13 @@
 <li><p>重启ESP8266模块，打开串口 BAUD 115200</p>
 </li>
 <li><p>在浏览器登录MQTT，可以看到会话界面，有刚才客户端ID,主题界面有工程中注册的主题如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-6.png" alt></p>
+<p><img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-6.png" class="lazyload"></p>
 <p>​</p>
 </li>
-<li><p>主题，是我们在user_main.c的mqttConnectedCb函数注册的主题 如图 <img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-5.png" alt>  </p>
+<li><p>主题，是我们在user_main.c的mqttConnectedCb函数注册的主题 如图 <img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-5.png" class="lazyload">  </p>
 </li>
 <li><p>串口也会打印出来</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-7.png" alt></p>
+<p><img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-7.png" class="lazyload"></p>
 </li>
 <li><p>到这一步，我们整个MQTT的局域网服务器已经搭建起来，下面测试一下，</p>
 <ol>
@@ -360,9 +360,9 @@
 </li>
 <li><p>给主题”/mqtt/topic/1” 发送”Hello World!”</p>
 </li>
-<li><p>如图  <img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-8.png" alt></p>
+<li><p>如图  <img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-8.png" class="lazyload"></p>
 </li>
-<li><p>在串口端会打印出”Hello World!”,如图<img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-9.png" alt></p>
+<li><p>在串口端会打印出”Hello World!”,如图<img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-8-25-9.png" class="lazyload"></p>
 <p>​</p>
 </li>
 </ol>
@@ -562,7 +562,7 @@
 </li>
 <li><p>bximage生成512字节的虚拟软盘</p>
 <ol>
-<li>在终端下执行bximage <img src="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-1.png" alt></li>
+<li>在终端下执行bximage <img alt data-src="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-1.png" class="lazyload"></li>
 <li>选择1，再输入”fd”（选择虚拟软盘），再确认，再确认，最终生成1.44M的a.img文件</li>
 <li>也可以使用dd命令代替bximage，<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">dd if=/dev/zero of=a.img bs=1440k count=1</span><br></pre></td></tr></table></figure>
 </li>
@@ -577,7 +577,7 @@
 <li>在bochs的源码目录里面，执行“ls -al”,可以看到一个.bochsrc</li>
 <li>vim .bochsrc<ol>
 <li>设置floppya</li>
-<li>将boot设置为：floppy<br><img src="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-2.png" alt></li>
+<li>将boot设置为：floppy<br><img alt data-src="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-2.png" class="lazyload"></li>
 </ol>
 </li>
 </ol>
@@ -588,7 +588,7 @@
 </li>
 <li><p>如果bochs带调试功能：需要输入c继续执行，才能执行。</p>
 </li>
-<li><p>现象：<img src="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-3.png" alt></p>
+<li><p>现象：<img alt data-src="http://p9zz81nyl.bkt.clouddn.com/2018-11-3-3.png" class="lazyload"></p>
 </li>
 </ol>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这个章节主要是搭建操作系统运行的环境和编写一个简单的裸机文件，这个汇编程序比较简单，但是这个org命令让我想到了之前在学习内核的时候的相对地址和绝对地址，疑问编译器编译的指令是相对地址是从000h编译的，但是我们自己创建的引导扇区是从07C00h开始执行的，所以需要用到org命令。</p>
@@ -637,7 +637,7 @@
 <li><p>选中该工程右键选择Clean Project，然后再Build Project。</p>
 </li>
 <li><p>然后就可以 看到下面提示</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.11.png" alt></p>
+<p><img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.11.png" class="lazyload"></p>
 </li>
 <li><p>下面就开始烧录</p>
 </li>
@@ -723,12 +723,12 @@
 </tbody></table>
 </li>
 <li><p>烧录工具的设置 如图：</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.12.png" alt></p>
+<p><img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.12.png" class="lazyload"></p>
 </li>
 <li><p>选好COM口，BAUD选的越大，下载速度越快，如果下载失败，可以将波特率降低</p>
 </li>
 <li><p>下载好之后，我们重启开发板，连接串口调试助手，波特率76800-1-8-0，如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.13.png" alt></p>
+<p><img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_2018-7-27.13.png" class="lazyload"></p>
 </li>
 <li><p>可以看到输出 Hello,World！</p>
 </li>
@@ -757,19 +757,19 @@
 
 
 
-<h1 id="融合-CDN-测试域名公告"><a href="#融合-CDN-测试域名公告" class="headerlink" title="融合 CDN 测试域名公告"></a>融合 CDN 测试域名公告</h1><p><img src="http://cdn.funful.ink/2018-11-20.png" alt></p>
+<h1 id="融合-CDN-测试域名公告"><a href="#融合-CDN-测试域名公告" class="headerlink" title="融合 CDN 测试域名公告"></a>融合 CDN 测试域名公告</h1><p><img alt data-src="http://cdn.funful.ink/2018-11-20.png" class="lazyload"></p>
 <p>但是发现之前文章的测试域名还能在blog中正常显示，所以先不管这个呢．先创建自定义域名．</p>
 <h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><h2 id="自定义域名"><a href="#自定义域名" class="headerlink" title="自定义域名"></a>自定义域名</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">本站域名:funful.ink</span><br><span class="line"></span><br><span class="line">七牛绑定域名:cdn.funful.ink</span><br></pre></td></tr></table></figure>
 
 <ol>
 <li><p>登录七牛云,进入对象存储,再进入到相应的存储空间,在空间概览,点击自定义域名.如图:</p>
-<p><img src="http://cdn.funful.ink/2018-11-20-1.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/2018-11-20-1.png" class="lazyload"></p>
 </li>
 <li><p>如图:点击自定义域名之后,会进入域名管理-&gt;创建域名里面,我们只需要填写一个加速域名,也就是二级域名,这里我的funful.ink已经备案了,所以我就在我的主域名前加一个字符串,然后点击创建就可以了.如图:</p>
-<p><img src="http://cdn.funful.ink/2018-11-20-2.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/2018-11-20-2.png" class="lazyload"></p>
 </li>
 <li><p>这是后再次去存储空间-&gt;空间概览会发现域名状态是: 处理中</p>
-<p><img src="http://cdn.funful.ink/2018-11-20-3.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/2018-11-20-3.png" class="lazyload"></p>
 </li>
 </ol>
 <h2 id="配置CNAME"><a href="#配置CNAME" class="headerlink" title="配置CNAME"></a>配置CNAME</h2><ol>
@@ -779,7 +779,7 @@
 <li><p>打开阿里云官网-&gt;控制台-&gt;域名,在主域名下点击解析-&gt;添加记录</p>
 </li>
 <li><p>会出现如图设置:</p>
-<p><img src="http://cdn.funful.ink/2018-11-20-4.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/2018-11-20-4.png" class="lazyload"></p>
 </li>
 </ol>
 <p>上图的记录类型:选择CNAME;主机记录:就是我们七牛云自定义域名前缀;记录值:就是CNAME值;其他值默认就可以. 点击确认就配置好了CNAME</p>
@@ -787,7 +787,7 @@
 <li>返回到七牛云我们的存储空间-&gt;空间概览会发现,融合CDN加速域名里面的域名状态已经成功了,如果是等待CNAME的话可能是需要等待几分钟.</li>
 </ol>
 <h1 id="使用存储空间"><a href="#使用存储空间" class="headerlink" title="使用存储空间"></a>使用存储空间</h1><p>上面已经配置好 进入储存空间-&gt;内容管理.选择外链默认域名之后就可以正常使用了,(外链域名不能使用七牛云的测试域名,因为这个测试域名只能使用一个月)</p>
-<p><img src="http://cdn.funful.ink/2018-11-20-5.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/2018-11-20-5.png" class="lazyload"></p>
 ]]></content>
       <categories>
         <category>各个方面方案解决</category>
@@ -818,26 +818,26 @@
 <li><p>手机开启wifi连接OneNET</p>
 </li>
 <li><p>手机端打开TCP调试助手，设置如图，点击connect</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_picture.jpg" alt></p>
+<p><img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_picture.jpg" class="lazyload"></p>
 </li>
 <li><p>电脑连接ESP8266的串口显示</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_1.png" alt></p>
+<p><img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_1.png" class="lazyload"></p>
 </li>
 <li><p>这就显示连接成功了，下来电脑端也连接”OneNET”，打开网络调试助手，设置如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_2.png" alt></p>
+<p><img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_2.png" class="lazyload"></p>
 </li>
 <li><p>上面四步我们就将手机和电脑作为TCP client 连接到电脑了，下面测试通信。</p>
 </li>
 </ol>
 <h2 id="通信"><a href="#通信" class="headerlink" title="通信##"></a>通信##</h2><h3 id="ESP8266接收"><a href="#ESP8266接收" class="headerlink" title="ESP8266接收###"></a>ESP8266接收###</h3><ol>
 <li><p>手机端发送如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_5.jpg" alt></p>
+<p><img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_5.jpg" class="lazyload"></p>
 </li>
 <li><p>电脑端发送如图</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_3.png" alt></p>
+<p><img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_3.png" class="lazyload"></p>
 </li>
 <li><p>ESP8266串口显示</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_4.png" alt></p>
+<p><img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_4.png" class="lazyload"></p>
 </li>
 </ol>
 <h3 id="ESP8266发送"><a href="#ESP8266发送" class="headerlink" title="ESP8266发送###"></a>ESP8266发送###</h3><ol>
@@ -846,12 +846,12 @@
 <li><p>先给手机端发送，执行命令</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">AT+CIPSEND=&lt;link ID&gt;,&lt;length&gt;</span><br><span class="line">AT+CIPSEND=0,11（给ID0发送11个字节数据）</span><br><span class="line">OK</span><br><span class="line">&gt;</span><br><span class="line">Hello,PHONE</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_8.jpg" alt></p>
+<p><img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_8.jpg" class="lazyload"></p>
 </li>
 <li><p>给电脑端发送，执行命令</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">AT+CIPSEND=1,11（给ID1发送11个字节数据）</span><br><span class="line">OK</span><br><span class="line">&gt;</span><br><span class="line">Hello,PC</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/blog_7.png" alt></p>
+<p><img alt data-src="http://p9zz81nyl.bkt.clouddn.com/blog_7.png" class="lazyload"></p>
 </li>
 </ol>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结#"></a>总结#</h1><p>使用AT指令开发ESP8266，比较简单，但是ESP8266内置MCU，这使得浪费了硬件资源。这篇文章是基于TCP多连接的通信，至于单连接，就更简单了。</p>
@@ -926,7 +926,7 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">make MyFF2440_config&amp;&amp;make</span><br></pre></td></tr></table></figure>
 
 <p>不出意外的话，就可以顺利生成u-boot.bin文件，烧进板子里面nor 启动，串口就能正常输出    </p>
-<img src="http://p9zz81nyl.bkt.clouddn.com/1.jpg">
+<img data-src="http://p9zz81nyl.bkt.clouddn.com/1.jpg" class="lazyload">
 
 <h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>我们在注释的时候尽量使用“/**/”符号，不要用“//”,因为有些交叉编译器不识别单行注释</p>
 <p>​</p>
@@ -1007,12 +1007,12 @@
 <p> 因为我们的最大快区大于19了</p>
 <h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>重新编译uboot 下载到板子里面，就可以看到成功。</p>
 <p>虽然我们看到串口打印出来的信息显示支持Flash，但是我们要测试下是否真的支持了</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/2.png" alt></p>
+<p><img alt data-src="http://p9zz81nyl.bkt.clouddn.com/2.png" class="lazyload"></p>
 <ol>
 <li><p>进入到uboot的命令行</p>
 </li>
 <li><p>输入：flinfo</p>
-<p><img src="http://p9zz81nyl.bkt.clouddn.com/3.png" alt="img"></p>
+<p><img alt="img" data-src="http://p9zz81nyl.bkt.clouddn.com/3.png" class="lazyload"></p>
 <p> 可见扇区地址，扇区数、设备ID和厂商ID都是正确的。接下来进一步确认正确与否</p>
 </li>
 <li><p>查看命令 </p>
@@ -1170,7 +1170,7 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh  user@IP  -p 22  (默认情况下，客户端的ssh_config中端口号，要和我们远程服务器监听的端口号一致，也就是ssh_config里面监听的端口号一致)</span><br></pre></td></tr></table></figure>
 
 <h2 id="口令验证"><a href="#口令验证" class="headerlink" title="口令验证"></a>口令验证</h2><p>初次登录，客户端发送请求之后，服务器端会将公钥发送到客户端，为了防止中间人攻击，可以将接受到的公钥和服务器的公钥对比，一致则是安全的，继续下一步，输入密码，认证成功就可以。这是客户端接受到的公钥会将其通过MD5之后放在~/.ssh/hnown_hosts文件里面，下次登录不用进行公钥验证。</p>
-<p><img src="http://cdn.funful.ink/Blog_2019-3-31_ssh1.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/Blog_2019-3-31_ssh1.png" class="lazyload"></p>
 <h2 id="密钥验证"><a href="#密钥验证" class="headerlink" title="密钥验证"></a>密钥验证</h2><p>上面步骤可知，通过输入密码进行登录安全性较低，容易受到中间人攻击。密钥登录也称为免密登录。上面口令验证时候，客户端已经获得服务器的公钥，现在我们客户端也生成一组密匙，将客户端的公钥放到服务器的~/.ssh/authorized_keys ，这样就可以实现免密登录。具体过程如下：</p>
 <ol>
 <li>服务器收到客户端发送的用户名和IP之后，在authorized_keys 需要匹配的公钥，如果匹配就随机生成一个字符串然后通过authorized_keys 里面的公钥加密，发送给客户端。</li>
@@ -1218,15 +1218,15 @@
 <li>虚拟机：VM</li>
 </ul>
 <h1 id="RAID介绍"><a href="#RAID介绍" class="headerlink" title="RAID介绍"></a>RAID介绍</h1><h2 id="RAID0"><a href="#RAID0" class="headerlink" title="RAID0"></a>RAID0</h2><p>RAID0是通过硬件或者是软件的方式将其连接在一起，至少需要两块硬盘，数据分段之后依次写入各个物理硬盘上面。RAID的存储速度最快，但是没有备份，空间利用率达到100%，但是硬盘损坏之后，数据无法修复。零容错。</p>
-<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID0.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/Blog_2019-3-9_RAID0.png" class="lazyload"></p>
 <h2 id="RAID1"><a href="#RAID1" class="headerlink" title="RAID1"></a>RAID1</h2><p>RAID0是对数据分开存放的，任何一个硬盘发生故障，那么整个数据都将不可用。RAID1则提高数据安全性，将数据同时存入多个硬盘当中，相当于镜像存储，磁盘阵列无论挂载多少个硬盘，都相当于容量最小的硬盘，写入速度相对于RAID0慢，但是数据安全性大大提高，但是这种读取速度是一个硬盘读取速度乘于硬盘个数。</p>
-<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID1.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/Blog_2019-3-9_RAID1.png" class="lazyload"></p>
 <h2 id="RAID5"><a href="#RAID5" class="headerlink" title="RAID5"></a>RAID5</h2><p>RAID1虽然安全性大大提高，但是硬盘空间利用率大大降低。RAID5兼顾RAID0和RAID1的优点提出来的一种技术方案。RAID5与RAID3和RAID4不同的是RAID4是使用固定盘来存储奇偶校验位，而RAID5是将数据和数据对应的校验位在分散存储在各个硬盘上面。RAID5的数据和RAID0数据分布相似，都是把数据以块为单位分布到各个评判上面。上面这两个RAID5技术方案特点，使得RAID至少需要3块磁盘。RAID5没有备份数据，只保存数据的校验位，在硬盘损坏之后通过奇偶校验位进行数据恢复。RAID5受到系统故障之后，重建时间比较长。</p>
-<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID5%EF%BC%88nor%EF%BC%89.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/Blog_2019-3-9_RAID5%EF%BC%88nor%EF%BC%89.png" class="lazyload"></p>
 <h2 id="RAID6"><a href="#RAID6" class="headerlink" title="RAID6"></a>RAID6</h2><p>RAID5可以知道，如果某一个盘故障之后，可以通过其他盘的校验位和其余的数据记性数据恢复，但是如果同时有两个盘故障的话，则不能完全进行数据恢复（假如上图的Disk1和Disk2同时损坏，A的数据可以通过A1和ParityA恢复，D的数据可以通过D3和ParityD恢复，而B,C的数据由于校验位数据丢失不能恢复）。所以这是出现RAID6，RAID6是在RAID5增加一个安全等级，就是RIAD6在RAID5的基础上，在其他盘又增加XOR校验区，这两个XOR校验使用不同的算法，这个阵列需要至少4块硬盘。这样磁盘阵列允许同时两个硬盘故障，容错功能提高。但是在写入数据的时候需要计算两个XOR区，速度大大降低，空间利用率也降低。</p>
-<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID6.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/Blog_2019-3-9_RAID6.png" class="lazyload"></p>
 <h2 id="RAID10"><a href="#RAID10" class="headerlink" title="RAID10"></a>RAID10</h2><p>由于RAID磁盘阵列的读写速度和数据安全性是相互制约，RAID10通过将RAID0和RAID1进行组合，他利用RAID0的快速读写和RAID1的安全性。性能超过RAID6和RAID5.只要同一组的硬盘不全部损坏，那么数据就不会丢失。RAID10至少需要4块硬盘。如图 ：</p>
-<p><img src="http://cdn.funful.ink/Blog_2019-3-9_RAID10.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/Blog_2019-3-9_RAID10.png" class="lazyload"></p>
 <h2 id="热备磁盘"><a href="#热备磁盘" class="headerlink" title="热备磁盘"></a>热备磁盘</h2><p>针对磁盘阵列，不同的方案容错成都也不一样，一般都会有热备磁盘，也就是在磁盘阵列中某个磁盘挂了，热备磁盘可以立刻代替损坏磁盘的位置，这时候，我们的磁盘阵列就会重建，一个磁盘阵列可以包含多个热备磁盘。</p>
 <h1 id="mdadm命令"><a href="#mdadm命令" class="headerlink" title="mdadm命令"></a>mdadm命令</h1><p>mdadm命令是Linux下创建和管理磁盘阵列的命令，具体参数如下：</p>
 <table>
@@ -1285,7 +1285,7 @@
 <li>步骤二（查看磁盘）</li>
 </ul>
 <p>虚拟机下开机（打开系统），进入终端（桌面版），使用lsblk或者“fdisk  -l”命令，可以看到我们添加的两个硬盘，如图：</p>
-<p><img src="http://cdn.funful.ink/Blog_2019-3-10_lsblk.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/Blog_2019-3-10_lsblk.png" class="lazyload"></p>
 <ul>
 <li>步骤三（分区）</li>
 </ul>
@@ -1305,7 +1305,7 @@
 <li>步骤六（查看磁盘阵列信息）</li>
 </ul>
 <p>查看我们创建的磁盘阵列：终端命令“cat  /proc/mdstat”或者使用“mdadm  -D   /dev/md0”详细查看RAID0 配置，如图：</p>
-<p><img src="http://cdn.funful.ink/Blog_2019-3-10_mdadm0.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/Blog_2019-3-10_mdadm0.png" class="lazyload"></p>
 <ul>
 <li>步骤七（挂载）</li>
 </ul>
@@ -1322,7 +1322,7 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo time dd  if=/dev/zero  of=/home/funful/iointest bs=8k count=131072</span><br></pre></td></tr></table></figure>
 
 <p>如图可以看出来，虽然是虚拟磁盘模拟出来的，但是写入速度与时间还是有差距的(忽略数值，电脑配置比较低)。</p>
-<p><img src="http://cdn.funful.ink/Blog_2019-3-10_mdadm0iointest.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/Blog_2019-3-10_mdadm0iointest.png" class="lazyload"></p>
 </li>
 <li><p>读取测试</p>
 <p>先读取磁盘阵列数据，命令如下：</p>
@@ -1337,14 +1337,14 @@
 <h2 id="RADI10"><a href="#RADI10" class="headerlink" title="RADI10"></a>RADI10</h2><ul>
 <li><p>步骤一（添加磁盘）</p>
 <p>和RAID0的过程相似，在虚拟机系统关机状态下添加5个虚拟磁盘（每个20GB）,4个数据盘，一个热备份盘。如图：</p>
-<p><img src="http://cdn.funful.ink/Blog_2019-3-10_raid10.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/Blog_2019-3-10_raid10.png" class="lazyload"></p>
 </li>
 <li><p>步骤二（创建磁盘阵列+备份盘 ）</p>
 <p>使用命令创建磁盘阵列：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo mdadm -C /dev/md0 -n 4  -l 10 -x 1 /dev/sdb /dev/sdc /dev/sdd  /dev/sde  /dev/sdf</span><br></pre></td></tr></table></figure>
 
 <p>使用命令查看磁盘阵列信息：“mdadm -D    /dev/md0”  如图：</p>
-<p><img src="http://cdn.funful.ink/Blog_2019-3-10_raid10des.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/Blog_2019-3-10_raid10des.png" class="lazyload"></p>
 <p>从上图可以看出来，总共有5个磁盘，四个活动磁盘，一个备份磁盘。/dev/sdf作为备份盘。</p>
 </li>
 </ul>
@@ -1357,7 +1357,7 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mdadm /dev/md0 -f /dev/sdb</span><br></pre></td></tr></table></figure>
 
 <p>可以从图中可以看到，/dev/sdb已经挂了，而之前的备份盘正在顶替sdb的位置，而且正在rebuilding，所以此时活动盘只有3个。过一会再使用这个命令可以看到，rebuilding完毕之后，顶替之前位置。</p>
-<p><img src="http://cdn.funful.ink/Blog_2019-3-10_raid10rebui.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/Blog_2019-3-10_raid10rebui.png" class="lazyload"></p>
 </li>
 </ul>
 <ul>
@@ -1365,7 +1365,7 @@
 <p>下面我们将模拟损坏的磁盘，作为热备磁盘加进磁盘阵列，命令如下：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span>移除损坏磁盘</span><br><span class="line">sudo mdadm  /dev/md0 -r /dev/sdb</span><br><span class="line"><span class="meta">   #</span>添加备份磁盘</span><br><span class="line">   sudo mdadm  /dev/md0 -a /dev/sdb</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://cdn.funful.ink/Blog_2019-3-10_raid10add.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/Blog_2019-3-10_raid10add.png" class="lazyload"></p>
 <p>从上图可以看到我们刚才模拟损坏的sdb盘，已经作为热备份盘，添加到磁盘阵列当中。</p>
 </li>
 </ul>
@@ -1729,14 +1729,14 @@
 </li>
 <li><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gcc test1.c -o test1_1 -static ;这是静态链接</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://cdn.funful.ink/2018-11-19.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/2018-11-19.png" class="lazyload"></p>
 </li>
 </ol>
 <ol start="6">
 <li><p>对比上图可以发现静态链接的可执行文件比动态链接的大特别多.</p>
 </li>
 <li><p>使用ldd(查询动态依赖关系)命令查看</p>
-<p><img src="http://cdn.funful.ink/2018-11-20-6.png" alt></p>
+<p><img alt data-src="http://cdn.funful.ink/2018-11-20-6.png" class="lazyload"></p>
 <p>可以看出来使用动态库链接的时候 使用ldd命令看到依赖的库,但是静态链接的会提示不是一个动态可执行文件,因为他是动态依赖的,运行过程不要动态依赖,</p>
 </li>
 </ol>
