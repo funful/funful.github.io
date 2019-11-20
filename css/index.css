@@ -2400,6 +2400,16 @@ blockquote footer cite:before {
   background-size: cover;
   position: relative;
 }
+#footer:before {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
 #footer-wrap {
   padding: 2rem 1rem;
   color: #eee;
@@ -2426,7 +2436,7 @@ blockquote footer cite:before {
   margin-bottom: 1rem;
 }
 #nav.full_page {
-  height: 100vh;
+  height: 0.003333333333333px;
 }
 #nav .nav_bg {
   width: 100%;
@@ -2460,7 +2470,7 @@ blockquote footer cite:before {
 #site-info {
   position: absolute;
   width: 100%;
-  top: 43%;
+  top: 0.000333333333333px;
 }
 #site-title,
 #site-sub-title {
