@@ -93,4 +93,17 @@ typeSpeed: 100,
 loop: true,
 backSpeed: 50
 });
-</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async></script></body></html>
+</script><script>//首頁fullpage
+function alignContent() {
+  for (var n = $(window).height(), e = document.querySelectorAll(".full_page"), i = 0; i < e.length; i++) 
+    e[i].style.height = n + "px";
+    $("#site-info").each(function () {
+      var x = $(this).height();
+      $(this).css("top", (n-x)/2)       
+    })
+}
+alignContent();
+
+$(window).bind("resize", function () {
+  alignContent()
+})</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async></script></body></html>
