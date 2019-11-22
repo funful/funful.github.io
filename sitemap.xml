@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.funful.ink/2019/08/24/2019-08-24-C-Assembly/</loc>
+    
+    <lastmod>2019-11-22T09:55:51.659Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.funful.ink/2019/10/19/2019-10-19-%E5%85%A8%E5%BF%97A64%E7%BC%96%E8%AF%91%E5%9B%BA%E4%BB%B6%E6%8A%A5Fault/</loc>
     
     <lastmod>2019-11-15T07:52:22.470Z</lastmod>
@@ -82,13 +89,6 @@
     <loc>http://www.funful.ink/2019/07/30/2019-07-30-QEMU-ARM-A9-TFTP-NFS/</loc>
     
     <lastmod>2019-08-25T04:15:15.502Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.funful.ink/2019/08/24/2019-08-24-C-Assembly/</loc>
-    
-    <lastmod>2019-08-25T03:23:47.071Z</lastmod>
     
   </url>
   
